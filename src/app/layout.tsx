@@ -56,6 +56,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon-16x16.svg?v=1" sizes="16x16" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/favicon.svg?v=1" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${shareTechMono.variable} ${outfit.variable} antialiased`}>
         <Providers>

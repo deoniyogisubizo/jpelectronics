@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function HeroVideo() {
   return (
-    <section className="relative h-[400px] md:h-[500px] overflow-hidden">
+    <section className="relative h-[600px] md:h-[700px] overflow-hidden">
       {/* Background Image with Horizontal Gradient Overlay */}
       <div className="absolute inset-0 overflow-hidden bg-black">
         <img
@@ -44,7 +44,7 @@ export default function HeroVideo() {
           </div>
 
           {/* New Info Panel - Hidden on mobile */}
-          <div className="hidden md:grid grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="hidden md:grid grid-cols-2 gap-8 max-w-4xl mx-auto absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-0">
             {/* First Column - Brand Icons with heading */}
             <div className="space-y-4">
               {/* Main heading */}
@@ -56,38 +56,38 @@ export default function HeroVideo() {
               <div className="flex flex-wrap items-center gap-6 opacity-40">
                 {/* Apple */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-white/60 text-lg font-bold"></span>
+                  <i className="fab fa-apple text-white/60 text-lg"></i>
                 </div>
                 {/* HP */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-white/60 text-sm font-bold">HP</span>
+                  <i className="fab fa-hp text-white/60 text-lg"></i>
                 </div>
                 {/* Dell */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-white/60 text-xs font-bold">DELL</span>
+                  <i className="fab fa-dell text-white/60 text-lg"></i>
                 </div>
                 {/* Android */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-white/60 text-lg">🤖</span>
+                  <i className="fab fa-android text-white/60 text-lg"></i>
                 </div>
                 {/* Asus */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-white/60 text-xs font-bold">ASUS</span>
+                  <i className="fab fa-asus text-white/60 text-lg"></i>
                 </div>
-                {/* Acer */}
+                {/* Acer - Note: FontAwesome doesn't have a specific Acer icon, using generic brand icon */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-white/60 text-xs font-bold">ACER</span>
+                  <i className="fas fa-laptop text-white/60 text-lg"></i>
                 </div>
                 {/* Nokia */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-white/60 text-xs font-bold">NOKIA</span>
+                  <i className="fab fa-nokia text-white/60 text-lg"></i>
                 </div>
               </div>
             </div>
 
             {/* Second Column - Contact info in flex row */}
             <div className="flex flex-col justify-center">
-              <div className="flex flex-wrap items-center gap-6 text-white/80">
+              <div className="flex items-center gap-6 text-white/90 font-black">
                 <div className="flex items-center gap-2">
                   <span className="text-sm">📍 Kigali, Rwanda</span>
                 </div>
