@@ -43,23 +43,45 @@ export default function HeroVideo() {
             </div>
           </div>
 
-          {/* Stats Panel - Hidden on mobile */}
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              <p className="text-3xl font-bold text-white">119+</p>
-              <p className="text-sm text-gray-300">Products</p>
+          {/* New Info Panel - Hidden on mobile */}
+          <div className="hidden md:grid grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* First Column - 3 Layers */}
+            <div className="space-y-4">
+              {/* Layer 1: Main heading */}
+              <div className="text-gray-400/60 uppercase text-sm font-medium tracking-wide">
+                WHILE YOU ARE WITH JP ELECTRONIC SHOP
+              </div>
+
+              {/* Layer 2: Bordered description */}
+              <div className="border border-white/20 rounded-lg p-4 bg-black/20 backdrop-blur-sm">
+                <p className="text-white text-sm leading-relaxed">
+                  all electronic shop center , all electronic tools and components repair services on best quality
+                </p>
+              </div>
+
+              {/* Layer 3: Contact and location */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-white/80">
+                  <span className="text-sm">📍 Kigali, Rwanda</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/80">
+                  <span className="text-sm">📞 +250 790 336 683</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/80">
+                  <span className="text-sm">✉️ info@jpelectronics.rw</span>
+                </div>
+              </div>
             </div>
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              <p className="text-3xl font-bold text-white">20</p>
-              <p className="text-sm text-gray-300">Categories</p>
-            </div>
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              <p className="text-3xl font-bold text-white">Kigali</p>
-              <p className="text-sm text-gray-300">Delivery Nationwide</p>
-            </div>
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-              <p className="text-3xl font-bold text-white">24/7</p>
-              <p className="text-sm text-gray-300">Support</p>
+
+            {/* Second Column - Brand Icons */}
+            <div className="flex flex-wrap items-center justify-center gap-6 opacity-20">
+              <div className="text-white/30 text-2xl font-bold"></div>
+              <div className="text-white/30 text-2xl font-bold">HP</div>
+              <div className="text-white/30 text-2xl font-bold">DELL</div>
+              <div className="text-white/30 text-2xl font-bold">🤖</div>
+              <div className="text-white/30 text-2xl font-bold">ASUS</div>
+              <div className="text-white/30 text-2xl font-bold">ACER</div>
+              <div className="text-white/30 text-2xl font-bold">NOKIA</div>
             </div>
           </div>
         </div>
