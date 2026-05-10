@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function HeroVideo() {
   return (
-    <section className="relative h-[600px] md:h-[700px] overflow-hidden">
+    <section className="relative h-[450px] md:h-[550px] overflow-hidden">
       {/* Background Image with Horizontal Gradient Overlay */}
       <div className="absolute inset-0 overflow-hidden bg-black">
         <img
@@ -44,11 +44,11 @@ export default function HeroVideo() {
           </div>
 
           {/* New Info Panel - Hidden on mobile */}
-          <div className="hidden md:grid grid-cols-2 gap-8 max-w-4xl mx-auto absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-0">
+          <div className="hidden md:grid grid-cols-2 gap-8 max-w-6xl mx-auto absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-0">
             {/* First Column - Brand Icons with heading */}
             <div className="space-y-4">
               {/* Main heading */}
-              <div className="text-gray-400/60 uppercase text-sm font-medium tracking-wide">
+              <div className="text-gray-400/60 uppercase text-sm font-medium tracking-wide ml-0 text-left">
                 WHILE YOU ARE WITH JP ELECTRONICS SHOP
               </div>
 
