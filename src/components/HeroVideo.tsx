@@ -16,7 +16,7 @@ export default function HeroVideo() {
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center justify-center">
-        <div className="container mx-auto px-4 text-left">
+        <div className="container mx-auto px-2 text-left">
           {/* Main text content */}
           <div className="text-left mb-12">
             <div className="inline-block bg-yellow-500/20 text-yellow-500 text-[10px] md:text-xs font-bold uppercase tracking-widest px-2 py-1 rounded-sm mb-3 md:mb-4">
@@ -44,50 +44,50 @@ export default function HeroVideo() {
           </div>
 
           {/* New Info Panel - Hidden on mobile */}
-          <div className="hidden md:grid grid-cols-3 gap-4 max-w-7xl mx-auto absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-0">
-            {/* First Column - Brand Icons with heading (narrower, left aligned) */}
-            <div className="space-y-4 col-span-1">
+          <div className="hidden md:grid grid-cols-2 gap-8 max-w-6xl mx-auto absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-0">
+            {/* First Column - Brand Icons with heading */}
+            <div className="space-y-4">
               {/* Main heading */}
-              <div className="text-gray-400/60 uppercase text-sm font-medium tracking-wide text-left">
+              <div className="text-gray-400/60 uppercase text-sm font-medium tracking-wide ml-0 text-left">
                 WHILE YOU ARE WITH JP ELECTRONICS SHOP
               </div>
 
               {/* Brand Icons */}
-              <div className="flex flex-wrap items-center gap-4 opacity-40">
+              <div className="flex flex-wrap items-center gap-6 opacity-40">
                 {/* Apple */}
-                <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-apple text-white/60 text-base"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className="fab fa-apple text-white/60 text-lg"></i>
                 </div>
                 {/* HP */}
-                <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-hp text-white/60 text-base"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className="fab fa-hp text-white/60 text-lg"></i>
                 </div>
                 {/* Dell */}
-                <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-dell text-white/60 text-base"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className="fab fa-dell text-white/60 text-lg"></i>
                 </div>
                 {/* Android */}
-                <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-android text-white/60 text-base"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className="fab fa-android text-white/60 text-lg"></i>
                 </div>
                 {/* Asus */}
-                <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-asus text-white/60 text-base"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className="fab fa-asus text-white/60 text-lg"></i>
                 </div>
                 {/* Acer - Note: FontAwesome doesn't have a specific Acer icon, using generic brand icon */}
-                <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fas fa-laptop text-white/60 text-base"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className="fas fa-laptop text-white/60 text-lg"></i>
                 </div>
                 {/* Nokia */}
-                <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-nokia text-white/60 text-base"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className="fab fa-nokia text-white/60 text-lg"></i>
                 </div>
               </div>
             </div>
 
-            {/* Second Column - Contact info (wider, right aligned) */}
-            <div className="flex flex-col justify-center col-span-2">
-              <div className="flex items-center justify-end gap-8 text-white/90 font-black">
+            {/* Second Column - Contact info in flex row */}
+            <div className="flex flex-col justify-center">
+              <div className="flex items-center gap-6 text-white/90 font-black">
                 <div className="flex items-center gap-2">
                   <span className="text-sm">📍 Kigali, Rwanda</span>
                 </div>
