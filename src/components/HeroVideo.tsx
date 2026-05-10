@@ -19,9 +19,9 @@ export default function HeroVideo() {
         <div className="container mx-auto px-4 text-left">
           {/* Main text content */}
           <div className="text-left mb-12">
-            <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg text-left">
-              The "All-in-One" Approach
-            </h1>
+            <div className="inline-block bg-yellow-500/20 text-yellow-500 text-[10px] md:text-xs font-bold uppercase tracking-widest px-2 py-1 rounded-sm mb-3 md:mb-4">
+              JP Tech Electronics New & Repair Services
+            </div>
             <p className="text-xs md:text-base lg:text-lg text-gray-300 mb-6 md:mb-8 max-w-2xl text-left font-light italic leading-relaxed">
               Curated technology, expert repairs and solar solutions — brought together with care, precision and genuine service from the heart of Kigali.
             </p>
