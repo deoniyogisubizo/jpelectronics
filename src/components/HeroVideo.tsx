@@ -45,43 +45,59 @@ export default function HeroVideo() {
 
           {/* New Info Panel - Hidden on mobile */}
           <div className="hidden md:grid grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* First Column - 3 Layers */}
+            {/* First Column - Brand Icons with heading */}
             <div className="space-y-4">
-              {/* Layer 1: Main heading */}
+              {/* Main heading */}
               <div className="text-gray-400/60 uppercase text-sm font-medium tracking-wide">
-                WHILE YOU ARE WITH JP ELECTRONIC SHOP
+                WHILE YOU ARE WITH JP ELECTRONICS SHOP
               </div>
 
-              {/* Layer 2: Bordered description */}
-              <div className="border border-white/20 rounded-lg p-4 bg-black/20 backdrop-blur-sm">
-                <p className="text-white text-sm leading-relaxed">
-                  all electronic shop center , all electronic tools and components repair services on best quality
-                </p>
-              </div>
-
-              {/* Layer 3: Contact and location */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-white/80">
-                  <span className="text-sm">📍 Kigali, Rwanda</span>
+              {/* Brand Icons */}
+              <div className="flex flex-wrap items-center gap-6 opacity-40">
+                {/* Apple */}
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <span className="text-white/60 text-lg font-bold"></span>
                 </div>
-                <div className="flex items-center gap-2 text-white/80">
-                  <span className="text-sm">📞 +250 790 336 683</span>
+                {/* HP */}
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <span className="text-white/60 text-sm font-bold">HP</span>
                 </div>
-                <div className="flex items-center gap-2 text-white/80">
-                  <span className="text-sm">✉️ info@jpelectronics.rw</span>
+                {/* Dell */}
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <span className="text-white/60 text-xs font-bold">DELL</span>
+                </div>
+                {/* Android */}
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <span className="text-white/60 text-lg">🤖</span>
+                </div>
+                {/* Asus */}
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <span className="text-white/60 text-xs font-bold">ASUS</span>
+                </div>
+                {/* Acer */}
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <span className="text-white/60 text-xs font-bold">ACER</span>
+                </div>
+                {/* Nokia */}
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <span className="text-white/60 text-xs font-bold">NOKIA</span>
                 </div>
               </div>
             </div>
 
-            {/* Second Column - Brand Icons */}
-            <div className="flex flex-wrap items-center justify-center gap-6 opacity-20">
-              <div className="text-white/30 text-2xl font-bold"></div>
-              <div className="text-white/30 text-2xl font-bold">HP</div>
-              <div className="text-white/30 text-2xl font-bold">DELL</div>
-              <div className="text-white/30 text-2xl font-bold">🤖</div>
-              <div className="text-white/30 text-2xl font-bold">ASUS</div>
-              <div className="text-white/30 text-2xl font-bold">ACER</div>
-              <div className="text-white/30 text-2xl font-bold">NOKIA</div>
+            {/* Second Column - Contact info in flex row */}
+            <div className="flex flex-col justify-center">
+              <div className="flex flex-wrap items-center gap-6 text-white/80">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">📍 Kigali, Rwanda</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">📞 +250 790 336 683</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">✉️ info@jpelectronics.rw</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
