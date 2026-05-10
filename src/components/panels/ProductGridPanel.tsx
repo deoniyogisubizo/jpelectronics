@@ -5,6 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart } from 'lucide-react';
+import Masonry from 'react-masonry-css';
 
 export default function ProductGridPanel() {
   const { ref, inView } = useInView({ triggerOnce: true });
@@ -45,11 +46,15 @@ export default function ProductGridPanel() {
     <section className="py-2 bg-gradient-to-r from-pink-50 to-rose-50">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl md:text-3xl font-bold text-rose-700 mb-8" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Featured Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {products.slice(0, 20).map((product: any) => (
+        <Masonry
+          breakpointCols={{ default: 5, 1100: 4, 700: 3, 500: 2 }}
+          className="flex -ml-4 w-auto"
+          columnClassName="pl-4 bg-clip-padding"
+        >
+          {products.slice(0, 20).map((product: any, index: number) => (
             <Link key={product._id} href={`/product/${product._id}`} className="group">
               <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div className="relative aspect-square overflow-hidden bg-beige">
+                <div className={`relative ${index % 3 === 0 ? 'aspect-[4/3]' : index % 3 === 1 ? 'aspect-square' : 'aspect-[3/4]'} overflow-hidden bg-beige`}>
                   {product.images && product.images.length > 0 ? (
                     <Image
                       src={product.images[0]}
@@ -88,7 +93,7 @@ export default function ProductGridPanel() {
               </div>
             </Link>
           ))}
-        </div>
+        </Masonry>
       </div>
     </section>
   );

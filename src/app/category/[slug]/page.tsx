@@ -58,7 +58,7 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-beige">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold capitalize mb-2">
@@ -72,7 +72,7 @@ export default function CategoryPage() {
         {/* Filters & Sort */}
         <div className="flex flex-col md:flex-row gap-4 mb-8 bg-white p-4 rounded-lg shadow">
           {/* Filter toggle (mobile) */}
-          <button className="md:hidden flex items-center gap-2 px-4 py-2 border rounded">
+          <button className="md:hidden flex items-center gap-2 px-2 py-2 border rounded">
             <Filter className="w-4 h-4" />
             Filters
           </button>

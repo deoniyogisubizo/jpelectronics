@@ -58,7 +58,7 @@ export default function PriceJustDroppedPanel() {
         <p className="text-gray-600 mb-6">Limited-time price reductions — save now before they go back up</p>
 
         {/* Mobile layout */}
-        <div className="md:hidden grid grid-cols-2 gap-2">
+        <div className="md:hidden grid grid-cols-2 gap-3">
           {products.slice(0, 4).map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
               <div className="bg-white rounded-lg overflow-hidden shadow-md group relative">
@@ -109,7 +109,7 @@ export default function PriceJustDroppedPanel() {
         {/* Desktop layout */}
         <div className="hidden md:grid grid-cols-[80%_20%] gap-6">
           {/* Left Column: Gallery Grid */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-2">
+          <div className="grid grid-cols-4 grid-rows-2 gap-3">
             {galleryProducts.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
                 <div className="bg-white rounded-lg overflow-hidden shadow-md group relative">

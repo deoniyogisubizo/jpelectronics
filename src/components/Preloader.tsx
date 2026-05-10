@@ -5,23 +5,36 @@ import { useState, useEffect } from 'react';
 export default function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [shouldShow, setShouldShow] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(timer);
-          setTimeout(() => setIsLoading(false), 500);
-          return 100;
-        }
-        return prev + 2;
-      });
-    }, 50);
-
-    return () => clearInterval(timer);
+    if (typeof window !== 'undefined') {
+      const hasVisited = localStorage.getItem('hasVisitedHomepage');
+      if (!hasVisited) {
+        setShouldShow(true);
+        localStorage.setItem('hasVisitedHomepage', 'true');
+      }
+    }
   }, []);
 
-  if (!isLoading) return null;
+  useEffect(() => {
+    if (shouldShow) {
+      const timer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(timer);
+            setTimeout(() => setIsLoading(false), 500);
+            return 100;
+          }
+          return prev + 2;
+        });
+      }, 50);
+
+      return () => clearInterval(timer);
+    }
+  }, [shouldShow]);
+
+  if (!shouldShow || !isLoading) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-beige">

@@ -300,14 +300,14 @@ export default function Header() {
               ))}
             </ul>
 
-            {/* Talk to Owner */}
+            {/* Call Button */}
             <div className="flex items-center">
               <button
-                onClick={handleWhatsAppClick}
-                className="flex items-center gap-2 bg-green-500 bg-opacity-80 hover:bg-green-600 text-white px-2 py-1 rounded-lg transition-colors"
+                onClick={() => window.open('tel:+250790336683', '_self')}
+                className="flex items-center gap-2 border-2 border-gold text-gold px-3 py-1 rounded-lg hover:bg-gold hover:text-black transition-colors"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span className="text-xs font-medium">Talk to Owner</span>
+                <Phone className="w-4 h-4" />
+                <span className="text-xs font-black">+250 790 336 683</span>
               </button>
             </div>
           </div>

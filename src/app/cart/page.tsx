@@ -20,7 +20,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-beige py-8">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2">
         <h1 className="text-3xl font-bold mb-8">{t('cart.title')}</h1>
 
         {items.length === 0 ? (

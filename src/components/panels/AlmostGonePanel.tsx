@@ -57,7 +57,7 @@ export default function AlmostGonePanel() {
         </div>
 
         {/* Mobile layout */}
-        <div className="md:hidden grid grid-cols-2 gap-2">
+        <div className="md:hidden grid grid-cols-2 gap-3">
           {products.slice(0, 4).map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
               <div className="bg-white rounded-lg overflow-hidden shadow-md group relative">
@@ -156,7 +156,7 @@ export default function AlmostGonePanel() {
           </Link>
 
           {/* Right Column: Gallery Grid */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-2">
+          <div className="grid grid-cols-4 grid-rows-2 gap-3">
             {galleryProducts.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
                 <div className="bg-white rounded-lg overflow-hidden shadow-md group relative">

@@ -21,6 +21,7 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -33,6 +34,14 @@ export default function ProductDetailPage() {
       const categoriesRes = await fetch('/api/categories');
       const categoriesData = await categoriesRes.json();
       setCategories(categoriesData);
+
+      // Fetch related products if product has category
+      if (productData && productData.category) {
+        const relatedRes = await fetch('/api/products');
+        const relatedData = await relatedRes.json();
+        const filteredRelated = relatedData.filter((p: Product) => p.category === productData.category && p._id !== productData._id);
+        setRelatedProducts(filteredRelated);
+      }
 
       setLoading(false);
     }
@@ -84,7 +93,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-beige">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 py-8">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-gray-600">
           Home / {product.category} / {product.name?.[language] || product.name?.en || 'Product'}
@@ -181,14 +190,14 @@ export default function ProductDetailPage() {
                 <div className="flex items-center border rounded">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-4 py-2 hover:bg-beige"
+                    className="px-2 py-2 hover:bg-beige"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-4 py-2 font-semibold">{quantity}</span>
+                  <span className="px-2 py-2 font-semibold">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product.stockQuantity, quantity + 1))}
-                    className="px-4 py-2 hover:bg-beige"
+                    className="px-2 py-2 hover:bg-beige"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -197,7 +206,7 @@ export default function ProductDetailPage() {
                 <button
                   onClick={handleAddToCart}
                   disabled={!product.inStock}
-                  className="flex-1 bg-gold text-black font-bold py-3 px-4 rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-gold text-black font-bold py-3 px-2 rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Add to Cart
                 </button>
@@ -205,7 +214,7 @@ export default function ProductDetailPage() {
                 <button
                   onClick={() => { addItem(product._id, quantity); window.location.href = '/checkout'; }}
                   disabled={!product.inStock}
-                  className="flex-1 bg-black text-white font-bold py-3 px-4 rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-black text-white font-bold py-3 px-2 rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Buy Now
                 </button>
@@ -214,7 +223,7 @@ export default function ProductDetailPage() {
               {/* WhatsApp Contact Button */}
               <button
                 onClick={handleWhatsAppContact}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 shadow-lg"
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 shadow-lg"
               >
                 <MessageSquare className="w-5 h-5" />
                 Talk to Seller on WhatsApp - Get Delivery Info, Discounts & Details
@@ -249,7 +258,7 @@ export default function ProductDetailPage() {
               <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
                 <button
                   onClick={handleWhatsAppContact}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 shadow-lg"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 shadow-lg"
                 >
                   <MessageSquare className="w-5 h-5" />
                   💬 Contact Seller - Ask About Delivery, Negotiate Price & Get Expert Advice
@@ -292,43 +301,19 @@ export default function ProductDetailPage() {
         </div>
 
           {/* Related Products */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Related Products</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <RelatedProductCard
-                  key={i}
-                  product={product ? {
-                  ...product,
-                  _id: `${product._id}-${i}`,
-                  name: { ...product.name, en: `Related ${i + 1}` },
-                  description: { ...product.description, en: `Description for related product ${i + 1}` },
-                  shortDescription: { ...product.shortDescription, en: `Short description for related product ${i + 1}` },
-                  price: product.price * (0.8 + i * 0.1),
-                } : {
-                  _id: `placeholder-${i}`,
-                  name: { en: 'Related Product', rw: 'Ikinini koreshejwe' },
-                  description: { en: 'Placeholder description', rw: 'Igihumbi kikumbuye' },
-                  shortDescription: { en: 'Short desc', rw: 'Igihumbi cyangwa' },
-                  price: 0,
-                  images: ['https://placehold.co/600x600?text=No+Image'],
-                  category: 'Placeholder',
-                  categorySlug: 'placeholder',
-                  brand: 'Placeholder Brand',
-                  inStock: true,
-                  stockQuantity: 10,
-                  tags: [],
-                  specs: {},
-                  featured: false,
-                  hotDeal: false,
-                  discount: 0,
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                }}
-                />
-              ))}
+          {relatedProducts.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold mb-6">Related Products</h2>
+              <div className={`grid gap-4 ${relatedProducts.length === 1 ? 'grid-cols-1' : relatedProducts.length === 2 ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-4'}`}>
+                {relatedProducts.map((relatedProduct) => (
+                  <RelatedProductCard
+                    key={relatedProduct._id}
+                    product={relatedProduct}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Frequently Asked Questions */}
           <div className="mb-12">

@@ -31,6 +31,16 @@ export const metadata: Metadata = {
   title: "JP Tech — Electronics Store Rwanda",
   description: "Your trusted electronics marketplace in Rwanda. Shop smartphones, laptops, TVs, appliances, wearables, solar products and more.",
   keywords: "electronics, rwanda, smartphones, laptops, kigali, tech store",
+  icons: {
+    icon: [
+      { url: '/favicon.svg?v=1', type: 'image/svg+xml' },
+      { url: '/favicon-16x16.svg?v=1', sizes: '16x16', type: 'image/svg+xml' },
+      { url: '/favicon-32x32.svg?v=1', sizes: '32x32', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.svg?v=1',
+    apple: '/favicon.svg?v=1',
+  },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -40,6 +50,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-32x32.svg?v=1" sizes="32x32" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-16x16.svg?v=1" sizes="16x16" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicon.svg?v=1" />
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${shareTechMono.variable} ${outfit.variable} antialiased`}>
         <Providers>
           <div className="min-h-screen pb-20 md:pb-0">
