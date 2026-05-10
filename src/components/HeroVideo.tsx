@@ -4,36 +4,30 @@ import Link from 'next/link';
 export default function HeroVideo() {
   return (
     <section className="relative h-[400px] md:h-[500px] overflow-hidden">
-      {/* Video Background */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster="/video/poster.jpg"
-      >
-        <source src="/video/videoo.mp4" type="video/mp4" />
-        {/* Fallback for browsers that don't support video */}
-      </video>
-
-      {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/60" />
+      {/* Background Image with Horizontal Gradient Overlay */}
+      <div className="absolute inset-0 overflow-hidden bg-black">
+        <img
+          src="/video/bg.png"
+          alt="Hero Background"
+          className="absolute right-0 top-0 h-full w-auto max-w-[85%] object-cover z-0"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
+      </div>
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center justify-center">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 text-left">
           {/* Main text content */}
-          <div className="text-center mb-12">
-            <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg">
+          <div className="text-left mb-12">
+            <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg text-left">
               The "All-in-One" Approach
             </h1>
-            <p className="text-sm md:text-lg lg:text-2xl text-gray-200 mb-6 md:mb-8 max-w-3xl mx-auto">
-              JP Tech — Quality Electronics. Reliable Service. Rwanda's Premier Tech & Repair Hub. need new & need to repair your device
+            <p className="text-xs md:text-base lg:text-lg text-gray-300 mb-6 md:mb-8 max-w-2xl text-left font-light italic leading-relaxed">
+              Curated technology, expert repairs and solar solutions — brought together with care, precision and genuine service from the heart of Kigali.
             </p>
 
             {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-start">
               <Link
                 href="/category/smartphones"
                 className="bg-yellow-400 text-black px-6 py-2 md:px-8 md:py-3 lg:px-12 lg:py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors shadow-lg text-sm md:text-base lg:text-lg"
