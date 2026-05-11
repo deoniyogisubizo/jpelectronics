@@ -44,58 +44,43 @@ export default function HeroVideo() {
           </div>
 
           {/* New Info Panel - Hidden on mobile */}
-          <div className="hidden md:grid grid-cols-2 gap-8 max-w-6xl mx-auto absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-0">
+          <div className="hidden md:flex flex-col gap-4 max-w-6xl mx-auto absolute bottom-0 left-0 transform translate-x-0 mb-15 px-2">
             {/* First Column - Brand Icons with heading */}
-            <div className="space-y-4">
+            <div className="space-y-4 mt-0 mb-8">
               {/* Main heading */}
-              <div className="text-gray-400/60 uppercase text-sm font-medium tracking-wide ml-0 text-left">
+              <div className="text-gray-100/80 uppercase text-sm font-medium tracking-wide ml-20 text-left opacity-80">
                 WHILE YOU ARE WITH JP ELECTRONICS SHOP
               </div>
 
               {/* Brand Icons */}
-              <div className="flex flex-wrap items-center gap-6 opacity-40">
+              <div className="flex flex-wrap items-center gap-6 opacity-40 ml-20">
                 {/* Apple */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
                   <i className="fab fa-apple text-white/60 text-lg"></i>
                 </div>
                 {/* HP */}
-                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-hp text-white/60 text-lg"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white/60 text-xs font-bold">
+                  HP
                 </div>
                 {/* Dell */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-dell text-white/60 text-lg"></i>
+                  <i className="fas fa-laptop text-white/60 text-lg"></i>
                 </div>
                 {/* Android */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
                   <i className="fab fa-android text-white/60 text-lg"></i>
                 </div>
                 {/* Asus */}
-                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-asus text-white/60 text-lg"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white/60 text-xs font-bold">
+                  ASUS
                 </div>
                 {/* Acer - Note: FontAwesome doesn't have a specific Acer icon, using generic brand icon */}
-                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fas fa-laptop text-white/60 text-lg"></i>
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white/60 text-xs font-bold">
+                  ACER
                 </div>
                 {/* Nokia */}
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <i className="fab fa-nokia text-white/60 text-lg"></i>
-                </div>
-              </div>
-            </div>
-
-            {/* Second Column - Contact info in flex row */}
-            <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-6 text-white/90 font-black">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">📍 Kigali, Rwanda</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">📞 +250 790 336 683</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">✉️ info@jpelectronics.rw</span>
+                  <i className="fas fa-phone text-white/60 text-lg"></i>
                 </div>
               </div>
             </div>

@@ -104,7 +104,7 @@ export default function CategoryTile({ category }: CategoryTileProps) {
      <div className="group relative bg-white rounded-lg shadow hover:shadow-xl transition-all duration-300">
        {/* Main Category Link */}
        <Link href={`/category/${category.slug}`} className="block p-2 md:p-4 text-center">
-          <div className="text-xs md:text-base font-bold text-black" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>
+          <div className={`text-black font-bold ${category.name.en === 'Printers & Scanners' ? 'text-[8px] md:text-xs' : 'text-xs md:text-base'}`} style={{ fontFamily: 'var(--font-share-tech-mono)' }}>
             {category.name.en}
           </div>
        </Link>

@@ -108,42 +108,6 @@ function EducationPanel() {
   );
 }
 
-function UpgradePanel() {
-  return (
-    <section className="py-2 sm:py-2 bg-cyan-50">
-      <div className="container mx-auto px-2">
-        <div className="flex items-center gap-3 mb-4 sm:mb-8">
-          <Recycle className="w-6 h-6 sm:w-8 sm:h-8 text-black" />
-          <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-cyan-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Upgrade Your Old Device</h2>
-        </div>
-        <div className="bg-white rounded-lg p-3 sm:p-6 shadow flex flex-col md:flex-row items-center gap-4 sm:gap-6">
-          <div className="flex-1">
-            <h3 className="text-xl font-bold mb-3">Own a 2021-2022 device?</h3>
-            <p className="text-gray-600 mb-4">See what customers with similar devices upgraded to. Find your next tech leap.</p>
-            <Link href="/category/smartphones" className="text-cyan-600 font-semibold hover:underline">
-              Compare Upgrade Options →
-            </Link>
-          </div>
-          <div className="flex-1 grid grid-cols-2 gap-1 sm:gap-2">
-            <div className="bg-gray-50 p-1 sm:p-2 rounded text-center">
-              <div className="font-bold text-sm sm:text-base">From iPhone 13 <span className="opacity-50">to iPhone 15</span></div>
-            </div>
-            <div className="bg-gray-50 p-1 sm:p-2 rounded text-center">
-              <div className="font-bold text-sm sm:text-base">From Galaxy S21 <span className="opacity-50">to S24 Ultra</span></div>
-            </div>
-            <div className="bg-gray-50 p-1 sm:p-2 rounded text-center">
-              <div className="font-bold text-sm sm:text-base">From AirPods Pro <span className="opacity-50">to AirPods Pro 2</span></div>
-            </div>
-            <div className="bg-gray-50 p-1 sm:p-2 rounded text-center">
-              <div className="font-bold text-sm sm:text-base">From iPad Air <span className="opacity-50">to iPad Air M2</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function CommunityPanel() {
   return (
     <section className="py-2 bg-teal-50">
@@ -280,8 +244,8 @@ export default async function HomePage() {
       {/* Category Tiles */}
       <section className="py-1 md:py-2 bg-beige">
         <div className="container mx-auto px-1 md:px-2">
-          <h2 className="text-xs md:text-xl font-bold mb-1 md:mb-4 text-center">
-            I am looking for
+          <h2 className="text-xs md:text-xl font-bold my-6 md:my-12 text-center uppercase" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            In our shop we deliver all these category
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1 md:gap-2">
             {categories.map((cat: any) => (
@@ -364,10 +328,7 @@ export default async function HomePage() {
       {/* Panel 6: Education */}
       <EducationPanel />
 
-      {/* Panel 7: Upgrade Your Device */}
-      <UpgradePanel />
-
-      {/* Panel 8: Community Picked */}
+      {/* Panel 7: Community Picked */}
       <CommunityPanel />
 
       {/* Product Grid */}
