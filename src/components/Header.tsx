@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
 import {
-  ShoppingCart, Search, Menu, Store, Globe, User, ChevronDown,
-  MessageCircle, Settings, X, Home, Phone, MapPin, Package,
-  HelpCircle, Briefcase, UserPlus, Info, FileText, ClipboardList
+  ShoppingCart, Menu, Store, Globe, User, ChevronDown,
+  MessageCircle, X, Home, Phone, MapPin, Package,
+  HelpCircle, UserPlus, Info, ClipboardList, Camera
 } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 
@@ -18,7 +18,7 @@ export default function Header() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isCategoriesHovered, setIsCategoriesHovered] = useState(false);
 
   const categories = useMemo(() => [
     'STM32 Microcontrollers',
@@ -178,30 +178,49 @@ export default function Header() {
       </div>
 
       {/* LAYER 2: PRIMARY MARKETPLACE NAVIGATION */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between gap-6">
           {/* Brand & Category Trigger */}
           <div className="flex items-center gap-6 flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 group">
-              <img src="/logo/logo.svg" alt="JP Tech Logo" className="w-12 h-12 transition-transform group-hover:scale-105" />
+              <img src="/logo/logo.svg" alt="JP Tech Logo" className="w-8 h-8 transition-transform group-hover:scale-105" />
               <div className="hidden lg:block">
-                <h1 className="text-2xl font-bold font-share-tech-mono text-black leading-none">JP Tech</h1>
-                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Electronics Rwanda</p>
+                <h1 className="text-lg font-bold font-share-tech-mono text-black leading-none">JP Tech</h1>
+                <p className="text-[8px] text-gray-500 uppercase tracking-widest font-semibold">Electronics Rwanda</p>
               </div>
             </Link>
 
-            <button
-              onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-              className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-bold text-gray-800 transition-colors border border-gray-300"
-            >
-              <Menu className="w-5 h-5" />
-              <span>All Categories</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
+            <div className="relative">
+              <button
+                onMouseEnter={() => setIsCategoriesHovered(true)}
+                onMouseLeave={() => setIsCategoriesHovered(false)}
+                className="hidden lg:flex items-center gap-1 px-2 py-1 bg-[#1a202c] hover:bg-[#2d3748] rounded text-xs font-medium text-white transition-colors"
+              >
+                <Menu className="w-3 h-3" />
+                <span>All Categories</span>
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              {isCategoriesHovered && (
+                <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2">
+                  {categoryData.map((category) => (
+                    <Link
+                      key={category.slug}
+                      href={`/category/${category.slug}`}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors"
+                      onMouseEnter={() => setIsCategoriesHovered(true)}
+                      onMouseLeave={() => setIsCategoriesHovered(false)}
+                    >
+                      <div className="font-medium">{category.name}</div>
+                      <div className="text-xs text-gray-500">{category.description}</div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Intelligent Search Engine */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-3xl hidden md:flex items-center gap-0 h-12">
+          <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center gap-0 h-12">
             <div className="relative flex-1 h-full flex">
               <select className="h-full bg-gray-50 border border-gray-300 rounded-l-lg px-3 text-xs font-medium text-gray-600 focus:outline-none hover:bg-gray-100 cursor-pointer appearance-none pr-8">
                 <option>All Categories</option>
@@ -215,11 +234,11 @@ export default function Header() {
                   placeholder={placeholderText}
                   className="w-full h-full px-4 border-y border-gray-300 focus:outline-none text-sm"
                 />
-                <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+                <Camera className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
               </div>
               <button
                 type="submit"
-                className="h-full px-6 bg-[#0057ff] text-white rounded-r-lg hover:bg-blue-700 transition-colors font-semibold text-sm"
+                className="h-full px-6 bg-gold/20 text-gold rounded-r-lg hover:bg-gold/30 transition-colors font-semibold text-sm"
               >
                 Search
               </button>
@@ -231,9 +250,6 @@ export default function Header() {
             <div className="hidden xl:flex items-center gap-2 mr-4">
               <Link href="/rfq" className="flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-amber-500 transition-colors">
                 <ClipboardList className="w-4 h-4" /> Request Quote
-              </Link>
-              <Link href="/bom-upload" className="flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-amber-500 transition-colors">
-                <FileText className="w-4 h-4" /> Upload BOM
               </Link>
             </div>
 
@@ -280,7 +296,7 @@ export default function Header() {
             type="submit"
             className="absolute right-2 top-2 bottom-2 px-3 bg-blue-600 text-white rounded-lg"
           >
-            <Search className="w-4 h-4" />
+            <Camera className="w-4 h-4" />
           </button>
         </form>
       </div>
@@ -340,9 +356,13 @@ export default function Header() {
                 </li>
               ))}
               <li className="h-full">
-                <Link href="/solutions" className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all gap-1">
-                  Solutions
-                  <span className="bg-blue-600 text-white text-[8px] px-1 rounded font-black uppercase">New</span>
+                <Link href="/category/mobilephone" className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all">
+                  Mobile Phones
+                </Link>
+              </li>
+              <li className="h-full">
+                <Link href="/category/speakers" className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all">
+                  Speakers
                 </Link>
               </li>
             </ul>
@@ -402,9 +422,7 @@ export default function Header() {
                   <Link href="/rfq" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
                     <ClipboardList className="w-4 h-4 text-gray-400" /> Request Quote
                   </Link>
-                  <Link href="/bom-upload" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
-                    <FileText className="w-4 h-4 text-gray-400" /> Upload BOM
-                  </Link>
+
                 </div>
               </div>
 

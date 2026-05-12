@@ -34,7 +34,7 @@ export default function AlmostGonePanel() {
   if (!loaded) {
     return (
       <section ref={ref} className="py-2 bg-red-50 border-l-4 border-red-500">
-        <div className="container mx-auto breathing-space">
+        <div className="container mx-auto px-[0.9rem]">
           <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-red-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Only a few left in stock — order soon!</h2>
           </div>

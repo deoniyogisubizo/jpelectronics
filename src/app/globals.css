@@ -33,7 +33,6 @@ body {
 .bg-beige { background-color: var(--color-beige); }
 .bg-beige-light { background-color: var(--color-beige-light); }
 .font-share-tech-mono { font-family: var(--font-share-tech-mono); }
-.breathing-space { padding-left: 0.9rem; padding-right: 0.9rem; }
 
 /* Product card hover effects */
 .product-card {
