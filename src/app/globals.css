@@ -2,7 +2,6 @@
 
 /* Custom theme configuration */
 @theme inline {
-  --spacing: 0.25rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-gold: #d4af37;
@@ -28,6 +27,7 @@ body {
 }
 
 /* Utility classes */
+.w-32 { width: calc(var(--spacing) * 18); }
 .bg-gold { background-color: var(--color-gold); }
 .text-gold { color: var(--color-gold); }
 .bg-vibrant { background: var(--color-vibrant); }
@@ -146,9 +146,4 @@ body {
 }
 .animate-fade-in {
   animation: fade-in 1s ease-out;
-}
-
-/* Custom width class */
-.w-32 {
-  width: calc(var(--spacing) * 18);
 }
