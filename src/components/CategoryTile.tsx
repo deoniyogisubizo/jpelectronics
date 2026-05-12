@@ -131,3 +131,4 @@ export default function CategoryTile({ category }: CategoryTileProps) {
      </div>
    );
 }
+

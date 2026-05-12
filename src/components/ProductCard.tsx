@@ -115,3 +115,4 @@ export default function ProductCard({ product }: ProductCardProps) {
 function t(key: string): string {
   return key;
 }
+

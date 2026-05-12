@@ -133,7 +133,7 @@ export default function Header() {
     <header className="bg-white sticky top-0 z-50 border-b border-gray-200 shadow-sm font-sans">
       {/* LAYER 1: TOP UTILITY BAR */}
       <div className="bg-[#1a202c] text-gray-300 py-1.5 hidden lg:block">
-        <div className="container mx-auto px-4 flex justify-between items-center text-[12px]">
+        <div className="container mx-auto px-0 flex justify-between items-center text-[12px]">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
               <span className="font-semibold text-white">USD</span>
@@ -178,7 +178,7 @@ export default function Header() {
       </div>
 
       {/* LAYER 2: PRIMARY MARKETPLACE NAVIGATION */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-0 py-4">
         <div className="flex items-center justify-between gap-6">
           {/* Brand & Category Trigger */}
           <div className="flex items-center gap-6 flex-shrink-0">
@@ -287,7 +287,7 @@ export default function Header() {
 
       {/* LAYER 3: CATEGORY MEGA NAVIGATION */}
       <nav className="border-t border-gray-200 hidden md:block bg-white relative">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-0">
           <div className="flex items-center justify-between h-10">
             <ul className="flex items-center gap-1 overflow-x-auto no-scrollbar h-full">
               <li className="h-full">
@@ -430,3 +430,4 @@ export default function Header() {
     </header>
   );
 }
+

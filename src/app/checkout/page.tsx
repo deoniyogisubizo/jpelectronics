@@ -44,7 +44,7 @@ export default function CheckoutPage() {
   if (orderPlaced) {
     return (
       <div className="min-h-screen bg-beige py-12">
-        <div className="container mx-auto px-2 text-center">
+        <div className="container mx-auto px-0 text-center">
           <div className="bg-white rounded-lg p-8 max-w-lg mx-auto">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h1 className="text-2xl font-bold mb-2">Order Placed Successfully!</h1>
@@ -68,7 +68,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-beige py-8">
-      <div className="container mx-auto px-2 max-w-4xl">
+      <div className="container mx-auto px-0 max-w-4xl">
         <h1 className="text-3xl font-bold mb-8">{t('checkout.title')}</h1>
 
         {/* Steps */}
@@ -293,3 +293,4 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
