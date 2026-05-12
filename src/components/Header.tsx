@@ -183,11 +183,7 @@ export default function Header() {
           {/* Brand & Category Trigger */}
           <div className="flex items-center gap-6 flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 group">
-              <img src="/logo/logo.svg" alt="JP Tech Logo" className="w-8 h-8 transition-transform group-hover:scale-105" />
-              <div className="hidden lg:block">
-                <h1 className="text-lg font-bold font-share-tech-mono text-black leading-none">JP Tech</h1>
-                <p className="text-[8px] text-gray-500 uppercase tracking-widest font-semibold">Electronics Rwanda</p>
-              </div>
+              <img src="/loading/load.png" alt="Logo" className="w-32 h-auto transition-transform group-hover:scale-105" />
             </Link>
 
             <div className="relative">
@@ -380,10 +376,7 @@ export default function Header() {
         <div className="md:hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm">
           <div className="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <div className="flex items-center gap-2">
-                <img src="/logo/logo.svg" alt="JP Tech Logo" className="w-8 h-8" />
-                <span className="font-bold font-share-tech-mono text-lg">JP Tech</span>
-              </div>
+              <img src="/loading/load.png" alt="Logo" className="w-24 h-auto" />
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
