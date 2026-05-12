@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
+import { useUser } from '@/context/UserContext';
 import {
   ShoppingCart, Menu, Store, Globe, User, ChevronDown,
   MessageCircle, X, Home, Phone, MapPin, Package,
@@ -13,12 +14,14 @@ import { useState, useEffect, useMemo } from 'react';
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { itemCount, setIsOpen } = useCart();
+  const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
   const [placeholderText, setPlaceholderText] = useState('Search components, manufacturers, or SKUs...');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoriesHovered, setIsCategoriesHovered] = useState(false);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 
   const categories = useMemo(() => [
     'STM32 Microcontrollers',
@@ -65,6 +68,108 @@ export default function Header() {
       slug: 'tools',
       description: 'Oscilloscopes, Multimeters & Soldering',
       items: ['Digital Multimeters', 'Logic Analyzers', 'Soldering Stations', 'Calibration Tools']
+    },
+    {
+      name: 'Mobile Phones',
+      slug: 'mobilephone',
+      description: 'Smartphones, Accessories & Parts',
+      items: ['Android Phones', 'iPhones', 'Phone Cases', 'Chargers', 'Screens']
+    },
+    {
+      name: 'Speakers',
+      slug: 'speakers',
+      description: 'Audio Equipment & Sound Systems',
+      items: ['Bluetooth Speakers', 'Home Theater', 'Microphones', 'Amplifiers', 'Headphones']
+    },
+    {
+      name: 'Laptops',
+      slug: 'laptops',
+      description: 'Notebooks, Ultrabooks & Accessories',
+      items: ['Gaming Laptops', 'Business Laptops', 'Chromebooks', 'Laptop Bags', 'Cooling Pads']
+    },
+    {
+      name: 'TVs',
+      slug: 'tvs',
+      description: 'LED, OLED & Smart Televisions',
+      items: ['4K TVs', 'Smart TVs', 'LED TVs', 'Curved TVs', 'TV Mounts']
+    },
+    {
+      name: 'Cameras',
+      slug: 'cameras',
+      description: 'Digital Cameras & Photography',
+      items: ['DSLR Cameras', 'Mirrorless', 'Action Cameras', 'Security Cameras', 'Lenses']
+    },
+    {
+      name: 'Gaming',
+      slug: 'gaming',
+      description: 'Consoles, Accessories & Games',
+      items: ['PlayStation', 'Xbox', 'Nintendo', 'Gaming PCs', 'Controllers']
+    },
+    {
+      name: 'Wearables',
+      slug: 'wearables',
+      description: 'Smartwatches, Fitness Trackers',
+      items: ['Apple Watch', 'Samsung Galaxy Watch', 'Fitbit', 'Smart Bands', 'Earbuds']
+    },
+    {
+      name: 'Solar Products',
+      slug: 'solar',
+      description: 'Solar Panels, Inverters & Batteries',
+      items: ['Solar Panels', 'Inverters', 'Solar Batteries', 'Charge Controllers', 'Solar Lights']
+    },
+    {
+      name: 'Networking',
+      slug: 'networking',
+      description: 'Routers, Switches & Cables',
+      items: ['WiFi Routers', 'Ethernet Switches', 'Network Cables', 'Access Points', 'Modems']
+    },
+    {
+      name: 'Drones',
+      slug: 'drones',
+      description: 'UAVs, Quadcopters & Accessories',
+      items: ['Consumer Drones', 'Professional Drones', 'Drone Cameras', 'Batteries', 'Propellers']
+    },
+    {
+      name: '3D Printers',
+      slug: '3dprinters',
+      description: '3D Printing Equipment & Supplies',
+      items: ['FDM Printers', 'Resin Printers', 'Filament', 'Resin', '3D Scanner']
+    },
+    {
+      name: 'VR/AR',
+      slug: 'vrar',
+      description: 'Virtual & Augmented Reality',
+      items: ['VR Headsets', 'AR Glasses', 'VR Games', 'Motion Controllers', 'VR Accessories']
+    },
+    {
+      name: 'Home Automation',
+      slug: 'homeauto',
+      description: 'Smart Home Devices & Systems',
+      items: ['Smart Lights', 'Smart Locks', 'Thermostats', 'Security Cameras', 'Voice Assistants']
+    },
+    {
+      name: 'Robotics',
+      slug: 'robotics',
+      description: 'Robots, Kits & Components',
+      items: ['Robot Kits', 'Servos', 'Sensors', 'Arduino', 'Raspberry Pi']
+    },
+    {
+      name: 'Medical Electronics',
+      slug: 'medical',
+      description: 'Medical Devices & Equipment',
+      items: ['Blood Pressure Monitors', 'Thermometers', 'Pulse Oximeters', 'ECG Machines', 'Ultrasound']
+    },
+    {
+      name: 'Industrial',
+      slug: 'industrial',
+      description: 'Industrial Electronics & Automation',
+      items: ['PLCs', 'HMIs', 'Sensors', 'Motors', 'Industrial PCs']
+    },
+    {
+      name: 'Educational',
+      slug: 'educational',
+      description: 'Learning Kits & Educational Tools',
+      items: ['Arduino Kits', 'Raspberry Pi Kits', 'STEM Kits', 'Educational Robots', 'Coding Boards']
     }
   ];
 
@@ -105,6 +210,13 @@ export default function Header() {
     timeoutId = setTimeout(typeText, 1000);
     return () => clearTimeout(timeoutId);
   }, [currentIndex, categories]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCategoryIndex((prev) => (prev + 10) % categoryData.length);
+    }, 120000); // 2 minutes
+    return () => clearInterval(interval);
+  }, [categoryData.length]);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'rw' : 'en');
@@ -249,7 +361,16 @@ export default function Header() {
               href="/profile"
               className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <User className="w-5 h-5 text-gray-500" />
+              {user ? (
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                    <User className="w-5 h-5 text-gray-500" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+                </div>
+              ) : (
+                <User className="w-5 h-5 text-gray-500" />
+              )}
               <span className="hidden sm:inline">Account</span>
             </Link>
 
@@ -303,7 +424,7 @@ export default function Header() {
                   {t('nav.home')}
                 </Link>
               </li>
-              {categoryData.map((category) => (
+              {categoryData.slice(currentCategoryIndex, currentCategoryIndex + 10).map((category) => (
                 <li
                   key={category.slug}
                   className="h-full relative"
@@ -312,51 +433,40 @@ export default function Header() {
                 >
                   <Link
                     href={`/category/${category.slug}`}
-                    className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all gap-1"
+                    className="flex items-center h-full px-2 text-[10px] font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all"
                   >
                     {category.name}
-                    <ChevronDown className="w-3 h-3 opacity-50" />
                   </Link>
 
                   {activeDropdown === category.name && (
-                    <div className="absolute top-full left-0 w-72 bg-white border border-gray-200 rounded-b-lg shadow-xl z-50 py-4 px-4">
-                      <div className="mb-3">
-                        <h3 className="text-sm font-black text-gray-900">{category.name}</h3>
-                        <p className="text-[11px] text-gray-500">{category.description}</p>
+                    <div className="absolute top-full left-0 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-3 px-3">
+                      <div className="mb-2">
+                        <h3 className="text-xs font-bold text-gray-900">{category.name}</h3>
+                        <p className="text-[10px] text-gray-500">{category.description}</p>
                       </div>
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                        {category.items.map((item) => (
+                      <div className="grid grid-cols-1 gap-y-1">
+                        {category.items.slice(0, 5).map((item) => (
                           <Link
                             key={item}
                             href={`/category/${category.slug}?sub=${encodeURIComponent(item.toLowerCase())}`}
-                            className="text-[12px] text-gray-600 hover:text-blue-600 transition-colors py-1"
+                            className="text-[10px] text-gray-600 hover:text-blue-600 transition-colors"
                           >
                             {item}
                           </Link>
                         ))}
                       </div>
-                      <div className="mt-4 pt-3 border-t border-gray-100">
+                      <div className="mt-2 pt-2 border-t border-gray-100">
                         <Link
                           href={`/category/${category.slug}`}
-                          className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
+                          className="text-[10px] font-medium text-blue-600 hover:underline"
                         >
-                          View All {category.name} →
+                          View All →
                         </Link>
                       </div>
                     </div>
                   )}
                 </li>
               ))}
-              <li className="h-full">
-                <Link href="/category/mobilephone" className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all">
-                  Mobile Phones
-                </Link>
-              </li>
-              <li className="h-full">
-                <Link href="/category/speakers" className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all">
-                  Speakers
-                </Link>
-              </li>
             </ul>
 
             <div className="flex items-center h-full">
@@ -406,7 +516,17 @@ export default function Header() {
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Account & Tools</h3>
                 <div className="space-y-1">
                   <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
-                    <User className="w-4 h-4 text-gray-400" /> Admin Dashboard
+                    {user ? (
+                      <div className="relative">
+                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                          <User className="w-4 h-4 text-gray-400" />
+                        </div>
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+                      </div>
+                    ) : (
+                      <User className="w-4 h-4 text-gray-400" />
+                    )}
+                    Profile
                   </Link>
                   <Link href="/rfq" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
                     <ClipboardList className="w-4 h-4 text-gray-400" /> Request Quote
