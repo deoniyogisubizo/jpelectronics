@@ -93,7 +93,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-beige">
-      <div className="container mx-auto px-0 py-8">
+      <div className="container mx-auto px-2 py-8">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-gray-600">
           Home / {product.category} / {product.name?.[language] || product.name?.en || 'Product'}

@@ -39,7 +39,7 @@ export default function ExplorePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-beige pt-16">
-        <div className="container mx-auto px-0 py-8">
+        <div className="container mx-auto px-2 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-48 mb-8"></div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -61,7 +61,7 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-beige pt-16">
-      <div className="container mx-auto px-0 py-8">
+      <div className="container mx-auto px-2 py-8">
         <h1 className="text-3xl font-bold text-black mb-2">Explore</h1>
         <p className="text-gray-600 mb-8">Discover trending products and curated picks</p>
 

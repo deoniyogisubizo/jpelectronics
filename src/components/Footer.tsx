@@ -10,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="bg-black text-white mt-16">
       {/* Main footer */}
-      <div className="container mx-auto px-0 py-12">
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
@@ -82,7 +82,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="bg-gray-900 py-4">
-        <div className="container mx-auto px-0 flex flex-col md:flex-row justify-between items-center gap-2">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-2">
           <p className="text-sm text-gray-400">© 2024 JP Tech. All rights reserved.</p>
           <p className="text-sm text-gray-400">Proudly serving Rwanda 🇷🇼</p>
         </div>
@@ -90,4 +90,3 @@ export default function Footer() {
     </footer>
   );
 }
-

@@ -16,7 +16,7 @@ export default function HeroVideo() {
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center justify-center">
-        <div className="container mx-auto px-0 text-left">
+        <div className="container mx-auto px-2 text-left">
           {/* Main text content */}
           <div className="text-left mb-12">
             <div className="inline-block bg-yellow-500/20 text-yellow-500 text-[10px] md:text-xs font-bold uppercase tracking-widest px-2 py-1 rounded-sm mb-3 md:mb-4">
@@ -95,4 +95,3 @@ export default function HeroVideo() {
     </section>
   );
 }
-

@@ -58,7 +58,7 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-beige">
-      <div className="container mx-auto px-0 py-8">
+      <div className="container mx-auto px-2 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold capitalize mb-2">

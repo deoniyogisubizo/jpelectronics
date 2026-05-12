@@ -101,7 +101,7 @@ export default function SearchPage() {
       <div className="min-h-screen bg-beige pt-16">
         <div className="animate-pulse">
           <div className="h-16 bg-white border-b mb-8"></div>
-          <div className="container mx-auto px-0">
+          <div className="container mx-auto px-2">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="bg-white rounded-lg overflow-hidden shadow-md">
@@ -123,7 +123,7 @@ export default function SearchPage() {
     <div className="min-h-screen bg-beige pt-16">
       {/* Fixed Search Bar */}
       <div className="fixed top-16 left-0 right-0 bg-white border-b border-gray-200 z-40">
-        <div className="container mx-auto px-0 py-4">
+        <div className="container mx-auto px-2 py-4">
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -156,7 +156,7 @@ export default function SearchPage() {
       </div>
 
       <div className="pt-20">
-        <div className="container mx-auto px-0">
+        <div className="container mx-auto px-2">
           {/* Recent & Popular Searches */}
           {!query && !hasActiveFilters && (
             <div className="mb-8">

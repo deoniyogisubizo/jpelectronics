@@ -49,7 +49,7 @@ function RepairServicesPanel() {
 
   return (
     <section className="py-4" style={{ backgroundColor: '#f5f5dc' }}> {/* beige */}
-      <div className="container mx-auto px-0">
+      <div className="container mx-auto px-4">
         <div className="mb-8">
           <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'var(--font-outfit)', color: '#333333' }}>Repair Services</h2> {/* black */}
         </div>
