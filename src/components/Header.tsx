@@ -222,17 +222,13 @@ export default function Header() {
           {/* Intelligent Search Engine */}
           <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center gap-0 h-12">
             <div className="relative flex-1 h-full flex">
-              <select className="h-full bg-gray-50 border border-gray-300 rounded-l-lg px-3 text-xs font-medium text-gray-600 focus:outline-none hover:bg-gray-100 cursor-pointer appearance-none pr-8">
-                <option>All Categories</option>
-                {categoryData.map(c => <option key={c.slug}>{c.name}</option>)}
-              </select>
               <div className="relative flex-1 h-full">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={placeholderText}
-                  className="w-full h-full px-4 border-y border-gray-300 focus:outline-none text-sm"
+                  className="w-full h-full px-4 border border-gray-300 rounded-l-lg focus:outline-none text-sm"
                 />
                 <Camera className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
               </div>
