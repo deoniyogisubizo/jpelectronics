@@ -34,7 +34,7 @@ export default function ProductGridPanel() {
   if (!loaded) {
     return (
       <section ref={ref} className="py-2 bg-gradient-to-r from-pink-50 to-rose-50">
-        <div className="container mx-auto px-3">
+        <div className="container mx-auto breathing-space">
           <h2 className="text-2xl md:text-3xl font-bold text-rose-700 mb-8" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Featured Products</h2>
           <div className="text-center py-8">Loading products...</div>
         </div>

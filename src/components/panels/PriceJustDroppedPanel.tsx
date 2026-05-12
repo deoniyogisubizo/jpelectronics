@@ -34,7 +34,7 @@ export default function PriceJustDroppedPanel() {
   if (!loaded) {
     return (
       <section ref={ref} className="py-2 bg-green-50">
-        <div className="container mx-auto px-3">
+        <div className="container mx-auto breathing-space">
           <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-green-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Price Just Dropped</h2>
           </div>
@@ -58,7 +58,7 @@ export default function PriceJustDroppedPanel() {
         <p className="text-gray-600 mb-6">Limited-time price reductions — save now before they go back up</p>
 
         {/* Mobile layout */}
-        <div className="md:hidden grid grid-cols-2 gap-3">
+        <div className="md:hidden grid grid-cols-3 gap-3">
           {products.slice(0, 4).map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
               <div className="bg-white rounded-lg overflow-hidden shadow-md group relative">
@@ -109,7 +109,7 @@ export default function PriceJustDroppedPanel() {
         {/* Desktop layout */}
         <div className="hidden md:grid grid-cols-[80%_20%] gap-6">
           {/* Left Column: Gallery Grid */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-3">
+          <div className="grid grid-cols-5 grid-rows-2 gap-3">
             {galleryProducts.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
                 <div className="bg-white rounded-lg overflow-hidden shadow-md group relative">
