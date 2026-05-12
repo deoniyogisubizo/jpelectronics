@@ -23,7 +23,7 @@ export const revalidate = 60;
 function LocallyPopularPanel() {
   return (
     <section className="py-2 md:py-2 bg-green-50">
-      <div className="container mx-auto px-2">
+      <div className="container mx-auto px-3">
         <div className="mb-4 md:mb-6">
           <h2 className="text-base md:text-xl font-bold text-green-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Most Popular in Kigali</h2>
         </div>
@@ -81,7 +81,7 @@ function LocallyPopularPanel() {
 function EducationPanel() {
   return (
     <section className="py-2 bg-yellow-50">
-      <div className="container mx-auto px-2">
+      <div className="container mx-auto px-3">
         <div className="flex items-center gap-3 mb-4">
           <AlertTriangle className="w-8 h-8 text-black" />
           <h2 className="text-lg md:text-3xl font-bold text-yellow-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Before You Buy</h2>
@@ -111,7 +111,7 @@ function EducationPanel() {
 function CommunityPanel() {
   return (
     <section className="py-2 bg-teal-50">
-      <div className="container mx-auto px-2">
+      <div className="container mx-auto px-3">
         <div className="flex items-center gap-2 mb-4">
           <Users className="w-6 h-6 text-teal-600" />
           <h2 className="text-lg md:text-xl font-bold text-teal-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>📊 Community Picked</h2>
@@ -158,7 +158,7 @@ function CommunityPanel() {
 function RealBuyerStory() {
   return (
     <section className="py-2 bg-orange-50">
-      <div className="container mx-auto px-2">
+      <div className="container mx-auto px-3">
         <div className="mb-4">
           <h2 className="text-lg md:text-2xl font-bold text-orange-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>💬 Real Buyer Story</h2>
         </div>
@@ -203,7 +203,7 @@ function RealBuyerStory() {
 function TrustStrip() {
   return (
     <section className="bg-gradient-to-r from-black to-gray-800 text-white py-2">
-      <div className="container mx-auto px-2">
+      <div className="container mx-auto px-3">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="flex flex-col items-center gap-2">
             <Truck className="w-8 h-8 text-yellow-400" />
@@ -243,7 +243,7 @@ export default async function HomePage() {
 
       {/* Category Tiles */}
       <section className="py-1 md:py-2 bg-beige">
-        <div className="container mx-auto px-1 md:px-2">
+        <div className="container mx-auto px-3 md:px-3">
           <h2 className="text-xs md:text-xl font-bold my-6 md:my-12 text-center uppercase" style={{ fontFamily: 'Outfit, sans-serif' }}>
             In our shop we deliver all these category
           </h2>
@@ -272,7 +272,7 @@ export default async function HomePage() {
 
       {/* Panel 5: Build Your Bundle */}
       <section className="py-2 bg-green-50">
-        <div className="container mx-auto px-2">
+        <div className="container mx-auto px-3">
           <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-green-700">Build Your Bundle</h2>
           </div>
