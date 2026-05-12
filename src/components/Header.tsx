@@ -178,12 +178,12 @@ export default function Header() {
       </div>
 
       {/* LAYER 2: PRIMARY MARKETPLACE NAVIGATION */}
-      <div className="container mx-auto px-4 py-2">
+      <div className="container mx-auto px-4 py-1">
         <div className="flex items-center justify-between gap-6">
           {/* Brand & Category Trigger */}
           <div className="flex items-center gap-6 flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 group">
-              <img src="/loading/load.png" alt="Logo" className="w-32 h-auto transition-transform group-hover:scale-105" />
+              <img src="/loading/load.png" alt="Logo" className="w-20 h-8 transition-transform group-hover:scale-105" />
             </Link>
 
             <div className="relative">
@@ -376,7 +376,7 @@ export default function Header() {
         <div className="md:hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm">
           <div className="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <img src="/loading/load.png" alt="Logo" className="w-24 h-auto" />
+              <img src="/loading/load.png" alt="Logo" className="w-16 h-6" />
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
