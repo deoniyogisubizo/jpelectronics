@@ -9,6 +9,7 @@ const withPWA = require('next-pwa')({
 const nextConfig = {
   // other config
   turbopack: {},
+  allowedDevOrigins: ['192.168.0.197'],
   images: {
     remotePatterns: [
       {

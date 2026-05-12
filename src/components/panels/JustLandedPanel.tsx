@@ -34,7 +34,7 @@ export default function JustLandedPanel() {
   if (!loaded) {
     return (
       <section ref={ref} className="py-2 bg-green-50">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-[0.9rem]">
           <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-green-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Just Landed</h2>
           </div>

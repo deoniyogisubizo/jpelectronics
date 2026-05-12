@@ -7,7 +7,7 @@
   --color-gold: #d4af37;
   --color-gold-light: #f0e68c;
   --color-vibrant: #1e3a8a;
-  --color-beige: #f5f5dc;
+  --color-beige: rgba(245, 245, 220, 0.8);
   --color-beige-light: #faf8f3;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -27,6 +27,7 @@ body {
 }
 
 /* Utility classes */
+.w-32 { width: calc(var(--spacing) * 22); }
 .bg-gold { background-color: var(--color-gold); }
 .text-gold { color: var(--color-gold); }
 .bg-vibrant { background: var(--color-vibrant); }
@@ -132,30 +133,10 @@ body {
 .cart-drawer-open { transform: translateX(0); }
 .cart-drawer-closed { transform: translateX(100%); }
 
-/* Container breathing space - fixed width layout */
+/* Container full width layout */
 .container {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-  }
-}
-
-/* Desktop fixed width */
-@media (min-width: 769px) {
-  .container {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-  }
+  margin: 0;
 }
 
 /* Preloader animations */

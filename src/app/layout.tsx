@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Share_Tech_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { Providers } from '@/components/Providers';
+import Header from '@/components/Header';
 import BottomNavbar from '@/components/BottomNavbar';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 
@@ -60,6 +61,7 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${shareTechMono.variable} ${outfit.variable} antialiased`}>
         <Providers>
+          <Header />
           <div className="min-h-screen pb-20 md:pb-0">
             {children}
           </div>

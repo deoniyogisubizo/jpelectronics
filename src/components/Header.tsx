@@ -3,22 +3,25 @@
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
+import { useUser } from '@/context/UserContext';
 import {
-  ShoppingCart, Search, Menu, Store, Globe, User, ChevronDown,
-  MessageCircle, Settings, X, Home, Phone, MapPin, Package,
-  HelpCircle, Briefcase, UserPlus, Info, FileText, ClipboardList
+  ShoppingCart, Menu, Store, Globe, User, ChevronDown,
+  MessageCircle, X, Home, Phone, MapPin, Package,
+  HelpCircle, UserPlus, Info, ClipboardList, Camera
 } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { itemCount, setIsOpen } = useCart();
+  const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
   const [placeholderText, setPlaceholderText] = useState('Search components, manufacturers, or SKUs...');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isCategoriesHovered, setIsCategoriesHovered] = useState(false);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 
   const categories = useMemo(() => [
     'STM32 Microcontrollers',
@@ -65,6 +68,108 @@ export default function Header() {
       slug: 'tools',
       description: 'Oscilloscopes, Multimeters & Soldering',
       items: ['Digital Multimeters', 'Logic Analyzers', 'Soldering Stations', 'Calibration Tools']
+    },
+    {
+      name: 'Mobile Phones',
+      slug: 'mobilephone',
+      description: 'Smartphones, Accessories & Parts',
+      items: ['Android Phones', 'iPhones', 'Phone Cases', 'Chargers', 'Screens']
+    },
+    {
+      name: 'Speakers',
+      slug: 'speakers',
+      description: 'Audio Equipment & Sound Systems',
+      items: ['Bluetooth Speakers', 'Home Theater', 'Microphones', 'Amplifiers', 'Headphones']
+    },
+    {
+      name: 'Laptops',
+      slug: 'laptops',
+      description: 'Notebooks, Ultrabooks & Accessories',
+      items: ['Gaming Laptops', 'Business Laptops', 'Chromebooks', 'Laptop Bags', 'Cooling Pads']
+    },
+    {
+      name: 'TVs',
+      slug: 'tvs',
+      description: 'LED, OLED & Smart Televisions',
+      items: ['4K TVs', 'Smart TVs', 'LED TVs', 'Curved TVs', 'TV Mounts']
+    },
+    {
+      name: 'Cameras',
+      slug: 'cameras',
+      description: 'Digital Cameras & Photography',
+      items: ['DSLR Cameras', 'Mirrorless', 'Action Cameras', 'Security Cameras', 'Lenses']
+    },
+    {
+      name: 'Gaming',
+      slug: 'gaming',
+      description: 'Consoles, Accessories & Games',
+      items: ['PlayStation', 'Xbox', 'Nintendo', 'Gaming PCs', 'Controllers']
+    },
+    {
+      name: 'Wearables',
+      slug: 'wearables',
+      description: 'Smartwatches, Fitness Trackers',
+      items: ['Apple Watch', 'Samsung Galaxy Watch', 'Fitbit', 'Smart Bands', 'Earbuds']
+    },
+    {
+      name: 'Solar Products',
+      slug: 'solar',
+      description: 'Solar Panels, Inverters & Batteries',
+      items: ['Solar Panels', 'Inverters', 'Solar Batteries', 'Charge Controllers', 'Solar Lights']
+    },
+    {
+      name: 'Networking',
+      slug: 'networking',
+      description: 'Routers, Switches & Cables',
+      items: ['WiFi Routers', 'Ethernet Switches', 'Network Cables', 'Access Points', 'Modems']
+    },
+    {
+      name: 'Drones',
+      slug: 'drones',
+      description: 'UAVs, Quadcopters & Accessories',
+      items: ['Consumer Drones', 'Professional Drones', 'Drone Cameras', 'Batteries', 'Propellers']
+    },
+    {
+      name: '3D Printers',
+      slug: '3dprinters',
+      description: '3D Printing Equipment & Supplies',
+      items: ['FDM Printers', 'Resin Printers', 'Filament', 'Resin', '3D Scanner']
+    },
+    {
+      name: 'VR/AR',
+      slug: 'vrar',
+      description: 'Virtual & Augmented Reality',
+      items: ['VR Headsets', 'AR Glasses', 'VR Games', 'Motion Controllers', 'VR Accessories']
+    },
+    {
+      name: 'Home Automation',
+      slug: 'homeauto',
+      description: 'Smart Home Devices & Systems',
+      items: ['Smart Lights', 'Smart Locks', 'Thermostats', 'Security Cameras', 'Voice Assistants']
+    },
+    {
+      name: 'Robotics',
+      slug: 'robotics',
+      description: 'Robots, Kits & Components',
+      items: ['Robot Kits', 'Servos', 'Sensors', 'Arduino', 'Raspberry Pi']
+    },
+    {
+      name: 'Medical Electronics',
+      slug: 'medical',
+      description: 'Medical Devices & Equipment',
+      items: ['Blood Pressure Monitors', 'Thermometers', 'Pulse Oximeters', 'ECG Machines', 'Ultrasound']
+    },
+    {
+      name: 'Industrial',
+      slug: 'industrial',
+      description: 'Industrial Electronics & Automation',
+      items: ['PLCs', 'HMIs', 'Sensors', 'Motors', 'Industrial PCs']
+    },
+    {
+      name: 'Educational',
+      slug: 'educational',
+      description: 'Learning Kits & Educational Tools',
+      items: ['Arduino Kits', 'Raspberry Pi Kits', 'STEM Kits', 'Educational Robots', 'Coding Boards']
     }
   ];
 
@@ -105,6 +210,13 @@ export default function Header() {
     timeoutId = setTimeout(typeText, 1000);
     return () => clearTimeout(timeoutId);
   }, [currentIndex, categories]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCategoryIndex((prev) => (prev + 10) % categoryData.length);
+    }, 120000); // 2 minutes
+    return () => clearInterval(interval);
+  }, [categoryData.length]);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'rw' : 'en');
@@ -178,48 +290,59 @@ export default function Header() {
       </div>
 
       {/* LAYER 2: PRIMARY MARKETPLACE NAVIGATION */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-1">
         <div className="flex items-center justify-between gap-6">
           {/* Brand & Category Trigger */}
           <div className="flex items-center gap-6 flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 group">
-              <img src="/logo/logo.svg" alt="JP Tech Logo" className="w-12 h-12 transition-transform group-hover:scale-105" />
-              <div className="hidden lg:block">
-                <h1 className="text-2xl font-bold font-share-tech-mono text-black leading-none">JP Tech</h1>
-                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Electronics Rwanda</p>
-              </div>
+              <img src="/loading/load.png" alt="Logo" className="w-32 h-12 transition-transform group-hover:scale-105" />
             </Link>
 
-            <button
-              onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-              className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-bold text-gray-800 transition-colors border border-gray-300"
-            >
-              <Menu className="w-5 h-5" />
-              <span>All Categories</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
+            <div className="relative">
+              <button
+                onMouseEnter={() => setIsCategoriesHovered(true)}
+                onMouseLeave={() => setIsCategoriesHovered(false)}
+                className="hidden lg:flex items-center gap-1 px-2 py-1 bg-[#1a202c] hover:bg-[#2d3748] rounded text-xs font-medium text-white transition-colors"
+              >
+                <Menu className="w-3 h-3" />
+                <span>All Categories</span>
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              {isCategoriesHovered && (
+                <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2">
+                  {categoryData.map((category) => (
+                    <Link
+                      key={category.slug}
+                      href={`/category/${category.slug}`}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors"
+                      onMouseEnter={() => setIsCategoriesHovered(true)}
+                      onMouseLeave={() => setIsCategoriesHovered(false)}
+                    >
+                      <div className="font-medium">{category.name}</div>
+                      <div className="text-xs text-gray-500">{category.description}</div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Intelligent Search Engine */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-3xl hidden md:flex items-center gap-0 h-12">
+          <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center gap-0 h-12">
             <div className="relative flex-1 h-full flex">
-              <select className="h-full bg-gray-50 border border-gray-300 rounded-l-lg px-3 text-xs font-medium text-gray-600 focus:outline-none hover:bg-gray-100 cursor-pointer appearance-none pr-8">
-                <option>All Categories</option>
-                {categoryData.map(c => <option key={c.slug}>{c.name}</option>)}
-              </select>
               <div className="relative flex-1 h-full">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={placeholderText}
-                  className="w-full h-full px-4 border-y border-gray-300 focus:outline-none text-sm"
+                  className="w-full h-full px-4 border border-gray-300 rounded-l-lg focus:outline-none text-sm"
                 />
-                <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+                <Camera className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
               </div>
               <button
                 type="submit"
-                className="h-full px-6 bg-[#0057ff] text-white rounded-r-lg hover:bg-blue-700 transition-colors font-semibold text-sm"
+                className="h-full px-6 bg-gold/20 text-gold rounded-r-lg hover:bg-gold/30 transition-colors font-semibold text-sm"
               >
                 Search
               </button>
@@ -232,16 +355,22 @@ export default function Header() {
               <Link href="/rfq" className="flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-amber-500 transition-colors">
                 <ClipboardList className="w-4 h-4" /> Request Quote
               </Link>
-              <Link href="/bom-upload" className="flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-amber-500 transition-colors">
-                <FileText className="w-4 h-4" /> Upload BOM
-              </Link>
             </div>
 
             <Link
-              href="/admin"
+              href="/profile"
               className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <User className="w-5 h-5 text-gray-500" />
+              {user ? (
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                    <User className="w-5 h-5 text-gray-500" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+                </div>
+              ) : (
+                <User className="w-5 h-5 text-gray-500" />
+              )}
               <span className="hidden sm:inline">Account</span>
             </Link>
 
@@ -280,7 +409,7 @@ export default function Header() {
             type="submit"
             className="absolute right-2 top-2 bottom-2 px-3 bg-blue-600 text-white rounded-lg"
           >
-            <Search className="w-4 h-4" />
+            <Camera className="w-4 h-4" />
           </button>
         </form>
       </div>
@@ -295,7 +424,7 @@ export default function Header() {
                   {t('nav.home')}
                 </Link>
               </li>
-              {categoryData.map((category) => (
+              {categoryData.slice(currentCategoryIndex, currentCategoryIndex + 10).map((category) => (
                 <li
                   key={category.slug}
                   className="h-full relative"
@@ -304,47 +433,40 @@ export default function Header() {
                 >
                   <Link
                     href={`/category/${category.slug}`}
-                    className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all gap-1"
+                    className="flex items-center h-full px-2 text-[10px] font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all"
                   >
                     {category.name}
-                    <ChevronDown className="w-3 h-3 opacity-50" />
                   </Link>
 
                   {activeDropdown === category.name && (
-                    <div className="absolute top-full left-0 w-72 bg-white border border-gray-200 rounded-b-lg shadow-xl z-50 py-4 px-4">
-                      <div className="mb-3">
-                        <h3 className="text-sm font-black text-gray-900">{category.name}</h3>
-                        <p className="text-[11px] text-gray-500">{category.description}</p>
+                    <div className="absolute top-full left-0 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-3 px-3">
+                      <div className="mb-2">
+                        <h3 className="text-xs font-bold text-gray-900">{category.name}</h3>
+                        <p className="text-[10px] text-gray-500">{category.description}</p>
                       </div>
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                        {category.items.map((item) => (
+                      <div className="grid grid-cols-1 gap-y-1">
+                        {category.items.slice(0, 5).map((item) => (
                           <Link
                             key={item}
                             href={`/category/${category.slug}?sub=${encodeURIComponent(item.toLowerCase())}`}
-                            className="text-[12px] text-gray-600 hover:text-blue-600 transition-colors py-1"
+                            className="text-[10px] text-gray-600 hover:text-blue-600 transition-colors"
                           >
                             {item}
                           </Link>
                         ))}
                       </div>
-                      <div className="mt-4 pt-3 border-t border-gray-100">
+                      <div className="mt-2 pt-2 border-t border-gray-100">
                         <Link
                           href={`/category/${category.slug}`}
-                          className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
+                          className="text-[10px] font-medium text-blue-600 hover:underline"
                         >
-                          View All {category.name} →
+                          View All →
                         </Link>
                       </div>
                     </div>
                   )}
                 </li>
               ))}
-              <li className="h-full">
-                <Link href="/solutions" className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all gap-1">
-                  Solutions
-                  <span className="bg-blue-600 text-white text-[8px] px-1 rounded font-black uppercase">New</span>
-                </Link>
-              </li>
             </ul>
 
             <div className="flex items-center h-full">
@@ -364,10 +486,7 @@ export default function Header() {
         <div className="md:hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm">
           <div className="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <div className="flex items-center gap-2">
-                <img src="/logo/logo.svg" alt="JP Tech Logo" className="w-8 h-8" />
-                <span className="font-bold font-share-tech-mono text-lg">JP Tech</span>
-              </div>
+              <img src="/loading/load.png" alt="Logo" className="w-32 h-10" />
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
@@ -396,15 +515,23 @@ export default function Header() {
               <div className="p-4 border-b border-gray-200">
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Account & Tools</h3>
                 <div className="space-y-1">
-                  <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
-                    <User className="w-4 h-4 text-gray-400" /> Admin Dashboard
+                  <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                    {user ? (
+                      <div className="relative">
+                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                          <User className="w-4 h-4 text-gray-400" />
+                        </div>
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+                      </div>
+                    ) : (
+                      <User className="w-4 h-4 text-gray-400" />
+                    )}
+                    Profile
                   </Link>
                   <Link href="/rfq" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
                     <ClipboardList className="w-4 h-4 text-gray-400" /> Request Quote
                   </Link>
-                  <Link href="/bom-upload" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
-                    <FileText className="w-4 h-4 text-gray-400" /> Upload BOM
-                  </Link>
+
                 </div>
               </div>
 
