@@ -27,7 +27,7 @@ body {
 }
 
 /* Utility classes */
-.w-32 { width: calc(var(--spacing) * 18); }
+.w-32 { width: calc(var(--spacing) * 22); }
 .bg-gold { background-color: var(--color-gold); }
 .text-gold { color: var(--color-gold); }
 .bg-vibrant { background: var(--color-vibrant); }
