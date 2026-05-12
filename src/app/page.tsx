@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import dynamic from 'next/dynamic';
@@ -236,7 +236,6 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-beige flex flex-col">
-      <Header />
 
       {/* Hero Video Section */}
       <HeroVideo />
