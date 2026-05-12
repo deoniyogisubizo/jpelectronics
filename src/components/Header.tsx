@@ -183,7 +183,7 @@ export default function Header() {
           {/* Brand & Category Trigger */}
           <div className="flex items-center gap-6 flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 group">
-              <img src="/loading/load.png" alt="Logo" className="w-32 h-10 transition-transform group-hover:scale-105" />
+              <img src="/loading/load.png" alt="Logo" className="w-32 h-12 transition-transform group-hover:scale-105" />
             </Link>
 
             <div className="relative">
@@ -246,7 +246,7 @@ export default function Header() {
             </div>
 
             <Link
-              href="/admin"
+              href="/profile"
               className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <User className="w-5 h-5 text-gray-500" />
@@ -376,7 +376,7 @@ export default function Header() {
         <div className="md:hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm">
           <div className="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <img src="/loading/load.png" alt="Logo" className="w-32 h-8" />
+              <img src="/loading/load.png" alt="Logo" className="w-32 h-10" />
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
@@ -405,7 +405,7 @@ export default function Header() {
               <div className="p-4 border-b border-gray-200">
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Account & Tools</h3>
                 <div className="space-y-1">
-                  <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                  <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
                     <User className="w-4 h-4 text-gray-400" /> Admin Dashboard
                   </Link>
                   <Link href="/rfq" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
