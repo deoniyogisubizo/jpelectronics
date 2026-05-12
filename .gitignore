@@ -16,7 +16,7 @@ tmp/
 /build
 
 # env files (Security)
-.env*
+
 
 # misc
 .DS_Store
