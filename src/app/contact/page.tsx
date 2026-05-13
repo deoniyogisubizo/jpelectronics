@@ -1,4 +1,3 @@
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import { LanguageProvider } from '@/context/LanguageContext';
@@ -10,7 +9,6 @@ export default function ContactPage() {
     <LanguageProvider>
       <CartProvider>
         <div className="min-h-screen bg-beige flex flex-col">
-          <Header />
 
           <main className="flex-1 py-12">
             <div className="container mx-auto px-4">
@@ -63,35 +61,35 @@ export default function ContactPage() {
                   <div className="bg-white rounded-lg p-6 shadow">
                     <h3 className="font-bold text-xl mb-4">Get in Touch</h3>
                     <div className="space-y-4">
-                       <div className="flex items-center gap-3">
-                         <Phone className="w-5 h-5 text-gold" />
-                          <div>
-                            <p className="font-medium">Phone</p>
-                            <p className="text-gray-600">+250 790 336 683</p>
-                            <p className="text-gray-600">+250 796 279 847</p>
-                          </div>
-                       </div>
-                       <div className="flex items-center gap-3">
-                         <MessageCircle className="w-5 h-5 text-gold" />
-                          <div>
-                            <p className="font-medium">WhatsApp</p>
-                            <p className="text-gray-600">+250 790 336 683</p>
-                          </div>
-                       </div>
-                       <div className="flex items-center gap-3">
-                         <Mail className="w-5 h-5 text-gold" />
-                         <div>
-                           <p className="font-medium">Email</p>
-                           <p className="text-gray-600">Jndayisenga47@gmail.com</p>
-                         </div>
-                       </div>
-                       <div className="flex items-center gap-3">
-                         <MapPin className="w-5 h-5 text-gold" />
-                         <div>
-                           <p className="font-medium">Address</p>
-                           <p className="text-gray-600">Konombe-mubusanza, Rwanda</p>
-                         </div>
-                       </div>
+                      <div className="flex items-center gap-3">
+                        <Phone className="w-5 h-5 text-gold" />
+                        <div>
+                          <p className="font-medium">Phone</p>
+                          <p className="text-gray-600">+250 790 336 683</p>
+                          <p className="text-gray-600">+250 796 279 847</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <MessageCircle className="w-5 h-5 text-gold" />
+                        <div>
+                          <p className="font-medium">WhatsApp</p>
+                          <p className="text-gray-600">+250 790 336 683</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Mail className="w-5 h-5 text-gold" />
+                        <div>
+                          <p className="font-medium">Email</p>
+                          <p className="text-gray-600">Jndayisenga47@gmail.com</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <MapPin className="w-5 h-5 text-gold" />
+                        <div>
+                          <p className="font-medium">Address</p>
+                          <p className="text-gray-600">Konombe-mubusanza, Rwanda</p>
+                        </div>
+                      </div>
                       <div className="flex items-center gap-3">
                         <Clock className="w-5 h-5 text-gold" />
                         <div>

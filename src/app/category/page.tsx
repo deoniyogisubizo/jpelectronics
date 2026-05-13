@@ -1,16 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import ProductCard from '@/components/ProductCard';
+import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Product } from '@/types';
-import { Filter, SortAsc, Grid3X3, List, Search } from 'lucide-react';
+import { Filter, SortAsc, Grid3X3, List, Search, Plus, Minus } from 'lucide-react';
+import Link from 'next/link';
 
 export default function CategoryPage() {
-  const params = useParams();
   const { t } = useLanguage();
-  const slug = params?.slug as string;
+  const { addItem, setIsOpen } = useCart();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +18,7 @@ export default function CategoryPage() {
   const [filters, setFilters] = useState({
     minPrice: '',
     maxPrice: '',
+    category: '',
     brand: '',
     size: '',
     minQuantity: '',
@@ -27,16 +27,17 @@ export default function CategoryPage() {
   });
   const [sortBy, setSortBy] = useState('newest');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [quantities, setQuantities] = useState<{[key: string]: number}>({});
 
   useEffect(() => {
     async function fetchProducts() {
-      const res = await fetch(`/api/products?category=${slug}`);
+      const res = await fetch('/api/products');
       const data = await res.json();
       setProducts(data);
       setLoading(false);
     }
     fetchProducts();
-  }, [slug]);
+  }, []);
 
   useEffect(() => {
     if (searchQuery.length < 2) {
@@ -48,17 +49,31 @@ export default function CategoryPage() {
         const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery)}`);
         if (res.ok) {
           const data = await res.json();
-          setSuggestions(data.filter((p: any) => p.categorySlug === slug)); // filter to category
+          setSuggestions(data);
         }
       } catch (error) {
         console.error('Search suggestions error:', error);
       }
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, slug]);
+  }, [searchQuery]);
 
   const uniqueBrands = Array.from(new Set(products.map(p => p.brand)));
   const uniqueSizes = Array.from(new Set(products.map(p => p.specs?.size || '').filter(Boolean)));
+  const uniqueCategories = Array.from(new Set(products.map(p => p.category)));
+
+  const updateQuantity = (productId: string, delta: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [productId]: Math.max(1, (prev[productId] || 1) + delta)
+    }));
+  };
+
+  const handleAddToCart = (product: Product) => {
+    const quantity = quantities[product._id] || 1;
+    addItem(product._id, quantity);
+    setIsOpen(true);
+  };
 
    const filteredProducts = products
       .filter(p => {
@@ -78,6 +93,7 @@ export default function CategoryPage() {
         }
         if (filters.minPrice && p.price < parseInt(filters.minPrice)) return false;
         if (filters.maxPrice && p.price > parseInt(filters.maxPrice)) return false;
+        if (filters.category && p.category !== filters.category) return false;
         if (filters.brand && p.brand !== filters.brand) return false;
         if (filters.size && p.specs?.size !== filters.size) return false;
         if (filters.minQuantity && p.stockQuantity < parseInt(filters.minQuantity)) return false;
@@ -85,18 +101,18 @@ export default function CategoryPage() {
         if (filters.inStock && !p.inStock) return false;
         return true;
       })
-     .sort((a, b) => {
-       switch (sortBy) {
-         case 'price-asc': return a.price - b.price;
-         case 'price-desc': return b.price - a.price;
-         case 'newest': {
-           const timeA = a.createdAt instanceof Date ? a.createdAt.getTime() : Date.parse(a.createdAt);
-           const timeB = b.createdAt instanceof Date ? b.createdAt.getTime() : Date.parse(b.createdAt);
-           return timeB - timeA;
-         }
-         default: return 0;
-       }
-     });
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'price-asc': return a.price - b.price;
+          case 'price-desc': return b.price - a.price;
+          case 'newest': {
+            const timeA = a.createdAt instanceof Date ? a.createdAt.getTime() : Date.parse(a.createdAt);
+            const timeB = b.createdAt instanceof Date ? b.createdAt.getTime() : Date.parse(b.createdAt);
+            return timeB - timeA;
+          }
+          default: return 0;
+        }
+      });
 
   return (
     <div className="min-h-screen bg-beige">
@@ -104,7 +120,7 @@ export default function CategoryPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold capitalize mb-2">
-            {slug.replace('-', ' ')}
+            All Products
           </h1>
           <p className="text-gray-600">
             {filteredProducts.length} products found {searchQuery && `for "${searchQuery}"`}
@@ -118,7 +134,7 @@ export default function CategoryPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search within this category..."
+              placeholder="Search all products..."
               autoFocus
               onBlur={() => setTimeout(() => setSuggestions([]), 200)}
               className="w-full h-12 px-4 pr-16 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900 placeholder:text-black placeholder:opacity-50"
@@ -160,6 +176,17 @@ export default function CategoryPage() {
           {/* Filters */}
           <div className="flex-1 flex flex-wrap gap-4">
             <select
+              value={filters.category}
+              onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+              className="px-3 py-2 border rounded-lg"
+            >
+              <option value="">All Categories</option>
+              {uniqueCategories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+
+            <select
               value={filters.brand}
               onChange={(e) => setFilters({ ...filters, brand: e.target.value })}
               className="px-3 py-2 border rounded-lg"
@@ -184,17 +211,6 @@ export default function CategoryPage() {
               onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
               className="px-3 py-2 border rounded-lg w-32"
             />
-
-            <select
-              value={filters.brand}
-              onChange={(e) => setFilters({ ...filters, brand: e.target.value })}
-              className="px-3 py-2 border rounded-lg"
-            >
-              <option value="">All Brands</option>
-              {uniqueBrands.map(brand => (
-                <option key={brand} value={brand}>{brand}</option>
-              ))}
-            </select>
 
             {uniqueSizes.length > 0 && (
               <select
@@ -269,14 +285,98 @@ export default function CategoryPage() {
         {loading ? (
           <div className="text-center py-12">Loading...</div>
         ) : (
-          <div className={`grid gap-4 ${
+          <div className={`grid gap-2 ${
             viewMode === 'grid'
-              ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+              ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
               : 'grid-cols-1'
           }`}>
-            {filteredProducts.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
+            {filteredProducts.map((product) => {
+              const quantity = quantities[product._id] || 1;
+              return (
+                <Link key={product._id} href={`/product/${product._id}`}>
+                  <div className="bg-white rounded-lg overflow-hidden group cursor-pointer">
+                  {/* Image - small height */}
+                  <div className="relative h-32 overflow-hidden bg-beige">
+                    {product.images && product.images.length > 0 ? (
+                      <img
+                        src={product.images[0]}
+                        alt={product.name.en}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <Search className="w-8 h-8" />
+                      </div>
+                    )}
+                    {!product.inStock && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">Out of Stock</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-2">
+                    {/* Brand */}
+                    <p className="text-xs text-gray-500 uppercase mb-1">
+                      {product.brand}
+                    </p>
+
+                    {/* Name */}
+                    <h3 className="font-semibold text-black text-sm mb-1 line-clamp-1">
+                      {product.name.en}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-xs text-gray-600 mb-1 line-clamp-2">
+                      {product.description.en}
+                    </p>
+
+                    {/* Price */}
+                    <div className="flex items-center gap-1 mb-2">
+                      <span className="text-sm font-bold text-gold">
+                        {product.price.toLocaleString()} RWF
+                      </span>
+                      {product.compareAtPrice && (
+                        <span className="text-xs text-gray-400 line-through">
+                          {product.compareAtPrice.toLocaleString()} RWF
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Bottom row */}
+                    <div className="grid grid-cols-2 gap-1">
+                      {/* Left: Quantity controls */}
+                      <div className="flex items-center justify-center gap-1 bg-gray-100 rounded px-1 py-1">
+                        <button
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); updateQuantity(product._id, -1); }}
+                          className="p-0.5 hover:bg-gray-200 rounded"
+                          disabled={quantity <= 1}
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="text-xs font-medium min-w-[20px] text-center">{quantity}</span>
+                        <button
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); updateQuantity(product._id, 1); }}
+                          className="p-0.5 hover:bg-gray-200 rounded"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      {/* Right: Add to cart */}
+                      <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(product); }}
+                        disabled={!product.inStock}
+                        className="bg-amber-800 text-white text-xs py-1 px-1 rounded hover:bg-lime-600 transition-colors disabled:bg-gray-400"
+                      >
+                        Add In Cart
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
 

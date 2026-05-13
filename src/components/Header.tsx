@@ -7,21 +7,29 @@ import { useUser } from '@/context/UserContext';
 import {
   ShoppingCart, Menu, Store, Globe, User, ChevronDown,
   MessageCircle, X, Home, Phone, MapPin, Package,
-  HelpCircle, UserPlus, Info, ClipboardList, Camera
+  HelpCircle, UserPlus, Info, ClipboardList, Camera,
+  Cpu, CircuitBoard, Cog, Zap, Radio, Hammer,
+  Smartphone, Volume2, Laptop, Monitor, Gamepad2,
+  Clock, Sun, Router, Plane, Printer, Eye, Home as HomeIcon,
+  Bot, Heart, Factory, BookOpen, Search
 } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { itemCount, setIsOpen } = useCart();
   const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
   const [placeholderText, setPlaceholderText] = useState('Search components, manufacturers, or SKUs...');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoriesHovered, setIsCategoriesHovered] = useState(false);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const [categoryData, setCategoryData] = useState<any[]>([]);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollY = useRef(0);
 
   const categories = useMemo(() => [
     'STM32 Microcontrollers',
@@ -32,146 +40,33 @@ export default function Header() {
     'Precision Resistors'
   ], []);
 
-  const categoryData = [
-    {
-      name: 'Semiconductors',
-      slug: 'semiconductors',
-      description: 'ICs, Transistors, Diodes & Integrated Circuits',
-      items: ['Microcontrollers', 'Analog ICs', 'Digital ICs', 'Power Management', 'Memory']
-    },
-    {
-      name: 'Passive Components',
-      slug: 'passives',
-      description: 'Capacitors, Resistors, Inductors & Coils',
-      items: ['Ceramic Capacitors', 'Aluminium Electrolytic', 'Thick Film Resistors', 'Power Inductors']
-    },
-    {
-      name: 'Electromechanical',
-      slug: 'electromechanical',
-      description: 'Relays, Switches, Connectors & Hardware',
-      items: ['Signal Relays', 'Pushbutton Switches', 'Board-to-Board', 'Terminal Blocks']
-    },
-    {
-      name: 'Power Supplies',
-      slug: 'power',
-      description: 'AC/DC Converters, Batteries & Chargers',
-      items: ['Switching Power Supplies', 'Li-Po Batteries', 'USB-C Chargers', 'DC-DC Converters']
-    },
-    {
-      name: 'IoT & Wireless',
-      slug: 'iot',
-      description: 'WiFi, Bluetooth, LoRa & Zigbee Modules',
-      items: ['ESP32 Modules', 'NRF52 Series', 'GSM/LTE Modems', 'ANTENNAS']
-    },
-    {
-      name: 'Tools & Test',
-      slug: 'tools',
-      description: 'Oscilloscopes, Multimeters & Soldering',
-      items: ['Digital Multimeters', 'Logic Analyzers', 'Soldering Stations', 'Calibration Tools']
-    },
-    {
-      name: 'Mobile Phones',
-      slug: 'mobilephone',
-      description: 'Smartphones, Accessories & Parts',
-      items: ['Android Phones', 'iPhones', 'Phone Cases', 'Chargers', 'Screens']
-    },
-    {
-      name: 'Speakers',
-      slug: 'speakers',
-      description: 'Audio Equipment & Sound Systems',
-      items: ['Bluetooth Speakers', 'Home Theater', 'Microphones', 'Amplifiers', 'Headphones']
-    },
-    {
-      name: 'Laptops',
-      slug: 'laptops',
-      description: 'Notebooks, Ultrabooks & Accessories',
-      items: ['Gaming Laptops', 'Business Laptops', 'Chromebooks', 'Laptop Bags', 'Cooling Pads']
-    },
-    {
-      name: 'TVs',
-      slug: 'tvs',
-      description: 'LED, OLED & Smart Televisions',
-      items: ['4K TVs', 'Smart TVs', 'LED TVs', 'Curved TVs', 'TV Mounts']
-    },
-    {
-      name: 'Cameras',
-      slug: 'cameras',
-      description: 'Digital Cameras & Photography',
-      items: ['DSLR Cameras', 'Mirrorless', 'Action Cameras', 'Security Cameras', 'Lenses']
-    },
-    {
-      name: 'Gaming',
-      slug: 'gaming',
-      description: 'Consoles, Accessories & Games',
-      items: ['PlayStation', 'Xbox', 'Nintendo', 'Gaming PCs', 'Controllers']
-    },
-    {
-      name: 'Wearables',
-      slug: 'wearables',
-      description: 'Smartwatches, Fitness Trackers',
-      items: ['Apple Watch', 'Samsung Galaxy Watch', 'Fitbit', 'Smart Bands', 'Earbuds']
-    },
-    {
-      name: 'Solar Products',
-      slug: 'solar',
-      description: 'Solar Panels, Inverters & Batteries',
-      items: ['Solar Panels', 'Inverters', 'Solar Batteries', 'Charge Controllers', 'Solar Lights']
-    },
-    {
-      name: 'Networking',
-      slug: 'networking',
-      description: 'Routers, Switches & Cables',
-      items: ['WiFi Routers', 'Ethernet Switches', 'Network Cables', 'Access Points', 'Modems']
-    },
-    {
-      name: 'Drones',
-      slug: 'drones',
-      description: 'UAVs, Quadcopters & Accessories',
-      items: ['Consumer Drones', 'Professional Drones', 'Drone Cameras', 'Batteries', 'Propellers']
-    },
-    {
-      name: '3D Printers',
-      slug: '3dprinters',
-      description: '3D Printing Equipment & Supplies',
-      items: ['FDM Printers', 'Resin Printers', 'Filament', 'Resin', '3D Scanner']
-    },
-    {
-      name: 'VR/AR',
-      slug: 'vrar',
-      description: 'Virtual & Augmented Reality',
-      items: ['VR Headsets', 'AR Glasses', 'VR Games', 'Motion Controllers', 'VR Accessories']
-    },
-    {
-      name: 'Home Automation',
-      slug: 'homeauto',
-      description: 'Smart Home Devices & Systems',
-      items: ['Smart Lights', 'Smart Locks', 'Thermostats', 'Security Cameras', 'Voice Assistants']
-    },
-    {
-      name: 'Robotics',
-      slug: 'robotics',
-      description: 'Robots, Kits & Components',
-      items: ['Robot Kits', 'Servos', 'Sensors', 'Arduino', 'Raspberry Pi']
-    },
-    {
-      name: 'Medical Electronics',
-      slug: 'medical',
-      description: 'Medical Devices & Equipment',
-      items: ['Blood Pressure Monitors', 'Thermometers', 'Pulse Oximeters', 'ECG Machines', 'Ultrasound']
-    },
-    {
-      name: 'Industrial',
-      slug: 'industrial',
-      description: 'Industrial Electronics & Automation',
-      items: ['PLCs', 'HMIs', 'Sensors', 'Motors', 'Industrial PCs']
-    },
-    {
-      name: 'Educational',
-      slug: 'educational',
-      description: 'Learning Kits & Educational Tools',
-      items: ['Arduino Kits', 'Raspberry Pi Kits', 'STEM Kits', 'Educational Robots', 'Coding Boards']
-    }
-  ];
+  const categoryIcons: Record<string, React.ComponentType<any>> = {
+    semiconductors: Cpu,
+    passives: CircuitBoard,
+    electromechanical: Cog,
+    power: Zap,
+    iot: Radio,
+    tools: Hammer,
+    mobilephone: Phone,
+    speakers: Volume2,
+    laptops: Laptop,
+    tvs: Monitor,
+    cameras: Camera,
+    gaming: Gamepad2,
+    wearables: Clock,
+    solar: Sun,
+    networking: Router,
+    drones: Plane,
+    '3dprinters': Printer,
+    vrar: Eye,
+    homeauto: HomeIcon,
+    robotics: Bot,
+    medical: Heart,
+    industrial: Factory,
+    educational: BookOpen
+  };
+
+
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -212,11 +107,212 @@ export default function Header() {
   }, [currentIndex, categories]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCategoryIndex((prev) => (prev + 10) % categoryData.length);
-    }, 120000); // 2 minutes
-    return () => clearInterval(interval);
+    const defaultCategories = [
+      {
+        name: 'Semiconductors',
+        slug: 'semiconductors',
+        description: 'ICs, Transistors, Diodes & Integrated Circuits',
+        items: ['Microcontrollers', 'Analog ICs', 'Digital ICs', 'Power Management', 'Memory']
+      },
+      {
+        name: 'Passive Components',
+        slug: 'passives',
+        description: 'Capacitors, Resistors, Inductors & Coils',
+        items: ['Ceramic Capacitors', 'Aluminium Electrolytic', 'Thick Film Resistors', 'Power Inductors']
+      },
+      {
+        name: 'Electromechanical',
+        slug: 'electromechanical',
+        description: 'Relays, Switches, Connectors & Hardware',
+        items: ['Signal Relays', 'Pushbutton Switches', 'Board-to-Board', 'Terminal Blocks']
+      },
+      {
+        name: 'Power Supplies',
+        slug: 'power',
+        description: 'AC/DC Converters, Batteries & Chargers',
+        items: ['Switching Power Supplies', 'Li-Po Batteries', 'USB-C Chargers', 'DC-DC Converters']
+      },
+      {
+        name: 'IoT & Wireless',
+        slug: 'iot',
+        description: 'WiFi, Bluetooth, LoRa & Zigbee Modules',
+        items: ['ESP32 Modules', 'NRF52 Series', 'GSM/LTE Modems', 'ANTENNAS']
+      },
+      {
+        name: 'Tools & Test',
+        slug: 'tools',
+        description: 'Oscilloscopes, Multimeters & Soldering',
+        items: ['Digital Multimeters', 'Logic Analyzers', 'Soldering Stations', 'Calibration Tools']
+      },
+      {
+        name: 'Mobile Phones',
+        slug: 'mobilephone',
+        description: 'Smartphones, Accessories & Parts',
+        items: ['Android Phones', 'iPhones', 'Phone Cases', 'Chargers', 'Screens']
+      },
+      {
+        name: 'Speakers',
+        slug: 'speakers',
+        description: 'Audio Equipment & Sound Systems',
+        items: ['Bluetooth Speakers', 'Home Theater', 'Microphones', 'Amplifiers', 'Headphones']
+      },
+      {
+        name: 'Laptops',
+        slug: 'laptops',
+        description: 'Notebooks, Ultrabooks & Accessories',
+        items: ['Gaming Laptops', 'Business Laptops', 'Chromebooks', 'Laptop Bags', 'Cooling Pads']
+      },
+      {
+        name: 'TVs',
+        slug: 'tvs',
+        description: 'LED, OLED & Smart Televisions',
+        items: ['4K TVs', 'Smart TVs', 'LED TVs', 'Curved TVs', 'TV Mounts']
+      },
+      {
+        name: 'Cameras',
+        slug: 'cameras',
+        description: 'Digital Cameras & Photography',
+        items: ['DSLR Cameras', 'Mirrorless', 'Action Cameras', 'Security Cameras', 'Lenses']
+      },
+      {
+        name: 'Gaming',
+        slug: 'gaming',
+        description: 'Consoles, Accessories & Games',
+        items: ['PlayStation', 'Xbox', 'Nintendo', 'Gaming PCs', 'Controllers']
+      },
+      {
+        name: 'Wearables',
+        slug: 'wearables',
+        description: 'Smartwatches, Fitness Trackers',
+        items: ['Apple Watch', 'Samsung Galaxy Watch', 'Fitbit', 'Smart Bands', 'Earbuds']
+      },
+      {
+        name: 'Solar Products',
+        slug: 'solar',
+        description: 'Solar Panels, Inverters & Batteries',
+        items: ['Solar Panels', 'Inverters', 'Solar Batteries', 'Charge Controllers', 'Solar Lights']
+      },
+      {
+        name: 'Networking',
+        slug: 'networking',
+        description: 'Routers, Switches & Cables',
+        items: ['WiFi Routers', 'Ethernet Switches', 'Network Cables', 'Access Points', 'Modems']
+      },
+      {
+        name: 'Drones',
+        slug: 'drones',
+        description: 'UAVs, Quadcopters & Accessories',
+        items: ['Consumer Drones', 'Professional Drones', 'Drone Cameras', 'Batteries', 'Propellers']
+      },
+      {
+        name: '3D Printers',
+        slug: '3dprinters',
+        description: '3D Printing Equipment & Supplies',
+        items: ['FDM Printers', 'Resin Printers', 'Filament', 'Resin', '3D Scanner']
+      },
+      {
+        name: 'VR/AR',
+        slug: 'vrar',
+        description: 'Virtual & Augmented Reality',
+        items: ['VR Headsets', 'AR Glasses', 'VR Games', 'Motion Controllers', 'VR Accessories']
+      },
+      {
+        name: 'Home Automation',
+        slug: 'homeauto',
+        description: 'Smart Home Devices & Systems',
+        items: ['Smart Lights', 'Smart Locks', 'Thermostats', 'Security Cameras', 'Voice Assistants']
+      },
+      {
+        name: 'Robotics',
+        slug: 'robotics',
+        description: 'Robots, Kits & Components',
+        items: ['Robot Kits', 'Servos', 'Sensors', 'Arduino', 'Raspberry Pi']
+      },
+      {
+        name: 'Medical Electronics',
+        slug: 'medical',
+        description: 'Medical Devices & Equipment',
+        items: ['Blood Pressure Monitors', 'Thermometers', 'Pulse Oximeters', 'ECG Machines', 'Ultrasound']
+      },
+      {
+        name: 'Industrial',
+        slug: 'industrial',
+        description: 'Industrial Electronics & Automation',
+        items: ['PLCs', 'HMIs', 'Sensors', 'Motors', 'Industrial PCs']
+      },
+      {
+        name: 'Educational',
+        slug: 'educational',
+        description: 'Learning Kits & Educational Tools',
+        items: ['Arduino Kits', 'Raspberry Pi Kits', 'STEM Kits', 'Educational Robots', 'Coding Boards']
+      }
+    ];
+
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch('/api/categories');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        const fetchedCategories = data.map((cat: any) => {
+          const defaultCat = defaultCategories.find(dc => dc.slug === cat.slug);
+          return {
+            name: cat.name[language] || cat.name.en,
+            slug: cat.slug,
+            description: defaultCat?.description || '',
+            items: defaultCat?.items || []
+          };
+        });
+        setCategoryData(fetchedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategoryData(defaultCategories);
+      }
+    };
+
+    fetchCategories();
+  }, [language]);
+
+  useEffect(() => {
+    if (categoryData.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentCategoryIndex((prev) => (prev + 10) % categoryData.length);
+      }, 30000); // 30 seconds
+      return () => clearInterval(interval);
+    }
   }, [categoryData.length]);
+
+  useEffect(() => {
+    if (searchQuery.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    const timeoutId = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSuggestions(data);
+        }
+      } catch (error) {
+        console.error('Search suggestions error:', error);
+      }
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current) {
+        setIsScrolled(true);
+      } else if (currentScrollY < lastScrollY.current) {
+        setIsScrolled(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'rw' : 'en');
@@ -229,13 +325,7 @@ export default function Header() {
     }
   };
 
-  const handleDropdownEnter = (categoryName: string) => {
-    setActiveDropdown(categoryName);
-  };
 
-  const handleDropdownLeave = () => {
-    setActiveDropdown(null);
-  };
 
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/250790336683', '_blank');
@@ -246,7 +336,7 @@ export default function Header() {
       {/* LAYER 1: TOP UTILITY BAR */}
       <div className="bg-[#1a202c] text-gray-300 py-1.5 hidden lg:block">
         <div className="container mx-auto px-4 flex justify-between items-center text-[12px]">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
               <span className="font-semibold text-white">USD</span>
               <ChevronDown className="w-3 h-3" />
@@ -258,33 +348,40 @@ export default function Header() {
               <span className="font-semibold text-white uppercase">{language}</span>
               <ChevronDown className="w-3 h-3" />
             </div>
-            <div className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
+            <div className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors mr-8">
               <MapPin className="w-3 h-3" />
               <span>Ship to Rwanda</span>
               <ChevronDown className="w-3 h-3" />
             </div>
-          </div>
-
-          <div className="flex items-center gap-4">
             <Link href="/orders" className="hover:text-amber-500 transition-colors flex items-center gap-1">
               <Package className="w-3 h-3" /> Track Order
             </Link>
             <Link href="/help" className="hover:text-amber-500 transition-colors flex items-center gap-1">
               <HelpCircle className="w-3 h-3" /> Help Center
+            </Link><Link href="/contact" className="hover:text-amber-500 transition-colors flex items-center gap-1">
+              <HelpCircle className="w-3 h-3" /> +250 790 336 683
             </Link>
-
             <Link href="/rfq" className="bg-amber-600 text-white px-2 py-0.5 rounded hover:bg-amber-700 transition-colors font-medium">
               Bulk Order (RFQ)
             </Link>
             <Link href="/become-seller" className="hover:text-amber-500 transition-colors flex items-center gap-1">
               <UserPlus className="w-3 h-3" /> Become a Seller
             </Link>
-            <Link href="/about" className="hover:text-amber-500 transition-colors flex items-center gap-1">
-              <Info className="w-3 h-3" /> About Us
-            </Link>
-            <div className="flex items-center gap-2 ml-2 border-l border-gray-600 pl-4">
-              <span className="text-[10px] opacity-50">Follow Us:</span>
-            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] opacity-50">Follow Us:</span>
+            <a href="#" className="hover:text-amber-500 transition-colors">
+              <i className="fa-brands fa-facebook-f text-sm font-bold"></i>
+            </a>
+            <a href="#" className="hover:text-amber-500 transition-colors">
+              <i className="fa-brands fa-instagram text-sm font-bold"></i>
+            </a>
+            <a href="#" className="hover:text-amber-500 transition-colors">
+              <i className="fa-brands fa-linkedin-in text-sm font-bold"></i>
+            </a>
+            <a href="#" className="hover:text-amber-500 transition-colors">
+              <i className="fa-brands fa-youtube text-sm font-bold"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -295,7 +392,7 @@ export default function Header() {
           {/* Brand & Category Trigger */}
           <div className="flex items-center gap-6 flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 group">
-              <img src="/loading/load.png" alt="Logo" className="w-32 h-12 transition-transform group-hover:scale-105" />
+              <img src="/loading/load.png" alt="Logo" className="w-32 h-[70px] transition-transform group-hover:scale-105" />
             </Link>
 
             <div className="relative">
@@ -328,24 +425,41 @@ export default function Header() {
           </div>
 
           {/* Intelligent Search Engine */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center gap-0 h-12">
-            <div className="relative flex-1 h-full flex">
-              <div className="relative flex-1 h-full">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={placeholderText}
-                  className="w-full h-full px-4 border border-gray-300 rounded-l-lg focus:outline-none text-sm"
-                />
-                <Camera className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
-              </div>
+          <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center h-14">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={placeholderText}
+                autoFocus
+                onBlur={() => setTimeout(() => setSuggestions([]), 200)}
+                className="w-full h-12 px-4 pr-16 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900 placeholder:text-black placeholder:opacity-50"
+              />
               <button
                 type="submit"
-                className="h-full px-6 bg-gold/20 text-gold rounded-r-lg hover:bg-gold/30 transition-colors font-semibold text-sm"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-14 w-14 bg-gray-800 text-white mr-[-10] rounded-full hover:bg-gray-900 transition-colors flex items-center justify-center"
               >
-                Search
+                <Search className="w-5 h-5" />
               </button>
+              {suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg  shadow-lg z-50 max-h-60 overflow-y-auto">
+                  {suggestions.map((product: any) => (
+                    <div
+                      key={product._id}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setSearchQuery(product.name.en);
+                        setSuggestions([]);
+                        window.location.href = `/search?q=${encodeURIComponent(product.name.en)}`;
+                      }}
+                    >
+                      <div className="font-medium">{product.name.en}</div>
+                      <div className="text-sm text-gray-500">{product.brand} - {product.category}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </form>
 
@@ -415,56 +529,28 @@ export default function Header() {
       </div>
 
       {/* LAYER 3: CATEGORY MEGA NAVIGATION */}
-      <nav className="border-t border-gray-200 hidden md:block bg-white relative">
+      <nav className={`border-t border-gray-200 hidden md:block bg-white relative transition-all duration-300 ${isScrolled ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-20'}`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-10">
-            <ul className="flex items-center gap-1 overflow-x-auto no-scrollbar h-full">
+            <ul className="flex items-center gap-2 overflow-x-auto no-scrollbar h-full">
               <li className="h-full">
                 <Link href="/" className="flex items-center h-full px-4 text-xs font-bold text-gray-600 hover:text-amber-500 hover:bg-gray-50 transition-all">
                   {t('nav.home')}
                 </Link>
               </li>
               {categoryData.slice(currentCategoryIndex, currentCategoryIndex + 10).map((category) => (
-                <li
-                  key={category.slug}
-                  className="h-full relative"
-                  onMouseEnter={() => handleDropdownEnter(category.name)}
-                  onMouseLeave={handleDropdownLeave}
-                >
+                <li key={category.slug} className="h-full">
                   <Link
                     href={`/category/${category.slug}`}
-                    className="flex items-center h-full px-2 text-[10px] font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all"
+                    className="flex items-center h-full px-2 text-xs font-medium text-gray-600 hover:text-amber-500 hover:bg-gray-50 transition-all"
+                    title={category.description}
                   >
+                    {(() => {
+                      const Icon = categoryIcons[category.slug] || CircuitBoard;
+                      return <Icon className="w-3 h-3 mr-1" />;
+                    })()}
                     {category.name}
                   </Link>
-
-                  {activeDropdown === category.name && (
-                    <div className="absolute top-full left-0 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-3 px-3">
-                      <div className="mb-2">
-                        <h3 className="text-xs font-bold text-gray-900">{category.name}</h3>
-                        <p className="text-[10px] text-gray-500">{category.description}</p>
-                      </div>
-                      <div className="grid grid-cols-1 gap-y-1">
-                        {category.items.slice(0, 5).map((item) => (
-                          <Link
-                            key={item}
-                            href={`/category/${category.slug}?sub=${encodeURIComponent(item.toLowerCase())}`}
-                            className="text-[10px] text-gray-600 hover:text-blue-600 transition-colors"
-                          >
-                            {item}
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="mt-2 pt-2 border-t border-gray-100">
-                        <Link
-                          href={`/category/${category.slug}`}
-                          className="text-[10px] font-medium text-blue-600 hover:underline"
-                        >
-                          View All →
-                        </Link>
-                      </div>
-                    </div>
-                  )}
                 </li>
               ))}
             </ul>
@@ -474,7 +560,7 @@ export default function Header() {
                 onClick={handleWhatsAppClick}
                 className="flex items-center gap-2 text-[11px] font-black text-gray-600 hover:text-blue-600 transition-colors px-3 h-full"
               >
-                <Phone className="w-3 h-3" />
+                <i className="fa-brands fa-telegram w-3 h-3"></i>
               </button>
             </div>
           </div>

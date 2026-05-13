@@ -142,6 +142,44 @@ export async function deleteProduct(id: string) {
   return db.collection('products').deleteOne({ _id: new ObjectId(id) });
 }
 
+export async function searchProducts(query: string, limit: number = 10) {
+  const db = await connectToDatabase();
+  const regex = new RegExp(query, 'i');
+  const products = await db.collection('products').find({
+    $or: [
+      { 'name.en': regex },
+      { 'name.rw': regex },
+      { brand: regex },
+      { category: regex },
+      { 'description.en': regex },
+      { 'description.rw': regex },
+      { tags: { $in: [regex] } }
+    ]
+  }).limit(limit).toArray();
+  return products.map(p => ({
+    ...p,
+    _id: p._id.toString(),
+    name: p.name as { en: string; rw: string },
+    description: p.description as { en: string; rw: string },
+    shortDescription: p.shortDescription as { en: string; rw: string },
+    price: p.price as number,
+    compareAtPrice: p.compareAtPrice as number | undefined,
+    images: p.images as string[],
+    category: p.category as string,
+    categorySlug: p.categorySlug as string,
+    brand: p.brand as string,
+    inStock: p.inStock as boolean,
+    stockQuantity: p.stockQuantity as number,
+    tags: p.tags as string[],
+    specs: p.specs as Record<string, string> | undefined,
+    featured: p.featured as boolean,
+    hotDeal: p.hotDeal as boolean,
+    discount: p.discount as number | undefined,
+    createdAt: p.createdAt as Date,
+    updatedAt: p.updatedAt as Date,
+  }));
+}
+
 export async function createCategory(data: { name: { en: string; rw: string }; slug: string; image: string; featured: boolean; productCount: number }) {
   const db = await connectToDatabase();
   const result = await db.collection('categories').insertOne({

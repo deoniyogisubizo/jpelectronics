@@ -15,22 +15,20 @@ export default function HeroVideo() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-center justify-center">
+      <div className="relative z-10 h-full flex flex-col items-center justify-start pt-4">
+        <img src="/loading/load.png" alt="Logo" className="h-40 ml-[-1100] absolute w-auto mb-6" />
         <div className="container mx-auto px-2 text-left">
           {/* Main text content */}
-          <div className="text-left mb-12">
-            <div className="inline-block bg-yellow-500/20 text-yellow-500 text-[10px] md:text-xs font-bold uppercase tracking-widest px-2 py-1 rounded-sm mb-3 md:mb-4">
-              JP Tech Electronics New & Repair Services
-            </div>
-            <p className="text-xs md:text-base lg:text-lg text-gray-300 mb-6 md:mb-8 max-w-2xl text-left font-light italic leading-relaxed">
+          <div className="text-left mt-[150]">
+            <p className="text-xs md:text-base lg:text-lg text-gray-300 mt-[-10] mb-6 md:mb-8 max-w-2xl text-left font-light italic leading-relaxed">
               Curated technology, expert repairs and solar solutions — brought together with care, precision and genuine service from the heart of Kigali.
             </p>
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-start">
               <Link
-                href="/category/smartphones"
-                className="bg-yellow-400 text-black px-6 py-2 md:px-8 md:py-3 lg:px-12 lg:py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors shadow-lg text-sm md:text-base lg:text-lg"
+                href="/category"
+                className="bg-yellow-400 h-15 text-black px-6 py-2 md:px-8 md:py-3 lg:px-12 lg:py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors shadow-lg text-sm md:text-base lg:text-lg"
               >
                 Shop Now
               </Link>
@@ -44,7 +42,7 @@ export default function HeroVideo() {
           </div>
 
           {/* New Info Panel - Hidden on mobile */}
-          <div className="hidden md:flex flex-col gap-4 max-w-6xl mx-auto absolute bottom-0 left-0 transform translate-x-0 mb-15 px-2">
+          <div className="hidden md:flex flex-col gap-4 max-w-6xl mx-auto mt-[-10] absolute bottom-0 left-0 transform translate-x-0 mb-15 px-2">
             {/* First Column - Brand Icons with heading */}
             <div className="space-y-4 mt-0 mb-8">
               {/* Main heading */}
