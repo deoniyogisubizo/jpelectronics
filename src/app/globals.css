@@ -1,23 +1,32 @@
 @import "tailwindcss";
 
-/* Custom theme configuration */
+/* ═══════════════════════════════════════════════
+   JP ELECTRONICS COLOR SYSTEM
+   60% Beige  |  30% Black  |  10% Gold
+   No blue. Warm, grounded, premium.
+   ═══════════════════════════════════════════════ */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-gold: #d4af37;
-  --color-gold-light: #f0e68c;
-  --color-vibrant: #1e3a8a;
-  --color-beige: rgba(245, 245, 220, 0.8);
-  --color-beige-light: #faf8f3;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-share-tech-mono: var(--font-share-tech-mono);
-  --font-outfit: var(--font-outfit);
+  --color-background: var(--color-beige);
+  --color-foreground: var(--color-black);
+
+  /* Core palette */
+  --color-beige:        rgba(232, 224, 200, 0.60);   /* 60 % — warm cream */
+  --color-beige-solid:  #e8e0c8;                      /* 60 % opaque — for img bg etc */
+  --color-beige-deep:   #d4cbb6;                      /* deeper shade for card bg */
+  --color-black:        #1a202c;                       /* 30 % — near-black / dark navy */
+  --color-gold:         #d4af37;                       /* 10 % — brand accent */
+
+  /* Typography */
+  --font-sans:              var(--font-geist-sans);
+  --font-mono:              var(--font-geist-mono);
+  --font-share-tech-mono:   var(--font-share-tech-mono);
+  --font-outfit:            var(--font-outfit);
 }
 
 :root {
   --background: var(--color-beige);
-  --foreground: #1a1a1a;
+  --foreground: var(--color-black);
 }
 
 body {
@@ -26,55 +35,100 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* Utility classes */
-.w-32 { width: calc(var(--spacing) * 22); }
-.bg-gold { background-color: var(--color-gold); }
-.text-gold { color: var(--color-gold); }
-.bg-vibrant { background: var(--color-vibrant); }
-.bg-beige { background-color: var(--color-beige); }
-.bg-beige-light { background-color: var(--color-beige-light); }
-.font-share-tech-mono { font-family: var(--font-share-tech-mono); }
+/* ─── Visual utility overrides ─── */
 
-/* Product card hover effects */
+/* Beige surfaces */
+.bg-beige      { background-color: rgba(232, 224, 200, 0.60); }
+.bg-beige-solid { background-color: #e8e0c8; }
+.bg-beige-deep  { background-color: #d4cbb6; }
+
+/* Gold set — ONLY accent elements are gold text */
+.text-gold     { color: #d4af37; }
+.bg-gold       { background-color: #d4af37; }
+.bg-gold-light { background-color: #f0e68c; }
+.text-gold-light { color: #f0e68c; }
+
+/* Vibrant → gold */
+.bg-vibrant    { background-color: #d4af37; }
+
+/* Text color on beige: pure black for consistency */
+.text-primary  { color: #1a202c; }
+
+/* Panel navy heading font */
+.font-share-tech-mono { font-family: var(--font-share-tech-mono); }
+.font-outfit          { font-family: var(--font-outfit); }
+
+/* ─── Reusable button styles ─── */
+
+.btn-primary {
+  background-color: #1a202c;
+  color: #e8e0c8;
+  padding: .75rem 1.5rem;
+  border-radius: .5rem;
+  font-weight: 600;
+  transition: opacity .2s;
+}
+.btn-primary:hover { opacity: .88; }
+
+.btn-gold {
+  background-color: #d4af37;
+  color: #1a202c;
+  padding: .75rem 1.5rem;
+  border-radius: .5rem;
+  font-weight: 600;
+  transition: background-color .2s;
+}
+.btn-gold:hover { background-color: #c49f2f; }
+
+.btn-outline {
+  border: 2px solid #1a202c;
+  padding: .75rem 1.5rem;
+  border-radius: .5rem;
+  font-weight: 600;
+  transition: all .2s;
+}
+.btn-outline:hover {
+  background-color: #1a202c;
+  color: #e8e0c8;
+}
+
+/* ─── Product card ─── */
 .product-card {
-  transition: all 0.3s ease;
+  transition: all .3s ease;
 }
 .product-card:hover {
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1);
   transform: translateY(-4px);
 }
 
-/* Hot deal badge */
+/* ─── Badges ─── */
 .hot-badge {
   position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  background-color: #dc2626;
-  color: white;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+  top: .5rem; left: .5rem;
+  background-color: #1a202c;
+  color: #e8e0c8;
+  padding: .25rem .5rem;
+  font-size: .75rem;
   font-weight: 700;
-  border-radius: 0.25rem;
+  border-radius: .25rem;
 }
-
 .discount-badge {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background-color: var(--color-gold);
-  color: black;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+  top: .5rem; right: .5rem;
+  background-color: #d4af37;
+  color: #1a202c;
+  padding: .25rem .5rem;
+  font-size: .75rem;
   font-weight: 700;
-  border-radius: 0.25rem;
+  border-radius: .25rem;
 }
 
-/* Category tile */
+/* ─── Category tile ─── */
 .category-tile {
   position: relative;
   overflow: hidden;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
+  border-radius: .5rem;
+  transition: all .3s ease;
 }
 .category-tile:hover {
   transform: scale(1.05);
@@ -82,68 +136,27 @@ body {
 .category-tile-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  background: linear-gradient(to top, rgba(232,224,200,.7), transparent);
 }
 
-/* Button styles */
-.btn-primary {
-  background: var(--color-vibrant);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: opacity 0.2s;
-}
-.btn-primary:hover { opacity: 0.9; }
-
-.btn-secondary {
-  background: var(--color-gold);
-  color: black;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: background-color 0.2s;
-}
-.btn-secondary:hover { background-color: #fbbf24; }
-
-.btn-outline {
-  border: 2px solid black;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-.btn-outline:hover {
-  background: black;
-  color: white;
-}
-
-/* Cart drawer */
+/* ─── Cart drawer ─── */
 .cart-drawer {
   position: fixed;
-  inset-y: 0;
-  right: 0;
-  width: 100%;
-  max-width: 24rem;
-  background: white;
-  box-shadow: -4px 0 24px rgb(0 0 0 / 0.15);
+  inset-inline-start: 0; inset-block-start: 0;
+  block-size: 100%;
+  inline-size: 100%;
+  max-inline-size: 24rem;
+  background: #fff;
+  box-shadow: -4px 0 24px rgb(0 0 0 / .15);
   z-index: 50;
-  transition: transform 0.3s ease;
+  transition: transform .3s ease;
 }
-.cart-drawer-open { transform: translateX(0); }
+.cart-drawer-open   { transform: translateX(0); }
 .cart-drawer-closed { transform: translateX(100%); }
 
-/* Container full width layout */
-.container {
-  width: 100%;
-  margin: 0;
-}
-
-/* Preloader animations */
+/* ─── Preloader ─── */
 @keyframes fade-in {
-  0% { opacity: 0; transform: translateY(20px); }
+  0%   { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-in {
-  animation: fade-in 1s ease-out;
-}
+.animate-fade-in { animation: fade-in 1s ease-out; }

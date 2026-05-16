@@ -368,7 +368,7 @@ export default function CategoryPage() {
                       <button
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(product); }}
                         disabled={!product.inStock}
-                        className="bg-amber-800 text-white text-xs py-1 px-1 rounded hover:bg-lime-600 transition-colors disabled:bg-gray-400"
+                        className="bg-black text-white text-xs py-1 px-1 rounded hover:bg-black/80 transition-colors disabled:bg-gray-400"
                       >
                         Add In Cart
                       </button>

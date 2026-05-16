@@ -9,27 +9,24 @@ export default function Footer() {
 
   return (
     <footer className="bg-black text-white mt-16">
-      {/* Main footer */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-gold rounded-lg flex items-center justify-center">
                 <span className="text-black font-bold text-xl">JP</span>
               </div>
-              <h3 className="text-xl font-bold">JP Tech</h3>
+              <h3 className="text-xl font-bold text-white">JP Tech</h3>
             </div>
             <p className="text-gray-400 text-sm mb-4">
               Your trusted electronics marketplace across Rwanda. Quality products, reliable delivery, excellent support.
             </p>
             <p className="text-gold font-semibold">+250 790 336 683</p>
-            <p className="text-gray-400 text-sm">Konombe-mubusanza, Rwanda</p>
+            <p className="text-gray-500 text-sm">Konombe-mubusanza, Rwanda</p>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li><Link href="/" className="text-gray-400 hover:text-gold transition-colors">{t('nav.home')}</Link></li>
               <li><Link href="/about" className="text-gray-400 hover:text-gold transition-colors">{t('nav.about')}</Link></li>
@@ -39,9 +36,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Categories */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Categories</h4>
+            <h4 className="text-lg font-semibold text-white mb-4">Categories</h4>
             <ul className="space-y-2 text-sm">
               <li><Link href="/category/phones" className="text-gray-400 hover:text-gold transition-colors">{t('categories.smartphones')}</Link></li>
               <li><Link href="/category/computers" className="text-gray-400 hover:text-gold transition-colors">{t('categories.computers')}</Link></li>
@@ -51,40 +47,38 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
+            <h4 className="text-lg font-semibold text-white mb-4">Contact Us</h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-gold" />
-                <span>+250 790 336 683</span>
+                <span className="text-gray-400">+250 790 336 683</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-gold" />
-                <span>+250 796 279 847</span>
+                <span className="text-gray-400">+250 796 279 847</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-gold" />
-                <span>Jndayisenga47@gmail.com</span>
+                <span className="text-gray-400">Jndayisenga47@gmail.com</span>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-gold" />
-                <span>Kigali, Rwanda</span>
+                <span className="text-gray-400">Kigali, Rwanda</span>
               </li>
               <li className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-gold" />
-                <span>Mon-Sat: 8am - 7pm</span>
+                <span className="text-gray-400">Mon–Sat: 8am – 7pm</span>
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="bg-gray-900 py-4">
+      <div className="bg-[#1a202c] py-4">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-2">
-          <p className="text-sm text-gray-400">© 2024 JP Tech. All rights reserved.</p>
-          <p className="text-sm text-gray-400">Proudly serving Rwanda 🇷🇼</p>
+          <p className="text-sm text-gray-500">© 2025 JP Tech. All rights reserved.</p>
+          <p className="text-sm text-gray-500">Proudly serving Rwanda 🇷🇼</p>
         </div>
       </div>
     </footer>

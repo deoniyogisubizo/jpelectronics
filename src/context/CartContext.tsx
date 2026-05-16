@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { CartItem, Product } from '@/types';
 
 interface CartContextType {
@@ -18,6 +19,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [products, setProducts] = useState<Record<string, Product>>({});
@@ -141,7 +143,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
               </button>
               <button
                 onClick={() => {
-                  setIsOpen(true); // Open cart drawer
+                  router.push('/cart');
                   setShowDuplicateAlert(false);
                   setDuplicateProductId(null);
                 }}

@@ -22,18 +22,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     setIsOpen(true);
   };
 
-   const formatPrice = (price: number | undefined) => {
-     if (price === undefined || price === null) {
-       return '0 RWF';
-     }
-     return `${price.toLocaleString()} RWF`;
-   };
+  const formatPrice = (price: number | undefined) => {
+    if (price === undefined || price === null) return '0 RWF';
+    return `${price.toLocaleString()} RWF`;
+  };
 
   return (
     <Link href={`/product/${product._id}`}>
-      <div className="product-card bg-white rounded-lg overflow-hidden shadow-md border border-gray-100 group">
-        {/* Image */}
-        <div className="relative aspect-square overflow-hidden bg-beige">
+      <div className="group bg-white/70 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm border border-black/10 card-hover">
+        <div className="relative aspect-square overflow-hidden bg-beige-solid">
           {product.images && product.images.length > 0 ? (
             <img
               src={product.images[0]}
@@ -46,72 +43,46 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          {/* Hot deal badge */}
-          {product.hotDeal && (
-            <span className="hot-badge">HOT</span>
-          )}
+          {product.hotDeal && <span className="hot-badge">HOT</span>}
+          {product.discount && product.discount > 0 && <span className="discount-badge">-{product.discount}%</span>}
 
-          {/* Discount badge */}
-          {product.discount && product.discount > 0 && (
-            <span className="discount-badge">-{product.discount}%</span>
-          )}
-
-          {/* Out of stock overlay */}
           {!product.inStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
               <span className="text-white font-bold text-lg">Out of Stock</span>
             </div>
           )}
         </div>
 
-        {/* Content */}
         <div className="p-4">
-          {/* Brand */}
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-            {product.brand}
-          </p>
-
-          {/* Name */}
+          <p className="text-xs text-black/60 uppercase tracking-wide mb-1">{product.brand}</p>
           <h3 className="font-semibold text-black mb-2 line-clamp-2 min-h-[2.5rem]">
             {product.name[language] || product.name.en}
           </h3>
 
-          {/* Rating placeholder */}
           <div className="flex items-center gap-1 mb-2">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className={`w-3 h-3 ${i < 4 ? 'fill-gold text-gold' : 'text-gray-300'}`} />
-              ))}
-            </div>
-            <span className="text-xs text-gray-500">(12)</span>
+            {[0, 1, 2, 3].map((i) => (
+              <Star key={i} className="w-3 h-3 text-black fill-black" />
+            ))}
+            <Star className="w-3 h-3 text-gray-300 fill-gray-300" />
+            <span className="text-xs text-black/50 ml-1">(12)</span>
           </div>
 
-          {/* Price */}
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-lg font-bold text-gold" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>
-              {formatPrice(product.price)}
-            </span>
+            <span className="bg-gold text-black text-sm font-bold px-2 py-0.5 rounded" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{formatPrice(product.price)}</span>
             {product.compareAtPrice && product.compareAtPrice > product.price && (
-              <span className="text-sm text-gray-400 line-through" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>
-                {formatPrice(product.compareAtPrice)}
-              </span>
+              <span className="bg-gray-200 text-gray-500 text-sm px-2 py-0.5 rounded line-through" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{formatPrice(product.compareAtPrice)}</span>
             )}
           </div>
 
-          {/* Add to cart button */}
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className="w-full py-2 bg-vibrant text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="w-full py-2 bg-black text-gold rounded-lg font-medium hover:bg-black/80 transition-colors disabled:bg-gray-300/50 disabled:text-gray-400 disabled:cursor-not-allowed"
           >
-            {product.inStock ? t('product.addToCart') : t('product.outOfStock')}
+            {product.inStock ? 'Add To Cart' : 'Out of Stock'}
           </button>
         </div>
       </div>
     </Link>
   );
-}
-
-function t(key: string): string {
-  return key;
 }

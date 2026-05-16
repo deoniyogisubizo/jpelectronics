@@ -359,7 +359,7 @@ export default function ProductDetailPage() {
                       <span className="text-sm">Nationwide Delivery</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-gray-800 rounded-full"></span>
                       <span className="text-sm">Expert Support</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -416,8 +416,8 @@ export default function ProductDetailPage() {
             <h2 className="text-2xl font-bold mb-6">Our Services</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white rounded-lg p-6 shadow text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Truck className="w-8 h-8 text-blue-600" />
+                <div className="w-16 h-16 mx-auto mb-4 bg-black/10 rounded-full flex items-center justify-center">
+                  <Truck className="w-8 h-8 text-black" />
                 </div>
                 <h3 className="font-semibold text-lg mb-3">Nationwide Delivery</h3>
                 <p className="text-gray-600 text-sm">

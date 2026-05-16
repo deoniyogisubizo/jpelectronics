@@ -1,5 +1,4 @@
 import Footer from '@/components/Footer';
-import CartDrawer from '@/components/CartDrawer';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { CartProvider } from '@/context/CartContext';
 import { Phone, Mail, MapPin, MessageCircle, Clock } from 'lucide-react';
@@ -113,7 +112,6 @@ export default function ContactPage() {
           </main>
 
           <Footer />
-          <CartDrawer />
         </div>
       </CartProvider>
     </LanguageProvider>

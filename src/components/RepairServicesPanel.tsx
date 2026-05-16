@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
 
-function RepairServicesPanel() {
+export default function RepairServicesPanel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const repairServices = [
@@ -28,18 +28,11 @@ function RepairServicesPanel() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 2) % repairServices.length);
-    }, 5000); // 5 seconds
-
+    }, 5000);
     return () => clearInterval(interval);
-  }, [repairServices.length]);
+  }, []);
 
-  const service1 = repairServices[currentIndex];
-  const service2 = repairServices[(currentIndex + 1) % repairServices.length];
-  const isAlternateLayout = (currentIndex / 2) % 2 === 1;
-
-  const getDeviceName = (name: string) => {
-    return name.replace(' Repair', '');
-  };
+  const getDeviceName = (name: string) => name.replace(' Repair', '');
 
   const handleCTAClick = (device: string) => {
     const message = `Hi, I need repair for my ${device}`;
@@ -47,55 +40,49 @@ function RepairServicesPanel() {
     window.open(whatsappUrl, '_blank');
   };
 
+  const service1 = repairServices[currentIndex];
+  const service2 = repairServices[(currentIndex + 1) % repairServices.length];
+  const isAlternateLayout = (currentIndex / 2) % 2 === 1;
+
   return (
-    <section className="py-4" style={{ backgroundColor: '#f5f5dc' }}> {/* beige */}
-      <div className="container mx-auto px-4">
+    <section className="py-4 bg-beige-deep">
+      <div className="container mx-auto">
         <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'var(--font-outfit)', color: '#333333' }}>Repair Services</h2> {/* black */}
+          <h2 className="text-2xl md:text-3xl font-bold text-black" style={{ fontFamily: 'var(--font-outfit)', color: '#1a202c' }}>Repair Services</h2>
         </div>
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Column 1 */}
           <div className={`flex items-center gap-6 ${isAlternateLayout ? 'flex-row-reverse' : ''}`}>
             <div className={`${isAlternateLayout ? 'text-right' : 'text-left'} flex-1`}>
-              <h3 className="text-xl font-bold mb-2" style={{ fontFamily: 'var(--font-outfit)', color: '#333333' }}>{service1.name}</h3>
-              <p className="text-gray-700 mb-4" style={{ fontFamily: 'var(--font-outfit)' }}>{service1.description}</p>
+              <h3 className="text-xl font-bold mb-2 text-black">{service1.name}</h3>
+              <p className="text-black/60 mb-4">{service1.description}</p>
               <button
                 onClick={() => handleCTAClick(getDeviceName(service1.name))}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 hover:bg-gold/10 transition-colors"
-                style={{ fontFamily: 'var(--font-outfit)', color: '#d4af37', borderColor: '#d4af37' }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/20 hover:bg-black/10 transition-colors text-black font-semibold"
               >
-                <Send className="w-4 h-4" style={{ transform: 'rotate(45deg)' }} />
+                <Send className="w-4 h-4" />
                 Talk to Repair {getDeviceName(service1.name)}
               </button>
             </div>
             <div className="flex-1">
-              <img
-                src={service1.image}
-                alt={service1.name}
-                className="w-full h-64 object-cover rounded-lg shadow-md"
-              />
+              <img src={service1.image} alt={service1.name}
+                className="w-full h-64 object-cover rounded-lg shadow-sm border border-black/10" />
             </div>
           </div>
-          {/* Column 2 */}
           <div className={`flex items-center gap-6 ${!isAlternateLayout ? 'flex-row-reverse' : ''}`}>
             <div className={`${!isAlternateLayout ? 'text-right' : 'text-left'} flex-1`}>
-              <h3 className="text-xl font-bold mb-2" style={{ fontFamily: 'var(--font-outfit)', color: '#333333' }}>{service2.name}</h3>
-              <p className="text-gray-700 mb-4" style={{ fontFamily: 'var(--font-outfit)' }}>{service2.description}</p>
+              <h3 className="text-xl font-bold mb-2 text-black">{service2.name}</h3>
+              <p className="text-black/60 mb-4">{service2.description}</p>
               <button
                 onClick={() => handleCTAClick(getDeviceName(service2.name))}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 hover:bg-gold/10 transition-colors"
-                style={{ fontFamily: 'var(--font-outfit)', color: '#d4af37', borderColor: '#d4af37' }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/20 hover:bg-black/10 transition-colors text-black font-semibold"
               >
-                <Send className="w-4 h-4" style={{ transform: 'rotate(45deg)' }} />
+                <Send className="w-4 h-4" />
                 Talk to Repair {getDeviceName(service2.name)}
               </button>
             </div>
             <div className="flex-1">
-              <img
-                src={service2.image}
-                alt={service2.name}
-                className="w-full h-64 object-cover rounded-lg shadow-md"
-              />
+              <img src={service2.image} alt={service2.name}
+                className="w-full h-64 object-cover rounded-lg shadow-sm border border-black/10" />
             </div>
           </div>
         </div>
@@ -103,5 +90,3 @@ function RepairServicesPanel() {
     </section>
   );
 }
-
-export default RepairServicesPanel;

@@ -824,7 +824,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleViewProduct(product)}
-                          className="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded"
+                          className="text-gray-900 hover:text-black p-2 hover:bg-beige rounded"
                           title="View/Edit Product"
                         >
                           <Eye className="w-5 h-5" />
@@ -881,7 +881,7 @@ export default function AdminDashboard() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleViewProduct(product)}
-                              className="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded transition-colors"
+                              className="text-gray-900 hover:text-black p-2 hover:bg-beige rounded transition-colors"
                               title="View/Edit Product"
                             >
                               <Eye className="w-5 h-5" />

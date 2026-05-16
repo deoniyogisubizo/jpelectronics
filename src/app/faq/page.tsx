@@ -1,6 +1,5 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import CartDrawer from '@/components/CartDrawer';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { CartProvider } from '@/context/CartContext';
 import { HelpCircle, ChevronDown, MessageCircle } from 'lucide-react';
@@ -89,7 +88,6 @@ export default function FAQPage() {
           </main>
 
           <Footer />
-          <CartDrawer />
         </div>
       </CartProvider>
     </LanguageProvider>

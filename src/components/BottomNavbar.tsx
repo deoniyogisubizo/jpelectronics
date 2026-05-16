@@ -23,7 +23,7 @@ export default function BottomNavbar() {
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-beige/80 backdrop-blur-lg border-t border-black/10 shadow-xl">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-beige border-t border-black/10 shadow-xl">
       <div className="flex items-center justify-around py-1 px-4">
         {navItems.map(({ icon: Icon, label, href, key }) => {
           const active = isActive(href);
