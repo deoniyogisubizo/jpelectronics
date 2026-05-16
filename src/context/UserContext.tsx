@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { signIn, signOut, getSession } from 'next-auth/react';
 
 interface User {
   _id: string;
@@ -42,30 +41,27 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const checkSession = async () => {
-      const session = await getSession();
-      if (session?.user) {
-        // Get user details from our database
-        try {
-          const response = await fetch(`/api/auth/user?email=${session.user.email}`);
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData);
+      try {
+        const response = await fetch('/api/auth/providers', { cache: 'no-store' });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.session?.user?.email) {
+            const userResponse = await fetch(`/api/auth/user?email=${data.session.user.email}`);
+            if (userResponse.ok) {
+              const userData = await userResponse.json();
+              setUser(userData);
+            }
           }
-        } catch (error) {
-          console.error('Failed to fetch user data:', error);
         }
-      } else {
-        // Check if user is logged in from localStorage (for manual auth)
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-          setUser(JSON.parse(savedUser));
-        }
+      } catch {
+        // No active session or providers not available
       }
       setIsLoading(false);
     };
 
     checkSession();
   }, []);
+
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -116,8 +112,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const googleLogin = async () => {
     setIsLoading(true);
     try {
-      await signIn('google', { callbackUrl: '/' });
-      // Note: signIn will redirect, so this code might not execute
+      window.location.href = '/api/auth/signin/google?callbackUrl=/';
     } catch (error) {
       setIsLoading(false);
       throw error;
@@ -125,7 +120,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await signOut({ callbackUrl: '/' });
+    await fetch('/api/auth/signout', { method: 'POST' });
     setUser(null);
     localStorage.removeItem('user');
   };

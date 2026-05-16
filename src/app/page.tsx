@@ -23,7 +23,7 @@ export const revalidate = 60;
 function LocallyPopularPanel() {
   return (
     <section className="py-2 md:py-2 bg-green-50">
-      <div className="container mx-auto px-[0.9rem]">
+      <div className="container mx-auto pl-3 pr-1">
         <div className="mb-4 md:mb-6">
           <h2 className="text-base md:text-xl font-bold text-green-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Most Popular in Kigali</h2>
         </div>
@@ -81,7 +81,7 @@ function LocallyPopularPanel() {
 function EducationPanel() {
   return (
     <section className="py-2 bg-yellow-50">
-      <div className="container mx-auto px-[0.9rem]">
+      <div className="container mx-auto pl-3 pr-1">
         <div className="flex items-center gap-3 mb-4">
           <AlertTriangle className="w-8 h-8 text-black" />
           <h2 className="text-lg md:text-3xl font-bold text-yellow-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Before You Buy</h2>
@@ -111,7 +111,7 @@ function EducationPanel() {
 function CommunityPanel() {
   return (
     <section className="py-2 bg-teal-50">
-      <div className="container mx-auto px-[0.9rem]">
+      <div className="container mx-auto pl-3 pr-1">
         <div className="flex items-center gap-2 mb-4">
           <Users className="w-6 h-6 text-teal-600" />
           <h2 className="text-lg md:text-xl font-bold text-teal-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>📊 Community Picked</h2>
@@ -158,7 +158,7 @@ function CommunityPanel() {
 function RealBuyerStory() {
   return (
     <section className="py-2 bg-orange-50">
-      <div className="container mx-auto px-[0.9rem]">
+      <div className="container mx-auto pl-3 pr-1">
         <div className="mb-4">
           <h2 className="text-lg md:text-2xl font-bold text-orange-700" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>💬 Real Buyer Story</h2>
         </div>
@@ -202,28 +202,28 @@ function RealBuyerStory() {
 
 function TrustStrip() {
   return (
-    <section className="bg-gradient-to-r from-black to-gray-800 text-white py-2">
-      <div className="container mx-auto px-[0.9rem]">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div className="flex flex-col items-center gap-2">
-            <Truck className="w-8 h-8 text-yellow-400" />
-            <h3 className="font-semibold">Fast Delivery</h3>
-            <p className="text-sm text-gray-400">Kigali: 1-2 days</p>
+    <section className="bg-beige py-3 border-t border-gray-200">
+      <div className="container mx-auto pl-3 pr-1">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="flex flex-col items-center gap-1">
+            <Truck className="w-6 h-6 text-black" />
+            <h3 className="font-semibold text-sm text-black">Fast Delivery</h3>
+            <p className="text-xs text-gray-600">Kigali: 1-2 days</p>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <MessageCircle className="w-8 h-8 text-yellow-400" />
-            <h3 className="font-semibold">WhatsApp Support</h3>
-            <p className="text-sm text-gray-400">+250 790 336 683</p>
+          <div className="flex flex-col items-center gap-1">
+            <MessageCircle className="w-6 h-6 text-black" />
+            <h3 className="font-semibold text-sm text-black">WhatsApp Support</h3>
+            <p className="text-xs text-gray-600">+250 790 336 683</p>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <Shield className="w-8 h-8 text-yellow-400" />
-            <h3 className="font-semibold">1 Year Warranty</h3>
-            <p className="text-sm text-gray-400">All products</p>
+          <div className="flex flex-col items-center gap-1">
+            <Shield className="w-6 h-6 text-black" />
+            <h3 className="font-semibold text-sm text-black">1 Year Warranty</h3>
+            <p className="text-xs text-gray-600">All products</p>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <Store className="w-8 h-8 text-yellow-400" />
-            <h3 className="font-semibold">Cash on Delivery</h3>
-            <p className="text-sm text-gray-400">Pay on delivery</p>
+          <div className="flex flex-col items-center gap-1">
+            <Store className="w-6 h-6 text-black" />
+            <h3 className="font-semibold text-sm text-black">Cash on Delivery</h3>
+            <p className="text-xs text-gray-600">Pay on delivery</p>
           </div>
         </div>
       </div>
@@ -242,7 +242,7 @@ export default async function HomePage() {
 
       {/* Category Tiles */}
       <section className="py-1 md:py-2 bg-beige">
-        <div className="container mx-auto px-[0.9rem] md:px-[0.9rem]">
+        <div className="container mx-auto pl-3 pr-1 md:pl-3 pr-1">
           <h2 className="text-xs md:text-xl font-bold my-6 md:my-12 text-center uppercase" style={{ fontFamily: 'Outfit, sans-serif' }}>
             In our shop we deliver all these category
           </h2>
@@ -268,61 +268,6 @@ export default async function HomePage() {
 
       {/* Panel 4.5: Repair Services */}
       <RepairServicesPanel />
-
-      {/* Panel 5: Build Your Bundle */}
-      <section className="py-2 bg-green-50">
-        <div className="container mx-auto px-[0.9rem]">
-          <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-green-700">Build Your Bundle</h2>
-          </div>
-          <div className="bg-white rounded-lg p-3 md:p-4 shadow">
-            <p className="text-gray-600 mb-3 md:mb-4 text-xs md:text-sm">Create your perfect tech setup and save up to 25%</p>
-            <div className="md:grid md:grid-cols-4 md:gap-3 md:mb-4">
-              <div className="md:hidden flex flex-col gap-2 mb-3">
-                <div className="flex justify-center">
-                  <div className="rounded-lg p-2 text-center w-24">
-                    <div className="text-lg mb-1">💻</div>
-                    <div className="font-semibold text-xs">Laptop</div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-1">
-                  <div className="rounded-lg p-2 text-center">
-                    <div className="text-lg mb-1">🎒</div>
-                    <div className="font-semibold text-xs">Laptop Bag</div>
-                  </div>
-                  <div className="rounded-lg p-2 text-center">
-                    <div className="text-lg mb-1">🖱️</div>
-                    <div className="font-semibold text-xs">Mouse</div>
-                  </div>
-                  <div className="rounded-lg p-2 text-center">
-                    <div className="text-lg mb-1">📅</div>
-                    <div className="font-semibold text-xs">Warranty</div>
-                  </div>
-                </div>
-              </div>
-              <div className="hidden md:block rounded-lg p-3 text-center">
-                <div className="text-xl mb-1">💻</div>
-                <div className="font-semibold text-sm">Laptop</div>
-              </div>
-              <div className="hidden md:block rounded-lg p-3 text-center">
-                <div className="text-xl mb-1">🎒</div>
-                <div className="font-semibold text-sm">Laptop Bag</div>
-              </div>
-              <div className="hidden md:block rounded-lg p-3 text-center">
-                <div className="text-xl mb-1">🖱️</div>
-                <div className="font-semibold text-sm">Mouse</div>
-              </div>
-              <div className="hidden md:block rounded-lg p-3 text-center">
-                <div className="text-xl mb-1">📅</div>
-                <div className="font-semibold text-sm">Warranty</div>
-              </div>
-            </div>
-            <Link href="/category/laptops" className="inline-block bg-green-600 text-white px-3 py-2 md:px-2 md:py-2 rounded-lg font-semibold hover:bg-green-500 text-xs md:text-sm">
-              Build My Bundle - Save 18%
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* Panel 6: Education */}
       <EducationPanel />
