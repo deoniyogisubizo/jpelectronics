@@ -373,8 +373,9 @@ export default function CategoryPage() {
                         Add In Cart
                       </button>
                     </div>
-                  </div>
-                </Link>
+                     </div>
+                   </div>
+                 </Link>
               );
             })}
           </div>
