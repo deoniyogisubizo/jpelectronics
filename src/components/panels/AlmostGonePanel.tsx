@@ -2,9 +2,127 @@
 
 import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useCart } from '@/context/CartContext';
+import { CartItem } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart, Shield } from 'lucide-react';
+import { ShoppingCart, Minus, Plus } from 'lucide-react';
+
+function HoverCartSelector({ product }: { product: any }) {
+  const { items, addItem, updateQuantity, removeItem } = useCart();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const cartItem = items.find((item: CartItem) => item.productId === product._id);
+  const qty = cartItem?.quantity ?? 0;
+  const inCart = cartItem !== undefined;
+
+  const handleAddStep = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (inCart) {
+      updateQuantity(product._id, qty + 1);
+    } else {
+      addItem(product._id, 1);
+    }
+  };
+
+  const handleSubStep = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (qty > 1) {
+      updateQuantity(product._id, qty - 1);
+    } else {
+      removeItem(product._id);
+    }
+  };
+
+  return (
+    <div
+      className="relative h-9"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <button
+        className={`w-full h-full py-1.5 bg-black text-white rounded-lg font-medium transition-all duration-200 absolute inset-0
+          ${isHovered ? 'opacity-0 pointer-events-none scale-y-0' : 'opacity-100 pointer-events-auto scale-y-100'}`}
+      >
+        Add In Cart
+      </button>
+      <div
+        className={`absolute inset-0 flex items-center justify-between transition-all duration-200
+          ${isHovered ? 'opacity-100 pointer-events-auto scale-y-100' : 'opacity-0 pointer-events-none scale-y-0'}`}
+      >
+        <button
+          onClick={handleSubStep}
+          className="h-full px-2.5 bg-black text-white rounded-l-lg text-sm font-bold hover:bg-black/80 transition-colors"
+        >
+          <Minus className="w-3.5 h-3.5" />
+        </button>
+        <div className="h-full flex-1 flex items-center justify-center bg-black/5 border-t border-b border-black/10 text-xs font-bold text-black">
+          {inCart ? qty : 'Add'}
+        </div>
+        <button
+          onClick={handleAddStep}
+          className="h-full px-2.5 bg-black text-white rounded-r-lg text-sm font-bold hover:bg-black/80 transition-colors"
+        >
+          <Plus className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PanelCard({ product }: { product: any }) {
+  const formatPrice = (price: number | undefined) => {
+    if (price == null) return '0 RWF';
+    return `${price.toLocaleString()} RWF`;
+  };
+
+  return (
+    <div className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm group relative">
+      <div className="relative aspect-[3/2] overflow-hidden bg-beige-solid">
+        {product.images && product.images.length > 0 ? (
+          <img
+            src={product.images[0]}
+            alt={product.name?.en || 'product'}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400">
+            <ShoppingCart className="w-6 h-6" />
+          </div>
+        )}
+        <span className="absolute top-1 right-1 bg-black text-white text-xs px-1.5 py-0.5 rounded-full font-semibold">
+          {product.stockQuantity} left
+        </span>
+      </div>
+      <div className="p-2">
+        <p className="text-xs text-black/60 uppercase tracking-wide mb-0.5">{product.brand}</p>
+        <h4 className="font-medium text-black text-xs line-clamp-2 min-h-[1.5rem]">{product.name?.en}</h4>
+        <p className="text-xs text-black/50 mb-1 line-clamp-2">
+          {product.description?.en?.substring?.(0, 60) ?? ''}…
+        </p>
+        <div className="flex items-center gap-1">
+          <span
+            className="bg-gold text-black text-xs font-bold px-1.5 py-0.5 rounded"
+            style={{ fontFamily: 'var(--font-share-tech-mono)' }}
+          >
+            {formatPrice(product.price)}
+          </span>
+          {product.compareAtPrice && product.compareAtPrice > product.price && (
+            <span
+              className="bg-gray-200 text-gray-500 text-xs px-1.5 py-0.5 rounded line-through"
+              style={{ fontFamily: 'var(--font-share-tech-mono)' }}
+            >
+              {formatPrice(product.compareAtPrice)}
+            </span>
+          )}
+        </div>
+        {product.inStock && <HoverCartSelector product={product} />}
+      </div>
+    </div>
+  );
+}
 
 export default function AlmostGonePanel() {
   const { ref, inView } = useInView({ triggerOnce: true });
@@ -13,19 +131,25 @@ export default function AlmostGonePanel() {
 
   useEffect(() => {
     if (inView && !loaded) {
-      fetch('/api/products').then(res => res.json()).then(data => {
-        const almostGone = data.filter((p: any) => p.stockQuantity > 0 && p.stockQuantity <= 10).sort(() => Math.random() - 0.5).slice(0, 9);
-        setProducts(almostGone);
-        setLoaded(true);
-      }).catch(err => {
-        console.error('Failed to fetch products:', err);
-        setLoaded(true);
-      });
+      fetch('/api/products')
+        .then(res => res.json())
+        .then(data => {
+          const almostGone = data
+            .filter((p: any) => p.stockQuantity > 0 && p.stockQuantity <= 10)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 9);
+          setProducts(almostGone);
+          setLoaded(true);
+        })
+        .catch(err => {
+          console.error('Failed to fetch products:', err);
+          setLoaded(true);
+        });
     }
   }, [inView, loaded]);
 
   const formatPrice = (price: number | undefined) => {
-    if (price === undefined || price === null) return '0 RWF';
+    if (price == null) return '0 RWF';
     return `${price.toLocaleString()} RWF`;
   };
 
@@ -57,29 +181,7 @@ export default function AlmostGonePanel() {
         {/* Mobile */}
         <div className="md:hidden grid grid-cols-3 gap-3">
           {products.slice(0, 4).map((product: any) => (
-            <Link key={product._id} href={`/product/${product._id}`}>
-              <div className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm group relative">
-                <div className="relative aspect-[3/2] overflow-hidden bg-beige-solid">
-                  {product.images && product.images.length > 0 ? (
-                    <Image src={product.images[0]} alt={product.name.en} width={300} height={200} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400"><ShoppingCart className="w-6 h-6" /></div>
-                  )}
-                  <span className="absolute top-1 right-1 bg-black text-white text-xs px-1.5 py-0.5 rounded-full font-semibold">{product.stockQuantity} left</span>
-                </div>
-                <div className="p-2">
-                  <p className="text-xs text-black/60 uppercase tracking-wide mb-0.5">{product.brand}</p>
-                  <h4 className="font-medium text-black text-xs line-clamp-2 min-h-[1.5rem]">{product.name.en}</h4>
-                  <p className="text-xs text-black/50 mb-1 line-clamp-2">{(product.description?.en || '').substring(0, 60)}…</p>
-                  <div className="flex items-center gap-1">
-                    <span className="bg-gold text-black text-xs font-bold px-1.5 py-0.5 rounded" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{formatPrice(product.price)}</span>
-                    {product.compareAtPrice && product.compareAtPrice > product.price && (
-                      <span className="bg-gray-200 text-gray-500 text-xs px-1.5 py-0.5 rounded" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{formatPrice(product.compareAtPrice)}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Link>
+            <PanelCard key={product._id} product={product} />
           ))}
         </div>
 
@@ -89,7 +191,7 @@ export default function AlmostGonePanel() {
             <div className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm border border-gray-100">
               <div className="relative aspect-[3/4] overflow-hidden bg-beige-solid">
                 {heroProduct.images && heroProduct.images.length > 0 ? (
-                  <Image src={heroProduct.images[0]} alt={heroProduct.name.en} width={300} height={400} className="w-full h-full object-cover" />
+                  <img src={heroProduct.images[0]} alt={heroProduct.name?.en || 'product'} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400"><ShoppingCart className="w-12 h-12" /></div>
                 )}
@@ -97,8 +199,8 @@ export default function AlmostGonePanel() {
               </div>
               <div className="p-4">
                 <p className="text-xs text-black/60 uppercase tracking-wide mb-2">{heroProduct.brand}</p>
-                <h3 className="font-semibold text-black mb-2">{heroProduct.name.en}</h3>
-                <p className="text-black/50 mb-3 text-xs leading-relaxed">{heroProduct.description?.en || 'No description available'}</p>
+                <h3 className="font-semibold text-black mb-2">{heroProduct.name?.en}</h3>
+                <p className="text-black/50 mb-3 text-xs leading-relaxed">{heroProduct.description?.en?.substring?.(0, 120) ?? ''}…</p>
                 <div className="mb-3">
                   <span className="bg-gold text-black text-sm font-bold px-2 py-0.5 rounded" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{formatPrice(heroProduct.price)}</span>
                   {heroProduct.compareAtPrice && heroProduct.compareAtPrice > heroProduct.price && (
@@ -112,29 +214,7 @@ export default function AlmostGonePanel() {
 
           <div className="grid grid-cols-5 grid-rows-2 gap-3">
             {galleryProducts.map((product: any) => (
-              <Link key={product._id} href={`/product/${product._id}`}>
-                <div className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm group relative">
-                  <div className="relative aspect-[3/2] overflow-hidden bg-beige-solid">
-                    {product.images && product.images.length > 0 ? (
-                      <Image src={product.images[0]} alt={product.name.en} width={300} height={200} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400"><ShoppingCart className="w-6 h-6" /></div>
-                    )}
-                    <span className="absolute top-1 right-1 bg-black text-white text-xs px-1 py-0.5 rounded-full font-semibold">{product.stockQuantity} left</span>
-                  </div>
-                  <div className="p-2">
-                    <p className="text-xs text-black/60 uppercase tracking-wide mb-0.5">{product.brand}</p>
-                    <h4 className="font-medium text-black text-xs line-clamp-2 min-h-[1.5rem]">{product.name.en}</h4>
-                    <p className="text-xs text-black/50 mb-1 line-clamp-2">{(product.description?.en || '').substring(0, 60)}…</p>
-                    <div className="flex items-center gap-1">
-                      <span className="bg-gold text-black text-xs font-bold px-1 py-0.5 rounded" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{formatPrice(product.price)}</span>
-                      {product.compareAtPrice && product.compareAtPrice > product.price && (
-                        <span className="bg-gray-200 text-gray-500 text-xs px-1 py-0.5 rounded" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{formatPrice(product.compareAtPrice)}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <PanelCard key={product._id} product={product} />
             ))}
           </div>
         </div>

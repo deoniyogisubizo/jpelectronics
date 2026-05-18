@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { generateSitemap } from '@/lib/sitemap-generator';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const sitemap = await generateSitemap();
