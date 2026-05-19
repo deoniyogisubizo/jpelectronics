@@ -27,6 +27,7 @@ export default function Header() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoriesHovered, setIsCategoriesHovered] = useState(false);
+  const [visibleCategoryCount, setVisibleCategoryCount] = useState(10);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -154,7 +155,7 @@ export default function Header() {
   useEffect(() => {
     if (categoryData.length > 0) {
       const interval = setInterval(() => {
-        setCurrentCategoryIndex((prev) => (prev + 10) % categoryData.length);
+        setCurrentIndex((prev) => (prev + 1) % categories.length);
       }, 30000);
       return () => clearInterval(interval);
     }
@@ -185,6 +186,15 @@ export default function Header() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const updateCategoryCount = () => {
+      setVisibleCategoryCount(window.innerWidth < 500 ? 3 : window.innerWidth < 1100 ? 5 : 10);
+    };
+    updateCategoryCount();
+    window.addEventListener('resize', updateCategoryCount);
+    return () => window.removeEventListener('resize', updateCategoryCount);
   }, []);
 
   const toggleLanguage = () => setLanguage(language === 'en' ? 'rw' : 'en');
@@ -376,41 +386,51 @@ export default function Header() {
         </form>
       </div>
 
-      {/* LAYER 3: CATEGORY MEGA NAV */}
-      <nav className={`border-t border-black/10 hidden md:block bg-white relative transition-all duration-300 ${isScrolled ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-20'}`}>
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-10">
-            <ul className="flex items-center gap-2 overflow-x-auto no-scrollbar h-full">
-              <li className="h-full">
-                <Link href="/" className="flex items-center h-full px-4 text-xs font-bold text-black hover:text-gold hover:bg-beige transition-all">
-                  {t('nav.home')}
-                </Link>
-              </li>
-              {categoryData.slice(currentCategoryIndex, currentCategoryIndex + 10).map((category) => (
-                <li key={category.slug} className="h-full">
-                  <Link
-                    href={`/category/${category.slug}`}
-                    className="flex items-center h-full px-2 text-xs font-medium text-black hover:text-gold hover:bg-beige transition-all"
-                    title={category.description}
-                  >
-                    {(() => {
-                      const Icon = categoryIcons[category.slug] || CircuitBoard;
-                      return <Icon className="w-3 h-3 mr-1" />;
-                    })()}
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex items-center h-full">
-              <button
-                onClick={handleWhatsAppClick}
-                className="flex items-center gap-2 text-[11px] font-bold text-black hover:text-gold transition-colors px-3 h-full"
+      {/* LAYER 3: CATEGORY MEGA NAV — Marquee */}
+      <nav className={`border-t border-black/10 bg-white relative transition-all duration-300 ${isScrolled ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-20'}`} style={{ scrollbarWidth: 'none' }}>
+        <style>{`
+          @keyframes marquee {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+          }
+          .marquee-track {
+            animation: marquee 30s linear infinite;
+          }
+          .marquee-track:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
+        <div className="h-10 overflow-hidden">
+          <div className="marquee-track flex items-center h-full gap-2 whitespace-nowrap w-max">
+            {categoryData.map((category) => (
+              <Link
+                key={category.slug}
+                href={`/category/${category.slug}`}
+                className="flex items-center h-full px-2 text-[10px] sm:text-xs font-medium text-black hover:text-gold hover:bg-beige transition-all mr-4"
+                title={category.description}
               >
-                <MessageCircle className="w-3 h-3" />
-              </button>
-            </div>
+                {(() => {
+                  const Icon = categoryIcons[category.slug] || CircuitBoard;
+                  return <Icon className="w-3 h-3 mr-1" />;
+                })()}
+                {category.name}
+              </Link>
+            ))}
+            {/* Duplicate set for seamless loop */}
+            {categoryData.map((category) => (
+              <Link
+                key={'dup-' + category.slug}
+                href={`/category/${category.slug}`}
+                className="flex items-center h-full px-2 text-[10px] sm:text-xs font-medium text-black hover:text-gold hover:bg-beige transition-all mr-4"
+                title={category.description}
+              >
+                {(() => {
+                  const Icon = categoryIcons[category.slug] || CircuitBoard;
+                  return <Icon className="w-3 h-3 mr-1" />;
+                })()}
+                {category.name}
+              </Link>
+            ))}
           </div>
         </div>
       </nav>

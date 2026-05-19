@@ -188,7 +188,7 @@ export function t(key: string, lang: Language = 'en'): string {
 
 // Rwanda districts with sectors
 export const rwandaDistricts: { name: string; sectors: string[]; deliveryFee: number; estimatedDays: string }[] = [
-  { name: 'Gasabo', sectors: ['Kacyiru', 'Gisozi', 'Nyarugenge', 'Kimihurura', 'Nyarugenge', 'Kicukiro'], deliveryFee: 1500, estimatedDays: '1-2' },
+  { name: 'Gasabo', sectors: ['Kacyiru', 'Gisozi', 'Nyarugenge', 'Kimihurura', 'Kicukiro'], deliveryFee: 1500, estimatedDays: '1-2' },
   { name: 'Kicukiro', sectors: ['Kagarama', 'Kanombe', 'Kicukiro', 'Nyarugenge', 'Gahanga', 'Masaka'], deliveryFee: 2000, estimatedDays: '1-2' },
   { name: 'Nyarugenge', sectors: ['Gitega', 'Kigali', 'Mwumba', 'Nyakabanda', 'Nyamirambo', 'Muhima', 'Rwezamenyo'], deliveryFee: 1500, estimatedDays: '1-2' },
   { name: 'Northern Province', sectors: ['Rulindo', 'Burera', 'Gicumbi', 'Gakenke', 'Musanze'], deliveryFee: 4000, estimatedDays: '3-5' },

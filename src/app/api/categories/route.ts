@@ -1,9 +1,21 @@
 import { NextResponse } from 'next/server';
-import { getCategories, createCategory } from '@/lib/db';
+import { getCategories, createCategory, connectToDatabase } from '@/lib/db';
+
+async function withRetry<T>(fn: () => Promise<T>, attempts = 2): Promise<T> {
+  try {
+    return await fn();
+  } catch (err: any) {
+    if (attempts > 1 && err.message?.includes('Topology is closed')) {
+      await connectToDatabase({ timeoutMS: 5000 });
+      return fn();
+    }
+    throw err;
+  }
+}
 
 export async function GET() {
   try {
-    const categories = await getCategories();
+    const categories = await withRetry(() => getCategories());
     return NextResponse.json(categories);
   } catch (error) {
     console.error('Categories API error:', error);

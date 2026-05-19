@@ -113,6 +113,41 @@ export async function getCategories() {
   }));
 }
 
+export async function getProductSubset(
+  filter: Record<string, unknown>,
+  limit: number = 10,
+  sortByCreatedDesc: boolean = true
+) {
+  const db = await connectToDatabase();
+  const cursor = db.collection('products').find(filter);
+  if (sortByCreatedDesc) {
+    cursor.sort({ createdAt: -1 });
+  }
+  const products = await cursor.limit(limit).toArray();
+  return products.map((p: any) => ({
+    ...p,
+    _id: p._id.toString(),
+    name: p.name as { en: string; rw: string },
+    description: p.description as { en: string; rw: string },
+    shortDescription: p.shortDescription as { en: string; rw: string },
+    price: p.price as number,
+    compareAtPrice: p.compareAtPrice as number | undefined,
+    images: p.images as string[],
+    category: p.category as string,
+    categorySlug: p.categorySlug as string,
+    brand: p.brand as string,
+    inStock: p.inStock as boolean,
+    stockQuantity: p.stockQuantity as number,
+    tags: p.tags as string[],
+    specs: p.specs as Record<string, string> | undefined,
+    featured: p.featured as boolean,
+    hotDeal: p.hotDeal as boolean,
+    discount: p.discount as number | undefined,
+    createdAt: p.createdAt as Date,
+    updatedAt: p.updatedAt as Date,
+  }));
+}
+
 export async function createProduct(data: Omit<ProductDocument, '_id' | 'createdAt' | 'updatedAt'>) {
   const db = await connectToDatabase();
   const now = new Date();
@@ -262,3 +297,6 @@ export async function createUser(data: {
   const result = await db.collection('users').insertOne(user);
   return result.insertedId;
 }
+
+// Re-export connection helper (used by API routes for retry logic)
+export { connectToDatabase };

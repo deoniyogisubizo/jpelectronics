@@ -7,8 +7,9 @@ import { CartItem } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart, Minus, Plus } from 'lucide-react';
+import { HeroPlusGallerySkeleton } from './SkeletonScreens';
 
-function HoverCartSelector({ product }: { product: any }) {
+function HoverCartSelector({ product, className }: { product: any; className?: string }) {
   const { items, addItem, updateQuantity, removeItem } = useCart();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -38,34 +39,26 @@ function HoverCartSelector({ product }: { product: any }) {
 
   return (
     <div
-      className="relative h-9"
+      className={`relative h-9 ${className ?? ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <button
-        className={`w-full h-full py-1.5 bg-black text-white rounded-lg font-medium transition-all duration-200 absolute inset-0
-          ${isHovered ? 'opacity-0 pointer-events-none scale-y-0' : 'opacity-100 pointer-events-auto scale-y-100'}`}
+        className={`w-full h-full py-1.5 bg-black text-white font-medium transition-all duration-200 absolute inset-0 ${isHovered ? 'opacity-0 pointer-events-none scale-y-0' : 'opacity-90 pointer-events-auto scale-y-100'}`}
       >
         Shop Now — Limited Time!
       </button>
       <div
-        className={`absolute inset-0 flex items-center justify-between transition-all duration-200
-          ${isHovered ? 'opacity-100 pointer-events-auto scale-y-100' : 'opacity-0 pointer-events-none scale-y-0'}`}
+        className={`absolute inset-0 flex items-center transition-all duration-200 ${isHovered ? 'opacity-100 pointer-events-auto scale-y-100' : 'opacity-0 pointer-events-none scale-y-0'}`}
       >
-        <button
-          onClick={handleSubStep}
-          className="h-full px-2.5 bg-black text-white rounded-l-lg text-sm font-bold hover:bg-black/80 transition-colors"
-        >
-          <Minus className="w-3.5 h-3.5" />
+        <button onClick={handleSubStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
+          <Minus className="w-4 h-4" />
         </button>
-        <div className="h-full flex-1 flex items-center justify-center bg-black/5 border-t border-b border-black/10 text-xs font-bold text-black">
+        <div className="h-full flex-1 flex items-center justify-center bg-black/5 text-xs font-bold text-black">
           {inCart ? qty : 'Add'}
         </div>
-        <button
-          onClick={handleAddStep}
-          className="h-full px-2.5 bg-black text-white rounded-r-lg text-sm font-bold hover:bg-black/80 transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5" />
+        <button onClick={handleAddStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
+          <Plus className="w-4 h-4" />
         </button>
       </div>
     </div>
@@ -79,7 +72,7 @@ function PanelCard({ product }: { product: any }) {
   };
 
   return (
-    <div className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm group relative">
+    <div className="overflow-hidden group relative">
       <div className="relative aspect-[3/2] overflow-hidden bg-beige-solid">
         {product.images && product.images.length > 0 ? (
           <img
@@ -116,7 +109,7 @@ function PanelCard({ product }: { product: any }) {
             </span>
           )}
         </div>
-        {product.inStock && <HoverCartSelector product={product} />}
+        {product.inStock && <HoverCartSelector product={product} className="mt-1" />}
       </div>
     </div>
   );
@@ -129,20 +122,10 @@ export default function PriceJustDroppedPanel() {
 
   useEffect(() => {
     if (inView && !loaded) {
-      fetch('/api/products')
+      fetch('/api/products/price-dropped')
         .then(res => res.json())
-        .then(data => {
-          const dropped = data
-            .filter((p: any) => p.discount > 0 && p.discount <= 20)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 9);
-          setProducts(dropped);
-          setLoaded(true);
-        })
-        .catch(err => {
-          console.error('Failed to fetch products:', err);
-          setLoaded(true);
-        });
+        .then(data => { setProducts(data); setLoaded(true); })
+        .catch(err => { console.error('Failed to fetch products:', err); setLoaded(true); });
     }
   }, [inView, loaded]);
 
@@ -152,16 +135,7 @@ export default function PriceJustDroppedPanel() {
   };
 
   if (!loaded) {
-    return (
-      <section ref={ref} className="py-2 bg-beige">
-        <div className="container mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-black" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Price Just Dropped</h2>
-          </div>
-          <div className="text-center py-8">Loading…</div>
-        </div>
-      </section>
-    );
+    return <HeroPlusGallerySkeleton label="Price Just Dropped" secondaryLabel="Save now before prices go back up" ref={ref} />;
   }
 
   if (!products.length) return null;
@@ -185,18 +159,27 @@ export default function PriceJustDroppedPanel() {
         </div>
 
         {/* Desktop */}
-        <div className="hidden md:grid grid-cols-[80%_20%] gap-6">
-          <div className="grid grid-cols-5 grid-rows-2 gap-3">
+        <div className="hidden md:grid grid-cols-[70%_30%] gap-3">
+          <div className="grid grid-cols-4 grid-rows-2 gap-3">
             {galleryProducts.map((product: any) => (
               <PanelCard key={product._id} product={product} />
             ))}
           </div>
 
           <Link href={`/product/${heroProduct._id}`}>
-            <div className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm border border-gray-100">
+            <div className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm">
               <div className="relative aspect-[3/4] overflow-hidden bg-beige-solid">
                 {heroProduct.images && heroProduct.images.length > 0 ? (
-                  <img src={heroProduct.images[0]} alt={heroProduct.name?.en || 'product'} className="w-full h-full object-cover" />
+                  <Image
+                    src={heroProduct.images[0]}
+                    alt={heroProduct.name?.en || 'product'}
+                    width={1}
+                    height={1}
+                    sizes="(max-width: 768px) 100vw, 17vw"
+                    className="object-cover"
+                    style={{ width: '100%', height: '100%' }}
+                    priority
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400"><ShoppingCart className="w-12 h-12" /></div>
                 )}

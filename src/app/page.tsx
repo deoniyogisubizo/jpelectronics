@@ -1,13 +1,20 @@
-
-import Footer from '@/components/Footer';
+ 
+ import Footer from '@/components/Footer';
 import dynamic from 'next/dynamic';
 import CategoryTile from '@/components/CategoryTile';
 import RepairServicesPanel from '@/components/RepairServicesPanel';
 import { getCategories } from '@/lib/db';
+import { warmupConnection } from '@/lib/mongodb';
 import { Store, Truck, Shield, MessageCircle, Package, TrendingDown, Users, AlertTriangle, BarChart3, Recycle, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Preloader from '@/components/Preloader';
+
+// Warm up the Atlas connection pool on the server as soon as this page is hit.
+// Only runs when MONGODB_URI is defined; silently skipped otherwise (e.g. during local builds).
+if (process.env.MONGODB_URI) {
+  warmupConnection().catch(() => {});
+}
 
 const HeroVideo = dynamic(() => import('@/components/HeroVideo'));
 const AlmostGonePanel = dynamic(() => import('@/components/panels/AlmostGonePanel'));
@@ -206,7 +213,13 @@ function TrustStrip() {
 }
 
 export default async function HomePage() {
-  const categories = await getCategories();
+  let categories: any[] = [];
+  try {
+    categories = await getCategories();
+  } catch {
+    // DB is unreachable (e.g. during a static build); render with empty data.
+    categories = [];
+  }
 
   return (
     <div className="min-h-screen bg-beige flex flex-col">
