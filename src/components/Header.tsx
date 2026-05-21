@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
 import { useUser } from '@/context/UserContext';
+import { useNavigation } from '@/context/NavigationContext';
 import {
   ShoppingCart, Menu, Store, Globe, User, ChevronDown,
   MessageCircle, X, Home, Phone, MapPin, Package,
@@ -21,6 +22,7 @@ export default function Header() {
   const { itemCount } = useCart();
   const { user } = useUser();
   const router = useRouter();
+  const { navigateTo, startNavigation } = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [placeholderText, setPlaceholderText] = useState('Search components, manufacturers, or SKUs...');
@@ -32,6 +34,7 @@ export default function Header() {
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   const categories = useMemo(() => [
     'STM32 Microcontrollers',
@@ -178,13 +181,25 @@ export default function Header() {
   }, [searchQuery]);
 
   useEffect(() => {
+    const SCROLL_THRESHOLD = 80; // ~2cm to prevent jitter on rapid scrolling
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY.current) setIsScrolled(true);
-      else if (currentScrollY < lastScrollY.current) setIsScrolled(false);
-      lastScrollY.current = currentScrollY;
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const delta = currentScrollY - lastScrollY.current;
+          if (delta > SCROLL_THRESHOLD) {
+            setIsScrolled(true);
+            lastScrollY.current = currentScrollY;
+          } else if (delta < -SCROLL_THRESHOLD) {
+            setIsScrolled(false);
+            lastScrollY.current = currentScrollY;
+          }
+          ticking.current = false;
+        });
+        ticking.current = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -201,7 +216,7 @@ export default function Header() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+    if (searchQuery.trim()) navigateTo(`/search?q=${encodeURIComponent(searchQuery)}`);
   };
 
   const handleWhatsAppClick = () => window.open('https://wa.me/250790336683', '_blank');
@@ -313,7 +328,7 @@ export default function Header() {
                       onClick={() => {
                         setSearchQuery(product.name.en);
                         setSuggestions([]);
-                        window.location.href = `/search?q=${encodeURIComponent(product.name.en)}`;
+                        navigateTo(`/search?q=${encodeURIComponent(product.name.en)}`);
                       }}
                     >
                       <div className="font-medium text-black">{product.name.en}</div>
@@ -349,7 +364,7 @@ export default function Header() {
             </Link>
 
             <button
-              onClick={() => router.push('/cart')}
+              onClick={() => navigateTo('/cart')}
               className="relative flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-black/80 transition-all transform active:scale-95"
             >
               <ShoppingCart className="w-5 h-5" />
@@ -387,14 +402,14 @@ export default function Header() {
       </div>
 
       {/* LAYER 3: CATEGORY MEGA NAV — Marquee */}
-      <nav className={`border-t border-black/10 bg-white relative transition-all duration-300 ${isScrolled ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-20'}`} style={{ scrollbarWidth: 'none' }}>
+      <nav className={`border-t border-black/10 bg-white relative ${isScrolled ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-20'}`} style={{ scrollbarWidth: 'none' }}>
         <style>{`
           @keyframes marquee {
             from { transform: translateX(0); }
             to   { transform: translateX(-50%); }
           }
           .marquee-track {
-            animation: marquee 30s linear infinite;
+            animation: marquee 60s linear infinite;
           }
           .marquee-track:hover {
             animation-play-state: paused;

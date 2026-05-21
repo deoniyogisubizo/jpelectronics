@@ -1,9 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getAllProducts, getProductById, createProduct } from '@/lib/db';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const products = await getAllProducts();
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get('category') || undefined;
+    const categorySlug = searchParams.get('categorySlug') || searchParams.get('category') || undefined;
+    const brand = searchParams.get('brand') || undefined;
+    const featured = searchParams.get('featured') === 'true' ? true : undefined;
+    const hotDeal = searchParams.get('hotDeal') === 'true' ? true : undefined;
+
+    const filter: any = {};
+    if (category) filter.category = category;
+    if (categorySlug) filter.categorySlug = categorySlug;
+    if (brand) filter.brand = brand;
+    if (featured) filter.featured = true;
+    if (hotDeal) filter.hotDeal = true;
+
+    const products = await getAllProducts(filter);
     return NextResponse.json(products);
   } catch (error) {
     console.error('Products API error:', error);

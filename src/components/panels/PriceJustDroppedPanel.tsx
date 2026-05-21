@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart, Minus, Plus } from 'lucide-react';
 import { HeroPlusGallerySkeleton } from './SkeletonScreens';
+import { useHomeData } from '@/context/HomeDataContext';
 
 function HoverCartSelector({ product, className }: { product: any; className?: string }) {
   const { items, addItem, updateQuantity, removeItem } = useCart();
@@ -43,22 +44,36 @@ function HoverCartSelector({ product, className }: { product: any; className?: s
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <button
-        className={`w-full h-full py-1.5 bg-black text-white font-medium transition-all duration-200 absolute inset-0 ${isHovered ? 'opacity-0 pointer-events-none scale-y-0' : 'opacity-90 pointer-events-auto scale-y-100'}`}
-      >
-        Shop Now — Limited Time!
-      </button>
-      <div
-        className={`absolute inset-0 flex items-center transition-all duration-200 ${isHovered ? 'opacity-100 pointer-events-auto scale-y-100' : 'opacity-0 pointer-events-none scale-y-0'}`}
-      >
-        <button onClick={handleSubStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
-          <Minus className="w-4 h-4" />
+      {/* Desktop: keep original text + hover quantity selector */}
+      <div className="hidden md:block">
+        <button
+          className={`w-full h-full py-1.5 bg-black text-white font-medium transition-all duration-200 absolute inset-0 ${isHovered ? 'opacity-0 pointer-events-none scale-y-0' : 'opacity-90 pointer-events-auto scale-y-100'}`}
+        >
+          Shop Now — Limited Time!
         </button>
-        <div className="h-full flex-1 flex items-center justify-center bg-black/5 text-xs font-bold text-black">
-          {inCart ? qty : 'Add'}
+        <div
+          className={`absolute inset-0 flex items-center transition-all duration-200 ${isHovered ? 'opacity-100 pointer-events-auto scale-y-100' : 'opacity-0 pointer-events-none scale-y-0'}`}
+        >
+          <button onClick={handleSubStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
+            <Minus className="w-4 h-4" />
+          </button>
+          <div className="h-full flex-1 flex items-center justify-center bg-black/5 text-xs font-bold text-black">
+            {inCart ? qty : 'Add'}
+          </div>
+          <button onClick={handleAddStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
+            <Plus className="w-4 h-4" />
+          </button>
         </div>
-        <button onClick={handleAddStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
-          <Plus className="w-4 h-4" />
+      </div>
+
+      {/* Mobile only: simple cart-plus icon at the right end */}
+      <div className="md:hidden absolute right-0 bottom-0">
+        <button
+          onClick={handleAddStep}
+          className="h-7 w-7 flex items-center justify-center bg-black text-gold rounded-full text-sm active:scale-95 transition-transform"
+          aria-label="Add to cart"
+        >
+          <i className="fa-solid fa-cart-plus"></i>
         </button>
       </div>
     </div>
@@ -117,17 +132,19 @@ function PanelCard({ product }: { product: any }) {
 
 export default function PriceJustDroppedPanel() {
   const { ref, inView } = useInView({ triggerOnce: true });
-  const [products, setProducts] = useState<any[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const { cache, ensureFetched } = useHomeData();
+  const endpoint = '/api/products/price-dropped';
+  const entry = cache[endpoint] || { data: [], loaded: false };
+  const [products, setProducts] = useState<any[]>(entry.data);
+  const [loaded, setLoaded] = useState<boolean>(entry.loaded);
 
   useEffect(() => {
     if (inView && !loaded) {
-      fetch('/api/products/price-dropped')
-        .then(res => res.json())
+      ensureFetched(endpoint)
         .then(data => { setProducts(data); setLoaded(true); })
-        .catch(err => { console.error('Failed to fetch products:', err); setLoaded(true); });
+        .catch(() => { setLoaded(true); });
     }
-  }, [inView, loaded]);
+  }, [inView, loaded, endpoint, ensureFetched]);
 
   const formatPrice = (price: number | undefined) => {
     if (price == null) return '0 RWF';
@@ -152,7 +169,7 @@ export default function PriceJustDroppedPanel() {
         </div>
 
         {/* Mobile */}
-        <div className="md:hidden grid grid-cols-3 gap-3">
+        <div className="md:hidden grid grid-cols-2 gap-2">
           {products.slice(0, 4).map((product: any) => (
             <PanelCard key={product._id} product={product} />
           ))}

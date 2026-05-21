@@ -23,12 +23,15 @@ export interface ProductDocument {
   updatedAt: Date;
 }
 
-export async function getAllProducts(filter?: { category?: string; brand?: string; featured?: boolean; hotDeal?: boolean }) {
+export async function getAllProducts(filter?: { category?: string; categorySlug?: string; brand?: string; featured?: boolean; hotDeal?: boolean }) {
   const db = await connectToDatabase();
   const query: Record<string, unknown> = {};
 
   if (filter?.category) {
     query.category = filter.category;
+  }
+  if (filter?.categorySlug) {
+    query.categorySlug = filter.categorySlug;
   }
   if (filter?.brand) {
     query.brand = filter.brand;

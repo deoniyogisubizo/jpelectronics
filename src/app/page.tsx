@@ -231,7 +231,38 @@ export default async function HomePage() {
           <h2 className="text-xs md:text-xl font-bold my-6 md:my-12 text-center uppercase text-black" style={{ fontFamily: 'Outfit, sans-serif' }}>
             In our shop we deliver all these categories
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1 md:gap-2">
+
+          {/* Mobile-only teaser: first 10 categories with progressive fade on 7–10 (reduced blur on 9+10), ends with VIEW MORE */}
+          <div className="md:hidden">
+            <div className="grid grid-cols-2 gap-1">
+              {categories.slice(0, 10).map((cat: any, index: number) => {
+                const hasMore = categories.length > 10;
+                let cls = '';
+                if (hasMore) {
+                  if (index === 6) cls = 'blur-[0.5px] opacity-90';
+                  else if (index === 7) cls = 'blur-[1px] opacity-82';
+                  else if (index === 8) cls = 'blur-[1.5px] opacity-68';
+                  else if (index === 9) cls = 'blur-[2px] opacity-52 pointer-events-none';
+                }
+                return (
+                  <div key={cat._id} className={cls}>
+                    <CategoryTile category={cat} />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 text-center">
+              <Link
+                href="/category"
+                className="inline-block bg-black text-gold text-xs font-bold px-5 py-1.5 rounded hover:bg-black/80 active:scale-[0.985] transition-all"
+              >
+                VIEW MORE
+              </Link>
+            </div>
+          </div>
+
+          {/* Desktop / tablet: full grid (original behavior) */}
+          <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-6 gap-1 md:gap-2">
             {categories.map((cat: any) => (
               <CategoryTile key={cat._id} category={cat} />
             ))}
@@ -241,6 +272,60 @@ export default async function HomePage() {
 
       <AlmostGonePanel />
       <PriceJustDroppedPanel />
+
+      {/* Mobile-only intro block — appears BEFORE Just Landed (taller with more info) */}
+      <div className="md:hidden mx-4 mt-2 mb-4 bg-white/80 backdrop-blur-sm rounded-xl p-4 text-[13px] leading-snug text-black/80">
+        <div className="font-bold text-base text-black mb-1 tracking-tight">__ JP ELECTRONICS</div>
+        <p className="text-xs mb-3">Owned &amp; operated by <strong>Ndayisenga Jean Paul</strong> • +250 790 336 683</p>
+
+        {/* What this website is for */}
+        <div className="mb-3">
+          <div className="font-semibold text-black text-xs mb-0.5">What is this website for?</div>
+          <p className="text-[12px]">Your local Kigali electronics store. Buy smartphones, laptops, components, speakers, chargers, monitors and more — all available for fast delivery in the city.</p>
+        </div>
+
+        {/* How to use it */}
+        <div className="mb-3">
+          <div className="font-semibold text-black text-xs mb-0.5">How to use this site</div>
+          <ol className="text-[12px] list-decimal list-inside space-y-0.5">
+            <li>Browse categories or use search</li>
+            <li>Add items to your cart</li>
+            <li>Checkout and confirm your order</li>
+            <li>Pay cash when we deliver to your door</li>
+          </ol>
+        </div>
+
+        {/* Delivery & Payment */}
+        <div className="mb-3">
+          <div className="font-semibold text-black text-xs mb-0.5">Delivery &amp; Payment Options</div>
+          <p className="text-[12px]">• Fast delivery in Kigali (Konombe-Mubusanza &amp; surrounding areas)<br />
+          • Cash on Delivery (COD)<br />
+          • Mobile Money accepted (MTN &amp; Airtel Money)</p>
+        </div>
+
+        {/* Quick FAQ */}
+        <div className="mb-3">
+          <div className="font-semibold text-black text-xs mb-0.5">Quick FAQ</div>
+          <div className="text-[12px] space-y-1">
+            <p><strong>Do you offer warranty?</strong> → Yes, 1 year on most products.</p>
+            <p><strong>Can I return items?</strong> → 7 days if unused and in original condition.</p>
+            <p><strong>Is delivery free?</strong> → Small fee applies (varies by location).</p>
+          </div>
+        </div>
+
+        {/* Phone + CTA */}
+        <a href="tel:+250790336683" className="block text-center text-gold font-medium text-xs mb-2">
+          📞 Call or WhatsApp: +250 790 336 683
+        </a>
+
+        <Link 
+          href="/category" 
+          className="block w-full text-center bg-black text-gold text-xs font-bold py-2 rounded-lg active:scale-[0.985] transition-transform"
+        >
+          Browse All Categories →
+        </Link>
+      </div>
+
       <JustLandedPanel />
       <LocallyPopularPanel />
       <RepairServicesPanel />

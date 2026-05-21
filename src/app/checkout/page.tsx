@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useNavigation } from '@/context/NavigationContext';
 import { rwandaDistricts } from '@/i18n';
 import { Store, CreditCard, CheckCircle, Minus, Plus, Trash2, ShoppingCart, Loader2 } from 'lucide-react';
 import Image from 'next/image';
@@ -13,6 +14,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, removeItem, updateQuantity, loadCartItem, isItemLoading, subtotal, products, clearCart } = useCart();
   const { t } = useLanguage();
+  const { navigateTo } = useNavigation();
 
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
@@ -56,7 +58,7 @@ export default function CheckoutPage() {
             <p className="text-sm text-gray-500 mb-6">
               We will contact you shortly to confirm delivery.
             </p>
-            <button onClick={() => router.push('/')} className="btn-primary">
+            <button onClick={() => navigateTo('/')} className="btn-primary">
               Back to Home
             </button>
           </div>

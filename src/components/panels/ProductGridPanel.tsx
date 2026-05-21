@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { ShoppingCart, Minus, Plus } from 'lucide-react';
 import Masonry from 'react-masonry-css';
 import { FeaturedSkeleton } from './SkeletonScreens';
+import { useHomeData } from '@/context/HomeDataContext';
 
 /** Shared hover cart quantity selector rendered as an overlay on the card footer. */
 function HoverCartSelector({ product, className }: { product: any; className?: string }) {
@@ -29,18 +30,32 @@ function HoverCartSelector({ product, className }: { product: any; className?: s
 
   return (
     <div className={`relative h-9 ${className ?? ''}`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <button className={`w-full h-full py-1.5 bg-black text-white font-medium transition-all duration-200 absolute inset-0 ${isHovered ? 'opacity-0 pointer-events-none scale-y-0' : 'opacity-100 pointer-events-auto scale-y-100'}`}>
-        Add In Cart
-      </button>
-      <div className={`absolute inset-0 flex items-center transition-all duration-200 ${isHovered ? 'opacity-100 pointer-events-auto scale-y-100' : 'opacity-0 pointer-events-none scale-y-0'}`}>
-        <button onClick={handleSubStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
-          <Minus className="w-4 h-4" />
+      {/* Desktop: keep original Add In Cart + hover quantity selector */}
+      <div className="hidden md:block">
+        <button className={`w-full h-full py-1.5 bg-black text-white font-medium transition-all duration-200 absolute inset-0 ${isHovered ? 'opacity-0 pointer-events-none scale-y-0' : 'opacity-100 pointer-events-auto scale-y-100'}`}>
+          Add In Cart
         </button>
-        <div className="h-full flex-1 flex items-center justify-center bg-black/5 text-xs font-bold text-black">
-          {inCart ? qty : 'Add'}
+        <div className={`absolute inset-0 flex items-center transition-all duration-200 ${isHovered ? 'opacity-100 pointer-events-auto scale-y-100' : 'opacity-0 pointer-events-none scale-y-0'}`}>
+          <button onClick={handleSubStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
+            <Minus className="w-4 h-4" />
+          </button>
+          <div className="h-full flex-1 flex items-center justify-center bg-black/5 text-xs font-bold text-black">
+            {inCart ? qty : 'Add'}
+          </div>
+          <button onClick={handleAddStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
+            <Plus className="w-4 h-4" />
+          </button>
         </div>
-        <button onClick={handleAddStep} className="h-full px-3 bg-black text-white text-sm font-bold hover:bg-black/80 transition-colors">
-          <Plus className="w-4 h-4" />
+      </div>
+
+      {/* Mobile only: simple cart-plus icon at the right end */}
+      <div className="md:hidden absolute right-0 bottom-0">
+        <button
+          onClick={handleAddStep}
+          className="h-7 w-7 flex items-center justify-center bg-black text-gold rounded-full text-sm active:scale-95 transition-transform"
+          aria-label="Add to cart"
+        >
+          <i className="fa-solid fa-cart-plus"></i>
         </button>
       </div>
     </div>
@@ -89,26 +104,31 @@ function PanelCard({ product, aspect }: { product: any; aspect?: string }) {
 
 export default function ProductGridPanel() {
   const { ref, inView } = useInView({ triggerOnce: true });
-  const [products, setProducts] = useState<any[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const { cache, ensureFetched } = useHomeData();
+  const endpoint = '/api/products/featured';
+  const entry = cache[endpoint] || { data: [], loaded: false };
+  const [products, setProducts] = useState<any[]>(entry.data);
+  const [loaded, setLoaded] = useState<boolean>(entry.loaded);
 
   useEffect(() => {
     if (inView && !loaded) {
-      fetch('/api/products/featured')
-        .then(res => res.json())
-        .then(data => { setProducts(data); setLoaded(true); })
-        .catch(err => { console.error(err); setLoaded(true); });
+      ensureFetched(endpoint)
+        .then(data => {
+          setProducts(data);
+          setLoaded(true);
+        })
+        .catch(() => {
+          setLoaded(true);
+        });
     }
-  }, [inView, loaded]);
-
-  const formatPrice = (price: number | undefined) => price == null ? '0 RWF' : `${price.toLocaleString()} RWF`;
+  }, [inView, loaded, endpoint, ensureFetched]);
 
   if (!loaded) {
-    return <FeaturedSkeleton />;
+    return <FeaturedSkeleton ref={ref} />;
   }
 
   return (
-    <section className="py-2 bg-beige">
+    <section ref={ref} className="py-2 bg-beige">
       <div className="container mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold text-black mb-8" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Featured Products</h2>
         <Masonry

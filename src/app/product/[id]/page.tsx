@@ -1,20 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Product, Category } from '@/types';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useNavigation } from '@/context/NavigationContext';
 import ProductCard from '@/components/ProductCard';
 import RelatedProductCard from '@/components/RelatedProductCard';
 import { Minus, Plus, Star, Truck, Shield, MessageCircle, MessageSquare } from 'lucide-react';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params?.id as string;
   const { addItem, setIsOpen } = useCart();
   const { language } = useLanguage();
+  const { navigateTo } = useNavigation();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -212,7 +215,7 @@ export default function ProductDetailPage() {
                 </button>
 
                 <button
-                  onClick={() => { addItem(product._id, quantity); window.location.href = '/checkout'; }}
+                  onClick={() => { addItem(product._id, quantity); navigateTo('/checkout'); }}
                   disabled={!product.inStock}
                   className="flex-1 bg-black text-white font-bold py-3 px-2 rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >

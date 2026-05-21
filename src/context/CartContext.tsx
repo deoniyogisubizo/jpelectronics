@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { CartItem, Product } from '@/types';
+import { useNavigation } from '@/context/NavigationContext';
 
 /* ── cache constants ─────────────────────────── */
 const CACHE_KEY = 'jptech-products';
@@ -49,6 +50,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 /* ── provider ────────────────────────────────── */
 export function CartProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const { navigateTo } = useNavigation();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [products, setProducts] = useState<Record<string, Product>>({});
@@ -208,7 +210,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             <p className="text-black text-lg font-semibold mb-4">Your product is already in the cart. Do you want to remove it or proceed to checkout?</p>
             <div className="flex gap-4 justify-center">
               <button onClick={() => { removeItem(duplicateProductId); setShowDuplicateAlert(false); setDuplicateProductId(null); }} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Remove</button>
-              <button onClick={() => { router.push('/cart'); setShowDuplicateAlert(false); setDuplicateProductId(null); }} className="bg-black text-beige px-4 py-2 rounded hover:bg-gray-800">Go to Cart</button>
+              <button onClick={() => { navigateTo('/cart'); setShowDuplicateAlert(false); setDuplicateProductId(null); }} className="bg-black text-beige px-4 py-2 rounded hover:bg-gray-800">Go to Cart</button>
             </div>
           </div>
         </div>

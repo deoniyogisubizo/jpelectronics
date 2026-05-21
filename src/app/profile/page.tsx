@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
+import { useNavigation } from '@/context/NavigationContext';
 
 const rwandaDistricts = [
   'Gasabo', 'Kicukiro', 'Nyarugenge', 'Bugesera', 'Gatsibo', 'Kayonza', 'Kirehe', 'Ngoma', 'Nyagatare', 'Rwamagana',
@@ -24,6 +25,7 @@ interface SignupFormData {
 export default function ProfilePage() {
   const { user, login, signup, googleLogin, logout, isLoading } = useUser();
   const router = useRouter();
+  const { navigateTo } = useNavigation();
 
   const [isSignup, setIsSignup] = useState(true);
   const [formData, setFormData] = useState<SignupFormData>({
@@ -65,7 +67,7 @@ export default function ProfilePage() {
         password: formData.password,
       });
       setSuccess('Account created successfully! Welcome to JPTech.');
-      setTimeout(() => router.push('/'), 2000);
+      setTimeout(() => navigateTo('/'), 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Signup failed');
     }
@@ -78,7 +80,7 @@ export default function ProfilePage() {
     try {
       await login(loginData.email, loginData.password);
       setSuccess('Logged in successfully!');
-      setTimeout(() => router.push('/'), 2000);
+      setTimeout(() => navigateTo('/'), 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }
