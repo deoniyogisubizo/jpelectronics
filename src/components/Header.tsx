@@ -252,7 +252,7 @@ export default function Header() {
             <Link href="/rfq" className="bg-gold text-black px-2 py-0.5 rounded hover:bg-gold-light transition-colors font-medium text-[11px]">
               Bulk Order (RFQ)
             </Link>
-            <Link href="/become-seller" className="hover:text-gold transition-colors flex items-center gap-1">
+            <Link href="/admin" className="hover:text-gold transition-colors flex items-center gap-1">
               <UserPlus className="w-3 h-3" /> Become a Seller
             </Link>
           </div>

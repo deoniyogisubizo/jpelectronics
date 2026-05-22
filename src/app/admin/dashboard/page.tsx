@@ -44,7 +44,7 @@ export default function AdminDashboard() {
 
   // Form states
   const [newProduct, setNewProduct] = useState({
-    nameEn: '', nameRw: '', price: '', stockQuantity: '', category: '', brand: '', images: [] as string[]
+    nameEn: '', nameRw: '', price: '', stockQuantity: '', category: '', categorySlug: '', brand: '', images: [] as string[]
   });
   const [imageOption, setImageOption] = useState<'url' | 'camera' | 'upload'>('url');
   const [imageUrl, setImageUrl] = useState('');
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
           price: parseFloat(newProduct.price),
           images: newProduct.images,
           category: newProduct.category,
-          categorySlug: newProduct.category.toLowerCase().replace(/\s+/g, '-'),
+          categorySlug: newProduct.categorySlug || newProduct.category.toLowerCase().replace(/\s+/g, '-'),
           brand: newProduct.brand,
           inStock: true,
           stockQuantity: parseInt(newProduct.stockQuantity),
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
 
       if (response.ok) {
         logAction('ADD_PRODUCT', { name: newProduct.nameEn, category: newProduct.category, images: newProduct.images.length });
-        setNewProduct({ nameEn: '', nameRw: '', price: '', stockQuantity: '', category: '', brand: '', images: [] });
+        setNewProduct({ nameEn: '', nameRw: '', price: '', stockQuantity: '', category: '', categorySlug: '', brand: '', images: [] });
         setImageUrl('');
         setSelectedFile(null);
         fetchData();
@@ -336,7 +336,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-beige flex flex-col">
+    <div className="min-h-screen bg-beige">
       {/* Mobile Header */}
       <div className="bg-black text-white p-4 md:hidden flex justify-between items-center">
         <div className="flex items-center gap-2">
@@ -423,81 +423,83 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-72 bg-black text-white min-h-screen">
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-4">
+      {/* Desktop sidebar + main side-by-side (fixed responsive layout) */}
+      <div className="flex flex-col md:flex-row">
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:block w-64 bg-black text-white min-h-screen flex-shrink-0">
+          <div className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <button
+                onClick={() => setActiveTab('overview')}
+                className="border-t border-b border-l-0 border-r-0 ml-4 mr-1 bg-transparent text-white p-1 text-sm"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+              <h2 className="text-xl font-bold text-gold">JP Tech Admin</h2>
+            </div>
+          </div>
+          <nav className="mt-6 space-y-2">
             <button
               onClick={() => setActiveTab('overview')}
-              className="border-t border-b border-l-0 border-r-0 ml-4 mr-1 bg-transparent text-white p-1 text-sm"
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'overview' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
             >
-              <ArrowLeft className="w-4 h-4" />
+              📊 Overview
             </button>
-            <h2 className="text-xl font-bold text-gold">JP Tech Admin</h2>
-          </div>
-        </div>
-        <nav className="mt-6 space-y-2">
-          <button
-            onClick={() => setActiveTab('overview')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'overview' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            📊 Overview
-          </button>
-          <button
-            onClick={() => setActiveTab('products')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'products' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            📦 Products
-          </button>
-          <button
-            onClick={() => setActiveTab('categories')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'categories' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            📂 Categories
-          </button>
-          <button
-            onClick={() => setActiveTab('orders')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'orders' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            🚚 Orders
-          </button>
-          <button
-            onClick={() => setActiveTab('analytics')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'analytics' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            📈 Analytics
-          </button>
-          <button
-            onClick={() => setActiveTab('system')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'system' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            ⚙️ System
-          </button>
-          <button
-            onClick={() => setActiveTab('profile')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'profile' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            👤 Profile
-          </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'history' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
-          >
-            📝 History
-          </button>
-          <div className="border-t border-gray-600 pt-4 mt-6">
             <button
-              onClick={() => { localStorage.removeItem('jptech-admin'); router.push('/admin'); }}
-              className="w-full text-left px-6 py-3 text-sm font-medium hover:bg-red-900 text-red-300"
+              onClick={() => setActiveTab('products')}
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'products' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
             >
-              🚪 Logout
+              📦 Products
             </button>
-          </div>
-        </nav>
-      </aside>
+            <button
+              onClick={() => setActiveTab('categories')}
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'categories' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
+            >
+              📂 Categories
+            </button>
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'orders' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
+            >
+              🚚 Orders
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'analytics' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
+            >
+              📈 Analytics
+            </button>
+            <button
+              onClick={() => setActiveTab('system')}
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'system' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
+            >
+              ⚙️ System
+            </button>
+            <button
+              onClick={() => setActiveTab('profile')}
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'profile' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
+            >
+              👤 Profile
+            </button>
+            <button
+              onClick={() => setActiveTab('history')}
+              className={`w-full text-left px-6 py-3 text-sm font-medium ${activeTab === 'history' ? 'bg-gold text-black font-semibold' : 'hover:bg-gray-700 text-white'}`}
+            >
+              📝 History
+            </button>
+            <div className="border-t border-gray-600 pt-4 mt-6">
+              <button
+                onClick={() => { localStorage.removeItem('jptech-admin'); router.push('/admin'); }}
+                className="w-full text-left px-6 py-3 text-sm font-medium hover:bg-red-900 text-red-300"
+              >
+                🚪 Logout
+              </button>
+            </div>
+          </nav>
+        </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 bg-beige min-h-screen">
+        {/* Main Content */}
+        <main className="flex-1 p-4 md:p-6 bg-beige min-h-screen">
         {activeTab === 'overview' && (
           <>
             <div className="mb-6 md:mb-8">
@@ -505,83 +507,83 @@ export default function AdminDashboard() {
               <p className="text-sm md:text-base text-gray-600">Welcome back, Admin</p>
             </div>
 
-            {/* Quick Actions - Desktop Enhanced */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+            {/* Quick Actions - sharp panel style, tight desktop grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-4">
               <button
                 onClick={() => setActiveTab('products')}
-                className="bg-black text-gold p-4 md:p-6 rounded-lg text-center hover:bg-gray-800 transition-all duration-200 transform hover:scale-105"
+                className="bg-black text-gold p-4 md:p-5 text-center hover:bg-gray-800 transition-colors"
               >
-                <Package className="w-5 h-5 md:w-8 md:h-8 mx-auto mb-2" />
+                <Package className="w-5 h-5 md:w-7 md:h-7 mx-auto mb-1.5" />
                 <span className="text-sm md:text-base font-semibold">Products</span>
               </button>
               <button
                 onClick={() => setActiveTab('categories')}
-                className="bg-black text-gold p-4 md:p-6 rounded-lg text-center hover:bg-gray-800 transition-all duration-200 transform hover:scale-105"
+                className="bg-black text-gold p-4 md:p-5 text-center hover:bg-gray-800 transition-colors"
               >
-                <FolderPlus className="w-5 h-5 md:w-8 md:h-8 mx-auto mb-2" />
+                <FolderPlus className="w-5 h-5 md:w-7 md:h-7 mx-auto mb-1.5" />
                 <span className="text-sm md:text-base font-semibold">Categories</span>
               </button>
               <button
                 onClick={() => setActiveTab('orders')}
-                className="bg-black text-gold p-4 md:p-6 rounded-lg text-center hover:bg-gray-800 transition-all duration-200 transform hover:scale-105"
+                className="bg-black text-gold p-4 md:p-5 text-center hover:bg-gray-800 transition-colors"
               >
-                <Truck className="w-5 h-5 md:w-8 md:h-8 mx-auto mb-2" />
+                <Truck className="w-5 h-5 md:w-7 md:h-7 mx-auto mb-1.5" />
                 <span className="text-sm md:text-base font-semibold">Orders</span>
               </button>
               <button
                 onClick={() => setActiveTab('analytics')}
-                className="bg-black text-gold p-4 md:p-6 rounded-lg text-center hover:bg-gray-800 transition-all duration-200 transform hover:scale-105"
+                className="bg-black text-gold p-4 md:p-5 text-center hover:bg-gray-800 transition-colors"
               >
-                <BarChart3 className="w-5 h-5 md:w-8 md:h-8 mx-auto mb-2" />
+                <BarChart3 className="w-5 h-5 md:w-7 md:h-7 mx-auto mb-1.5" />
                 <span className="text-sm md:text-base font-semibold">Analytics</span>
               </button>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="p-3 md:p-4 bg-gold rounded-lg">
+            {/* Stats - sharp no-border panels, tight arrangement for desktop */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-4">
+              <div className="bg-white p-4 md:p-5">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gold">
                     <Package className="w-5 h-5 md:w-6 md:h-6 text-black" />
                   </div>
                   <div>
-                    <p className="text-sm md:text-base text-gray-600 font-medium">Products</p>
+                    <p className="text-sm text-gray-600 font-medium">Products</p>
                     <p className="text-2xl md:text-3xl font-bold text-black">{products.length}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="p-3 md:p-4 bg-black rounded-lg">
+              <div className="bg-white p-4 md:p-5">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-black">
                     <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-gold" />
                   </div>
                   <div>
-                    <p className="text-sm md:text-base text-gray-600 font-medium">Orders</p>
+                    <p className="text-sm text-gray-600 font-medium">Orders</p>
                     <p className="text-2xl md:text-3xl font-bold text-black">{todayOrders}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="p-3 md:p-4 bg-gold rounded-lg">
+              <div className="bg-white p-4 md:p-5">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gold">
                     <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-black" />
                   </div>
                   <div>
-                    <p className="text-sm md:text-base text-gray-600 font-medium">Revenue</p>
+                    <p className="text-sm text-gray-600 font-medium">Revenue</p>
                     <p className="text-2xl md:text-3xl font-bold text-black">{(todayRevenue / 1000000).toFixed(1)}M</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="p-3 md:p-4 bg-black rounded-lg">
+              <div className="bg-white p-4 md:p-5">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-black">
                     <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-red-500" />
                   </div>
                   <div>
-                    <p className="text-sm md:text-base text-gray-600 font-medium">Low Stock</p>
+                    <p className="text-sm text-gray-600 font-medium">Low Stock</p>
                     <p className="text-2xl md:text-3xl font-bold text-red-600">{lowStock}</p>
                   </div>
                 </div>
@@ -592,10 +594,10 @@ export default function AdminDashboard() {
 
         {activeTab === 'products' && (
           <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-6 text-black">Product Management</h1>
+            <h1 className="text-xl md:text-3xl font-bold mb-4 text-black">Product Management</h1>
 
-            {/* Add Product Form */}
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+            {/* Add Product Form - sharp panel */}
+            <div className="bg-white p-4 md:p-5 mb-4">
               <h2 className="text-base md:text-lg font-bold mb-4 text-black">Add New Product</h2>
               <form onSubmit={handleAddProduct} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
@@ -603,7 +605,7 @@ export default function AdminDashboard() {
                   placeholder="Name (English)"
                   value={newProduct.nameEn}
                   onChange={(e) => setNewProduct({ ...newProduct, nameEn: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
                 <input
@@ -611,7 +613,7 @@ export default function AdminDashboard() {
                   placeholder="Name (Kinyarwanda)"
                   value={newProduct.nameRw}
                   onChange={(e) => setNewProduct({ ...newProduct, nameRw: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
                 <input
@@ -619,7 +621,7 @@ export default function AdminDashboard() {
                   placeholder="Price"
                   value={newProduct.price}
                   onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
                 <input
@@ -627,34 +629,41 @@ export default function AdminDashboard() {
                   placeholder="Stock"
                   value={newProduct.stockQuantity}
                   onChange={(e) => setNewProduct({ ...newProduct, stockQuantity: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
-                <input
-                  type="text"
-                  placeholder="Category"
-                  value={newProduct.category}
-                  onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                <select
+                  value={newProduct.categorySlug}
+                  onChange={(e) => {
+                    const slug = e.target.value;
+                    const found = categories.find((c: any) => c.slug === slug);
+                    setNewProduct({ ...newProduct, category: found ? found.name.en : '', categorySlug: slug });
+                  }}
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
-                />
+                >
+                  <option value="">Select Category from Database</option>
+                  {categories.map((c: any) => (
+                    <option key={c._id} value={c.slug}>{c.name?.en || c.slug}</option>
+                  ))}
+                </select>
                 <input
                   type="text"
                   placeholder="Brand"
                   value={newProduct.brand}
                   onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
 
-                {/* Image Upload Section */}
-                <div className="md:col-span-2 border border-gray-200 rounded p-4 md:p-6 bg-gray-50">
+                {/* Image Upload Section - sharp */}
+                <div className="md:col-span-2 p-4 md:p-5 bg-gray-50">
                   <h3 className="text-sm md:text-base font-semibold text-black mb-3">Product Images</h3>
                   <div className="flex flex-wrap gap-3 mb-4">
                     <button
                       type="button"
                       onClick={() => setImageOption('url')}
-                      className={`px-4 py-2 rounded text-sm md:text-base font-medium flex items-center gap-2 ${imageOption === 'url' ? 'bg-black text-gold' : 'bg-gray-200 text-gray-700'
+                      className={`px-4 py-2 rounded-sm text-sm md:text-base font-medium flex items-center gap-2 ${imageOption === 'url' ? 'bg-black text-gold' : 'bg-gray-200 text-gray-700'
                         }`}
                     >
                       <LinkIcon className="w-4 h-4" />
@@ -663,7 +672,7 @@ export default function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => setImageOption('camera')}
-                      className={`px-4 py-2 rounded text-sm md:text-base font-medium flex items-center gap-2 ${imageOption === 'camera' ? 'bg-black text-gold' : 'bg-gray-200 text-gray-700'
+                      className={`px-4 py-2 rounded-sm text-sm md:text-base font-medium flex items-center gap-2 ${imageOption === 'camera' ? 'bg-black text-gold' : 'bg-gray-200 text-gray-700'
                         }`}
                     >
                       <Camera className="w-4 h-4" />
@@ -672,7 +681,7 @@ export default function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => setImageOption('upload')}
-                      className={`px-4 py-2 rounded text-sm md:text-base font-medium flex items-center gap-2 ${imageOption === 'upload' ? 'bg-black text-gold' : 'bg-gray-200 text-gray-700'
+                      className={`px-4 py-2 rounded-sm text-sm md:text-base font-medium flex items-center gap-2 ${imageOption === 'upload' ? 'bg-black text-gold' : 'bg-gray-200 text-gray-700'
                         }`}
                     >
                       <Upload className="w-4 h-4" />
@@ -684,10 +693,19 @@ export default function AdminDashboard() {
                     <div className="space-y-3">
                       <input
                         type="url"
-                        placeholder="Enter image URL"
+                        placeholder="Enter image URL (press Enter to add)"
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
-                        className="w-full border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (imageUrl.trim()) {
+                              setNewProduct({ ...newProduct, images: [...newProduct.images, imageUrl.trim()] });
+                              setImageUrl('');
+                            }
+                          }
+                        }}
+                        className="w-full border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                       />
                       <button
                         type="button"
@@ -697,7 +715,7 @@ export default function AdminDashboard() {
                             setImageUrl('');
                           }
                         }}
-                        className="bg-gold text-black px-4 py-2 rounded text-sm md:text-base font-semibold hover:bg-yellow-600 flex items-center gap-2"
+                        className="bg-gold text-black px-4 py-2 rounded-sm text-sm md:text-base font-semibold hover:bg-yellow-600 flex items-center gap-2"
                       >
                         <Plus className="w-4 h-4" />
                         Add URL
@@ -763,7 +781,7 @@ export default function AdminDashboard() {
                             <img
                               src={image}
                               alt={`Product image ${index + 1}`}
-                              className="w-full h-20 md:h-24 object-cover rounded border-2 border-gray-200"
+                              className="w-full h-20 md:h-24 object-cover"
                             />
                             <button
                               type="button"
@@ -782,16 +800,16 @@ export default function AdminDashboard() {
                   )}
                 </div>
 
-                <button type="submit" className="bg-black text-gold px-4 py-3 rounded text-sm md:text-base font-semibold hover:bg-gray-800 md:col-span-2 flex items-center justify-center gap-2">
+                <button type="submit" className="bg-black text-gold px-4 py-3 rounded-sm text-sm md:text-base font-semibold hover:bg-gray-800 md:col-span-2 flex items-center justify-center gap-2">
                   <Plus className="w-4 h-4" />
                   Add Product
                 </button>
               </form>
             </div>
 
-            {/* Product List */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 md:p-6 border-b border-gray-200">
+            {/* Product List - sharp panel */}
+            <div className="bg-white">
+              <div className="p-4 md:p-5 border-b border-gray-200">
                 <h2 className="text-base md:text-lg font-bold text-black">Products ({products.length})</h2>
               </div>
 
@@ -818,13 +836,13 @@ export default function AdminDashboard() {
                           type="number"
                           defaultValue={product.price}
                           onBlur={(e) => handleUpdatePrice(product._id, parseFloat(e.target.value), product.name.en)}
-                          className="border border-gray-300 p-2 rounded text-sm w-20"
+                          className="border-0 border-b border-gray-400 p-2 bg-transparent text-sm w-20"
                         />
                       </div>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleViewProduct(product)}
-                          className="text-gray-900 hover:text-black p-2 hover:bg-beige rounded"
+                          className="text-gray-900 hover:text-black p-2 hover:bg-beige"
                           title="View/Edit Product"
                         >
                           <Eye className="w-5 h-5" />
@@ -873,7 +891,7 @@ export default function AdminDashboard() {
                             type="number"
                             defaultValue={product.price}
                             onBlur={(e) => handleUpdatePrice(product._id, parseFloat(e.target.value), product.name.en)}
-                            className="border border-gray-300 p-2 rounded text-sm w-24"
+                            className="border-0 border-b border-gray-400 p-2 bg-transparent text-sm w-24"
                           />
                         </td>
                         <td className="px-6 py-4 text-base">{product.stockQuantity}</td>
@@ -881,21 +899,21 @@ export default function AdminDashboard() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleViewProduct(product)}
-                              className="text-gray-900 hover:text-black p-2 hover:bg-beige rounded transition-colors"
+                              className="text-gray-900 hover:text-black p-2 hover:bg-beige transition-colors"
                               title="View/Edit Product"
                             >
                               <Eye className="w-5 h-5" />
                             </button>
                             <button
                               onClick={() => handleChangeImage(product)}
-                              className="text-green-500 hover:text-green-700 p-2 hover:bg-green-50 rounded transition-colors"
+                              className="text-green-500 hover:text-green-700 p-2 hover:bg-green-50 rounded-sm transition-colors"
                               title="Change Product Image"
                             >
                               <Image className="w-5 h-5" />
                             </button>
                             <button
                               onClick={() => handleDeleteProduct(product._id, product.name.en)}
-                              className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded transition-colors"
+                              className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-sm transition-colors"
                             >
                               <Trash2 className="w-5 h-5" />
                             </button>
@@ -912,10 +930,10 @@ export default function AdminDashboard() {
 
         {activeTab === 'categories' && (
           <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-6 text-black">Category Management</h1>
+            <h1 className="text-xl md:text-3xl font-bold mb-4 text-black">Category Management</h1>
 
-            {/* Add Category Form */}
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+            {/* Add Category Form - sharp */}
+            <div className="bg-white p-4 md:p-5 mb-4">
               <h2 className="text-base md:text-lg font-bold mb-4 text-black">Add New Category</h2>
               <form onSubmit={handleAddCategory} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
@@ -923,7 +941,7 @@ export default function AdminDashboard() {
                   placeholder="Name (English)"
                   value={newCategory.nameEn}
                   onChange={(e) => setNewCategory({ ...newCategory, nameEn: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
                 <input
@@ -931,7 +949,7 @@ export default function AdminDashboard() {
                   placeholder="Name (Kinyarwanda)"
                   value={newCategory.nameRw}
                   onChange={(e) => setNewCategory({ ...newCategory, nameRw: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
                 <input
@@ -939,7 +957,7 @@ export default function AdminDashboard() {
                   placeholder="Slug"
                   value={newCategory.slug}
                   onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
                 <input
@@ -947,32 +965,32 @@ export default function AdminDashboard() {
                   placeholder="Image URL"
                   value={newCategory.image}
                   onChange={(e) => setNewCategory({ ...newCategory, image: e.target.value })}
-                  className="border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
-                <button type="submit" className="bg-black text-gold px-4 py-3 rounded text-sm md:text-base font-semibold hover:bg-gray-800 md:col-span-2 flex items-center justify-center gap-2">
+                <button type="submit" className="bg-black text-gold px-4 py-3 rounded-sm text-sm md:text-base font-semibold hover:bg-gray-800 md:col-span-2 flex items-center justify-center gap-2">
                   <Plus className="w-4 h-4" />
                   Add Category
                 </button>
               </form>
             </div>
 
-            {/* Category List */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 md:p-6 border-b border-gray-200">
+            {/* Category List - sharp panels */}
+            <div className="bg-white">
+              <div className="p-4 md:p-5 border-b border-gray-200">
                 <h2 className="text-base md:text-lg font-bold text-black">Categories ({categories.length})</h2>
               </div>
-              <div className="p-4 md:p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              <div className="p-4 md:p-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
                   {categories.map((category) => (
-                    <div key={category._id} className="border border-gray-200 rounded-lg p-4 md:p-6 flex justify-between items-center hover:shadow-md transition-shadow">
+                    <div key={category._id} className="bg-white p-4 md:p-5 flex justify-between items-center border-b border-gray-200 last:border-0">
                       <div>
                         <h3 className="text-base md:text-lg font-semibold text-black">{category.name.en}</h3>
                         <p className="text-sm md:text-base text-gray-600">{category.productCount} products</p>
                       </div>
                       <button
                         onClick={() => handleDeleteCategory(category._id, category.name.en)}
-                        className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded transition-colors"
+                        className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-sm transition-colors"
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
@@ -986,10 +1004,10 @@ export default function AdminDashboard() {
 
         {activeTab === 'system' && (
           <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-6 text-black">System Settings</h1>
+            <h1 className="text-xl md:text-3xl font-bold mb-4 text-black">System Settings</h1>
 
-            {/* Hero Video Settings */}
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+            {/* Hero Video Settings - sharp */}
+            <div className="bg-white p-4 md:p-5 mb-4">
               <h2 className="text-base md:text-lg font-bold mb-4 flex items-center text-black">
                 <Video className="w-5 h-5 mr-3 text-gold" />
                 Hero Video
@@ -999,11 +1017,11 @@ export default function AdminDashboard() {
                   type="text"
                   value={heroVideo}
                   onChange={(e) => setHeroVideo(e.target.value)}
-                  className="flex-1 border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="flex-1 border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                 />
                 <button
                   onClick={handleUpdateHeroVideo}
-                  className="bg-black text-gold px-4 py-3 rounded text-sm md:text-base font-semibold hover:bg-gray-800 flex items-center justify-center gap-2"
+                  className="bg-black text-gold px-4 py-3 rounded-sm text-sm md:text-base font-semibold hover:bg-gray-800 flex items-center justify-center gap-2"
                 >
                   <Edit className="w-4 h-4" />
                   Update Video
@@ -1011,8 +1029,8 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Contact Number Settings */}
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+            {/* Contact Number Settings - sharp */}
+            <div className="bg-white p-4 md:p-5 mb-4">
               <h2 className="text-base md:text-lg font-bold mb-4 flex items-center text-black">
                 <Phone className="w-5 h-5 mr-3 text-gold" />
                 Contact Number
@@ -1022,11 +1040,11 @@ export default function AdminDashboard() {
                   type="text"
                   value={contactNumber}
                   onChange={(e) => setContactNumber(e.target.value)}
-                  className="flex-1 border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                  className="flex-1 border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                 />
                 <button
                   onClick={handleUpdateContactNumber}
-                  className="bg-black text-gold px-4 py-3 rounded text-sm md:text-base font-semibold hover:bg-gray-800 flex items-center justify-center gap-2"
+                  className="bg-black text-gold px-4 py-3 rounded-sm text-sm md:text-base font-semibold hover:bg-gray-800 flex items-center justify-center gap-2"
                 >
                   <Edit className="w-4 h-4" />
                   Update Number
@@ -1034,59 +1052,36 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Contact Number Settings */}
-            <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
-              <h2 className="text-sm md:text-base font-bold mb-3 flex items-center text-black">
-                <Phone className="w-4 h-4 mr-2 text-gold" />
-                Contact Number
-              </h2>
-              <div className="flex flex-col md:flex-row gap-2 md:gap-4">
-                <input
-                  type="text"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  className="flex-1 border border-gray-300 p-2 rounded text-xs"
-                  placeholder="Contact Number"
-                />
-                <button
-                  onClick={handleUpdateContactNumber}
-                  className="bg-black text-gold px-3 py-2 rounded text-xs font-semibold hover:bg-gray-800 flex items-center justify-center gap-1"
-                >
-                  <Edit className="w-3 h-3" />
-                  Update Number
-                </button>
-              </div>
-            </div>
-
-            {/* System Performance */}
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200">
+            {/* Performance - sharp */}
+            <div className="bg-white p-4 md:p-5">
               <h2 className="text-base md:text-lg font-bold mb-4 flex items-center text-black">
                 <Activity className="w-5 h-5 mr-3 text-gold" />
                 Performance
               </h2>
-              <div className="grid grid-cols-3 gap-3 md:gap-6">
-                <div className="text-center p-4 md:p-6 bg-beige rounded-lg hover:shadow-md transition-shadow">
+              <div className="grid grid-cols-3 gap-2 md:gap-3">
+                <div className="text-center p-4 md:p-5 bg-gray-50">
                   <div className="text-lg md:text-2xl font-bold text-black">{Math.floor(Math.random() * 20) + 80}%</div>
-                  <div className="text-sm md:text-base text-gray-600 font-medium">CPU</div>
+                  <div className="text-sm text-gray-600 font-medium">CPU</div>
                 </div>
-                <div className="text-center p-4 md:p-6 bg-beige rounded-lg hover:shadow-md transition-shadow">
+                <div className="text-center p-4 md:p-5 bg-gray-50">
                   <div className="text-lg md:text-2xl font-bold text-black">{(Math.random() * 500 + 200).toFixed(0)}MB</div>
-                  <div className="text-sm md:text-base text-gray-600 font-medium">Memory</div>
+                  <div className="text-sm text-gray-600 font-medium">Memory</div>
                 </div>
-                <div className="text-center p-4 md:p-6 bg-beige rounded-lg hover:shadow-md transition-shadow">
+                <div className="text-center p-4 md:p-5 bg-gray-50">
                   <div className="text-lg md:text-2xl font-bold text-black">{Math.floor(Math.random() * 100) + 50}ms</div>
-                  <div className="text-sm md:text-base text-gray-600 font-medium">Response</div>
+                  <div className="text-sm text-gray-600 font-medium">Response</div>
                 </div>
               </div>
             </div>
+
           </div>
         )}
 
         {activeTab === 'history' && (
           <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-6 text-black">System History</h1>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-4 md:p-6 border-b border-gray-200">
+            <h1 className="text-xl md:text-3xl font-bold mb-4 text-black">System History</h1>
+            <div className="bg-white overflow-hidden">
+              <div className="p-4 md:p-5 border-b border-gray-200">
                 <h2 className="text-base md:text-lg font-bold text-black">Recent Actions ({systemHistory.length})</h2>
               </div>
               <div className="max-h-80 md:max-h-96 overflow-y-auto">
@@ -1123,9 +1118,9 @@ export default function AdminDashboard() {
 
         {activeTab === 'analytics' && (
           <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-6 text-black">Database Analytics</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+            <h1 className="text-xl md:text-3xl font-bold mb-4 text-black">Database Analytics</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
+              <div className="bg-white p-4 md:p-5">
                 <h3 className="text-base md:text-lg font-bold mb-4 text-black">Product Analytics</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm md:text-base">
@@ -1147,7 +1142,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+              <div className="bg-white p-4 md:p-5">
                 <h3 className="text-base md:text-lg font-bold mb-4 text-black">Category Analytics</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm md:text-base">
@@ -1163,7 +1158,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 md:col-span-2 lg:col-span-1 hover:shadow-md transition-shadow">
+              <div className="bg-white p-4 md:p-5 md:col-span-2 lg:col-span-1">
                 <h3 className="text-base md:text-lg font-bold mb-4 text-black">Revenue Analytics</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm md:text-base">
@@ -1186,8 +1181,8 @@ export default function AdminDashboard() {
 
         {activeTab === 'profile' && (
           <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-6 text-black">Profile Settings</h1>
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200">
+            <h1 className="text-xl md:text-3xl font-bold mb-4 text-black">Profile Settings</h1>
+            <div className="bg-white p-4 md:p-5">
               <h2 className="text-base md:text-lg font-bold mb-4 text-black">Admin Profile</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
@@ -1195,7 +1190,7 @@ export default function AdminDashboard() {
                   <input
                     type="text"
                     defaultValue="JP Tech Administrator"
-                    className="w-full border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                    className="w-full border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   />
                 </div>
                 <div>
@@ -1203,7 +1198,7 @@ export default function AdminDashboard() {
                   <input
                     type="email"
                     defaultValue="admin@jptech.rw"
-                    className="w-full border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                    className="w-full border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   />
                 </div>
                 <div>
@@ -1211,7 +1206,7 @@ export default function AdminDashboard() {
                   <input
                     type="tel"
                     defaultValue="+250 790 336 683"
-                    className="w-full border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base"
+                    className="w-full border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   />
                 </div>
                 <div>
@@ -1219,7 +1214,7 @@ export default function AdminDashboard() {
                   <input
                     type="text"
                     defaultValue="Administrator"
-                    className="w-full border border-gray-300 p-3 md:p-4 rounded text-sm md:text-base bg-gray-50"
+                    className="w-full border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base bg-gray-50"
                     readOnly
                   />
                 </div>
@@ -1230,7 +1225,7 @@ export default function AdminDashboard() {
                     logAction('UPDATE_PROFILE', { updated: 'Profile information updated' });
                     alert('Profile updated successfully!');
                   }}
-                  className="bg-black text-gold px-4 py-3 rounded text-sm md:text-base font-semibold hover:bg-gray-800 flex items-center justify-center gap-2"
+                  className="bg-black text-gold px-4 py-3 rounded-sm text-sm md:text-base font-semibold hover:bg-gray-800 flex items-center justify-center gap-2"
                 >
                   <Edit className="w-4 h-4" />
                   Update Profile
@@ -1242,8 +1237,8 @@ export default function AdminDashboard() {
 
         {activeTab === 'orders' && (
           <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-6 text-black">Order Tracking</h1>
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-200">
+            <h1 className="text-xl md:text-3xl font-bold mb-4 text-black">Order Tracking</h1>
+            <div className="bg-white p-4 md:p-5">
               <h2 className="text-base md:text-lg font-bold mb-4 text-black">Recent Orders</h2>
               <div className="text-center text-gray-500 py-8 md:py-12 text-sm md:text-base">
                 Order tracking functionality is under development.
@@ -1257,7 +1252,7 @@ export default function AdminDashboard() {
         {/* Product View/Edit Modal */}
         {viewProductModal && selectedProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-bold text-black">Edit Product</h2>
@@ -1277,7 +1272,7 @@ export default function AdminDashboard() {
                       type="text"
                       value={editProduct.nameEn}
                       onChange={(e) => setEditProduct({ ...editProduct, nameEn: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       required
                     />
                   </div>
@@ -1287,7 +1282,7 @@ export default function AdminDashboard() {
                       type="text"
                       value={editProduct.nameRw}
                       onChange={(e) => setEditProduct({ ...editProduct, nameRw: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       required
                     />
                   </div>
@@ -1296,7 +1291,7 @@ export default function AdminDashboard() {
                     <textarea
                       value={editProduct.descriptionEn}
                       onChange={(e) => setEditProduct({ ...editProduct, descriptionEn: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       rows={3}
                     />
                   </div>
@@ -1305,7 +1300,7 @@ export default function AdminDashboard() {
                     <textarea
                       value={editProduct.descriptionRw}
                       onChange={(e) => setEditProduct({ ...editProduct, descriptionRw: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       rows={3}
                     />
                   </div>
@@ -1315,7 +1310,7 @@ export default function AdminDashboard() {
                       type="number"
                       value={editProduct.price}
                       onChange={(e) => setEditProduct({ ...editProduct, price: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       required
                     />
                   </div>
@@ -1325,7 +1320,7 @@ export default function AdminDashboard() {
                       type="number"
                       value={editProduct.stockQuantity}
                       onChange={(e) => setEditProduct({ ...editProduct, stockQuantity: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       required
                     />
                   </div>
@@ -1335,7 +1330,7 @@ export default function AdminDashboard() {
                       type="text"
                       value={editProduct.category}
                       onChange={(e) => setEditProduct({ ...editProduct, category: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       required
                     />
                   </div>
@@ -1345,7 +1340,7 @@ export default function AdminDashboard() {
                       type="text"
                       value={editProduct.brand}
                       onChange={(e) => setEditProduct({ ...editProduct, brand: e.target.value })}
-                      className="w-full border border-gray-300 p-3 rounded"
+                      className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       required
                     />
                   </div>
@@ -1354,13 +1349,13 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={() => setViewProductModal(false)}
-                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded-sm hover:bg-gray-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-black text-gold rounded hover:bg-gray-800"
+                    className="px-4 py-2 bg-black text-gold rounded-sm hover:bg-gray-800"
                   >
                     Update Product
                   </button>
@@ -1373,7 +1368,7 @@ export default function AdminDashboard() {
         {/* Change Product Image Modal */}
         {changeImageModal && selectedProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-bold text-black">Change Product Images</h2>
@@ -1424,7 +1419,7 @@ export default function AdminDashboard() {
                         placeholder="Enter image URL"
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
-                        className="w-full border border-gray-300 p-3 rounded"
+                        className="w-full border-0 border-b border-gray-400 p-3 bg-transparent"
                       />
                       <button
                         type="button"
@@ -1434,7 +1429,7 @@ export default function AdminDashboard() {
                             setImageUrl('');
                           }
                         }}
-                        className="bg-gold text-black px-4 py-2 rounded font-semibold hover:bg-yellow-600 flex items-center gap-2"
+                        className="bg-gold text-black px-4 py-2 rounded-sm font-semibold hover:bg-yellow-600 flex items-center gap-2"
                       >
                         <Plus className="w-4 h-4" />
                         Add URL
@@ -1498,7 +1493,7 @@ export default function AdminDashboard() {
                             <img
                               src={image}
                               alt={`Product image ${index + 1}`}
-                              className="w-full h-20 object-cover rounded border-2 border-gray-200"
+                              className="w-full h-20 object-cover"
                             />
                             <button
                               type="button"
@@ -1520,14 +1515,14 @@ export default function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => setChangeImageModal(false)}
-                      className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+                      className="px-4 py-2 text-gray-600 border border-gray-300 rounded-sm hover:bg-gray-50"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       onClick={handleUpdateProductImages}
-                      className="px-4 py-2 bg-black text-gold rounded hover:bg-gray-800"
+                      className="px-4 py-2 bg-black text-gold rounded-sm hover:bg-gray-800"
                     >
                       Update Images
                     </button>
@@ -1537,7 +1532,8 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
-      </main>
+       </main>
+      </div>
     </div>
   );
 }
