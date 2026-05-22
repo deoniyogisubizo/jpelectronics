@@ -636,14 +636,14 @@ export default function AdminDashboard() {
                   value={newProduct.categorySlug}
                   onChange={(e) => {
                     const slug = e.target.value;
-                    const found = categories.find((c: any) => c.slug === slug);
+                    const found = categories.find((c) => c.slug === slug);
                     setNewProduct({ ...newProduct, category: found ? found.name.en : '', categorySlug: slug });
                   }}
                   className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 >
                   <option value="">Select Category from Database</option>
-                  {categories.map((c: any) => (
+                  {categories.map((c) => (
                     <option key={c._id} value={c.slug}>{c.name?.en || c.slug}</option>
                   ))}
                 </select>
