@@ -35,6 +35,14 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
+/* ═══════════════════════════════════════════════
+   GLOBAL 90% ZOOM — makes entire system render
+   as if browser is zoomed to 90% view
+   ═══════════════════════════════════════════════ */
+html {
+  zoom: 0.9;
+}
+
 /* ─── Visual utility overrides ─── */
 
 /* Beige surfaces */

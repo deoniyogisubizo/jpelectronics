@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import React from 'react';
-import { ShoppingCart } from 'lucide-react';
 
 /** Base shimmer skeleton card — matches the exact PanelCard UI of each panel. */
 function SkeletonCard({

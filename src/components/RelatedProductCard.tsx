@@ -1,65 +1,68 @@
 'use client';
 
 import { Product } from '@/types';
-import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
+import { Eye } from 'lucide-react';
 
 interface RelatedProductCardProps {
   product: Product;
 }
 
 export default function RelatedProductCard({ product }: RelatedProductCardProps) {
-  const { addItem, setIsOpen } = useCart();
   const { language } = useLanguage();
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem(product._id, 1);
-    setIsOpen(true);
-  };
-
-  const formatPrice = (price: number | undefined) => {
-    if (price === undefined || price === null) {
-      return '0 RWF';
-    }
-    return `${price.toLocaleString()} RWF`;
-  };
+  const name = product.name[language] || product.name.en;
+  let descText = product.shortDescription?.[language] || product.description?.[language] || product.shortDescription?.en || product.description?.en || '';
+  if (!descText) {
+    const brand = product.brand || 'Premium';
+    const category = product.category || 'Electronics';
+    const niceCategory = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+    descText = `High-quality ${niceCategory} from ${brand}. Perfect for your everyday needs in Rwanda.…`;
+  }
+  const desc = descText;
 
   return (
     <Link href={`/product/${product._id}`}>
-      <div className="bg-gold rounded-lg p-4 h-48 flex flex-col justify-between hover:opacity-90 transition-opacity">
-        {/* Brand */}
-        <p className="text-xs text-black uppercase tracking-wide">
-          {product.brand}
-        </p>
+      <div className="group bg-white/70 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm border border-black/10">
+        {/* Image */}
+        <div className="relative aspect-square overflow-hidden bg-beige-solid">
+          {product.images?.[0] ? (
+            <img
+              src={product.images[0]}
+              alt={name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+          )}
 
-        {/* Name */}
-        <h3 className="font-bold text-black text-sm mb-2 line-clamp-2">
-          {product.name[language] || product.name.en}
-        </h3>
-
-        {/* Description */}
-        <p className="text-xs text-black/80 mb-2 line-clamp-2">
-          {product.shortDescription?.[language] || product.shortDescription?.en || product.description?.[language] || product.description?.en || ''}
-        </p>
-
-        {/* Price */}
-        <div className="mb-3">
-          <span className="text-lg font-bold text-black">
-            {formatPrice(product.price)}
-          </span>
+          {/* Eye on hover */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-10">
+            <div className="bg-white/95 rounded-full p-3 shadow">
+              <Eye className="w-5 h-5 text-black" />
+            </div>
+          </div>
         </div>
 
-        {/* Add to cart button */}
-        <button
-          onClick={handleAddToCart}
-          disabled={!product.inStock}
-          className="w-full py-2 bg-black text-white rounded font-medium hover:opacity-90 transition-opacity disabled:bg-gray-500 disabled:cursor-not-allowed text-sm"
-        >
-          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-        </button>
+        {/* Info */}
+        <div className="p-3">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs text-black/60 uppercase tracking-wide">{product.brand}</p>
+            <div className="flex items-center gap-0.5">
+              <span className="text-[10px] text-yellow-500">★★★★☆</span>
+              <span className="text-[10px] text-black/50">(124)</span>
+            </div>
+          </div>
+
+          <h3 className="font-semibold text-black text-sm mb-1 line-clamp-2 leading-snug">
+            {name}
+          </h3>
+
+          <p className="text-xs text-black/70 line-clamp-2">
+            {desc}
+          </p>
+        </div>
       </div>
     </Link>
   );

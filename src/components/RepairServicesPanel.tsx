@@ -1,91 +1,66 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+
+const repairServices = [
+  { name: "Phone Repair", image: "/images/1.jpeg", description: "Screen, battery, software — same-day fixes" },
+  { name: "TV Repair", image: "/images/2.jpeg", description: "Panels, ports, power — bring it back to life" },
+  { name: "Laptop Repair", image: "/images/4.jpeg", description: "Keyboard, screen, motherboard — fast turnaround" },
+  { name: "Fridge & AC Repair", image: "/images/7.jpeg", description: "Compressor, cooling, gas refill" },
+  { name: "Washing Machine", image: "/images/8.jpeg", description: "Motor, pump, board — house calls available" },
+  { name: "Small Appliances", image: "/images/3.jpeg", description: "Kettles, blenders, irons, toasters" },
+];
 
 export default function RepairServicesPanel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const repairServices = [
-    { name: "Phone Repair", image: "/images/1.jpeg", description: "Screen replacement, battery issues, software fixes" },
-    { name: "TV Repair", image: "/images/2.jpeg", description: "Panel replacement, HDMI ports, power supply" },
-    { name: "Kettle Repair", image: "/images/3.jpeg", description: "Heating element, switch replacement" },
-    { name: "Laptop Repair", image: "/images/4.jpeg", description: "Keyboard, screen, motherboard fixes" },
-    { name: "Tablet Repair", image: "/images/5.jpeg", description: "Digitizer, battery, charging issues" },
-    { name: "Microwave Repair", image: "/images/6.jpeg", description: "Magnetron, door switch, control panel" },
-    { name: "Fridge Repair", image: "/images/7.jpeg", description: "Compressor, thermostat, defrost" },
-    { name: "Washing Machine Repair", image: "/images/8.jpeg", description: "Motor, pump, control board" },
-    { name: "Air Conditioner Repair", image: "/images/9.jpeg", description: "Compressor, fan, refrigerant" },
-    { name: "Coffee Maker Repair", image: "/images/10.jpeg", description: "Heating element, pump, grinder" },
-    { name: "Blender Repair", image: "/images/11.jpeg", description: "Motor, blades, switch" },
-    { name: "Vacuum Cleaner Repair", image: "/images/12.jpeg", description: "Motor, filters, suction" },
-    { name: "Iron Repair", image: "/images/13.jpeg", description: "Heating element, thermostat" },
-    { name: "Toaster Repair", image: "/images/14.jpeg", description: "Heating elements, timer" },
-    { name: "Hair Dryer Repair", image: "/images/15.jpeg", description: "Motor, heating element" },
-    { name: "Printer Repair", image: "/images/16.jpeg", description: "Ink cartridges, print head" }
-  ];
-
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 2) % repairServices.length);
-    }, 5000);
+      setCurrentIndex((prev) => (prev + 1) % repairServices.length);
+    }, 4200);
     return () => clearInterval(interval);
   }, []);
 
-  const getDeviceName = (name: string) => name.replace(' Repair', '');
-
   const handleCTAClick = (device: string) => {
-    const message = `Hi, I need repair for my ${device}`;
-    const whatsappUrl = `https://wa.me/250790336683?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const msg = `Hi JP Electronics, I need repair for my ${device}`;
+    window.open(`https://wa.me/250790336683?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  const service1 = repairServices[currentIndex];
-  const service2 = repairServices[(currentIndex + 1) % repairServices.length];
-  const isAlternateLayout = (currentIndex / 2) % 2 === 1;
+  const s1 = repairServices[currentIndex];
+  const s2 = repairServices[(currentIndex + 1) % repairServices.length];
 
   return (
     <section className="py-4 bg-beige-deep">
       <div className="container mx-auto">
-        <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-black" style={{ fontFamily: 'var(--font-outfit)', color: '#1a202c' }}>Repair Services</h2>
+        <div className="mb-4 flex items-center gap-3">
+          <div className="uppercase tracking-[2.5px] text-xs font-bold text-black/60">IN-HOUSE EXPERTS • KIGALI</div>
+          <h2 className="text-2xl md:text-3xl font-black text-black" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>REPAIR SERVICES — WE FIX IT</h2>
         </div>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className={`flex items-center gap-6 ${isAlternateLayout ? 'flex-row-reverse' : ''}`}>
-            <div className={`${isAlternateLayout ? 'text-right' : 'text-left'} flex-1`}>
-              <h3 className="text-xl font-bold mb-2 text-black">{service1.name}</h3>
-              <p className="text-black/60 mb-4">{service1.description}</p>
-              <button
-                onClick={() => handleCTAClick(getDeviceName(service1.name))}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/20 hover:bg-black/10 transition-colors text-black font-semibold"
-              >
-                <Send className="w-4 h-4" />
-                Talk to Repair {getDeviceName(service1.name)}
-              </button>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          {[s1, s2].map((service, idx) => (
+            <div key={idx} className="flex flex-col md:flex-row bg-white/70 backdrop-blur rounded-2xl overflow-hidden border border-black/10">
+              <div className="md:w-5/12">
+                <img src={service.image} alt={service.name} className="w-full h-56 md:h-full object-cover" />
+              </div>
+              <div className="flex-1 p-5 flex flex-col">
+                <div className="uppercase text-[10px] text-gold font-bold tracking-widest mb-1">PROFESSIONAL FIX</div>
+                <h3 className="text-2xl font-bold text-black mb-1">{service.name}</h3>
+                <p className="text-black/70 flex-1 text-sm">{service.description}</p>
+                <button
+                  onClick={() => handleCTAClick(service.name.replace(' Repair', ''))}
+                  className="mt-3 inline-flex items-center gap-2 self-start bg-black text-gold px-4 py-2 rounded-lg text-sm font-semibold hover:bg-black/90 active:scale-[0.985] transition"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  WHATSAPP FOR QUOTE
+                </button>
+              </div>
             </div>
-            <div className="flex-1">
-              <img src={service1.image} alt={service1.name}
-                className="w-full h-64 object-cover rounded-lg shadow-sm border border-black/10" />
-            </div>
-          </div>
-          <div className={`flex items-center gap-6 ${!isAlternateLayout ? 'flex-row-reverse' : ''}`}>
-            <div className={`${!isAlternateLayout ? 'text-right' : 'text-left'} flex-1`}>
-              <h3 className="text-xl font-bold mb-2 text-black">{service2.name}</h3>
-              <p className="text-black/60 mb-4">{service2.description}</p>
-              <button
-                onClick={() => handleCTAClick(getDeviceName(service2.name))}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/20 hover:bg-black/10 transition-colors text-black font-semibold"
-              >
-                <Send className="w-4 h-4" />
-                Talk to Repair {getDeviceName(service2.name)}
-              </button>
-            </div>
-            <div className="flex-1">
-              <img src={service2.image} alt={service2.name}
-                className="w-full h-64 object-cover rounded-lg shadow-sm border border-black/10" />
-            </div>
-          </div>
+          ))}
         </div>
+
+        <div className="text-center mt-3 text-xs text-black/50">16+ device types • 1-year warranty on repairs • Same-day service in Kigali</div>
       </div>
     </section>
   );
