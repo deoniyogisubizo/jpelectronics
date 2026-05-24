@@ -28,9 +28,6 @@ export default function Header() {
   const [placeholderText, setPlaceholderText] = useState('Search components, manufacturers, or SKUs...');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCategoriesHovered, setIsCategoriesHovered] = useState(false);
-  const [visibleCategoryCount, setVisibleCategoryCount] = useState(10);
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollY = useRef(0);
@@ -203,15 +200,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const updateCategoryCount = () => {
-      setVisibleCategoryCount(window.innerWidth < 500 ? 3 : window.innerWidth < 1100 ? 5 : 10);
-    };
-    updateCategoryCount();
-    window.addEventListener('resize', updateCategoryCount);
-    return () => window.removeEventListener('resize', updateCategoryCount);
-  }, []);
-
   const toggleLanguage = () => setLanguage(language === 'en' ? 'rw' : 'en');
 
   const handleSearch = (e: React.FormEvent) => {
@@ -253,7 +241,7 @@ export default function Header() {
               Bulk Order (RFQ)
             </Link>
             <Link href="/admin" className="hover:text-gold transition-colors flex items-center gap-1">
-              <UserPlus className="w-3 h-3" /> Become a Seller
+              <UserPlus className="w-3 h-3" /> Become a Supplier
             </Link>
           </div>
           <div className="flex items-center gap-3">
@@ -269,37 +257,14 @@ export default function Header() {
       {/* LAYER 2: PRIMARY NAV */}
       <div className="container mx-auto px-4 py-1">
         <div className="flex items-center justify-between gap-6">
-          <div className="flex items-center gap-6 flex-shrink-0">
-            <Link href="/" className="flex items-center gap-2 group">
-              <img src="/loading/load.png" alt="Logo" className="w-32 h-[70px] transition-transform group-hover:scale-105" />
+          <div className="flex items-center gap-3 md:gap-6 flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2 md:gap-3 group">
+              <img src="/loading/load.png" alt="Logo" className="w-14 h-9 md:w-20 scale-170 md:h-12 object-contain transition-transform group-hover:scale-105 md:group-hover:scale-205" />
+              <div className="flex flex-col justify-center leading-none font-mono">
+                <span className="font-black text-lg md:text-xl tracking-[1.5px] md:tracking-[2.5px] text-black">JP TECH</span>
+                <span className="text-[7px] md:text-[9px] text-black/70 tracking-[0.5px] md:tracking-[1px]">Electronic shop & repair services</span>
+              </div>
             </Link>
-            <div className="relative">
-              <button
-                onMouseEnter={() => setIsCategoriesHovered(true)}
-                onMouseLeave={() => setIsCategoriesHovered(false)}
-                className="hidden lg:flex items-center gap-1 px-2 py-1 bg-black hover:bg-black/80 rounded text-xs font-medium text-gold transition-colors"
-              >
-                <Menu className="w-3 h-3" />
-                <span>All Categories</span>
-                <ChevronDown className="w-3 h-3" />
-              </button>
-              {isCategoriesHovered && (
-                <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2">
-                  {categoryData.map((category) => (
-                    <Link
-                      key={category.slug}
-                      href={`/category/${category.slug}`}
-                      className="block px-4 py-2 text-sm text-black hover:bg-beige transition-colors"
-                      onMouseEnter={() => setIsCategoriesHovered(true)}
-                      onMouseLeave={() => setIsCategoriesHovered(false)}
-                    >
-                      <div className="font-medium">{category.name}</div>
-                      <div className="text-xs text-black/50">{category.description}</div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
           <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center h-14">
@@ -348,7 +313,7 @@ export default function Header() {
             </div>
 
             <Link href="/profile"
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-black hover:bg-beige rounded-lg transition-colors"
+              className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-black hover:bg-beige rounded-lg transition-colors"
             >
               {user ? (
                 <div className="relative">

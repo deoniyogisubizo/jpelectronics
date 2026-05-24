@@ -1,11 +1,10 @@
  
  import Footer from '@/components/Footer';
 import dynamic from 'next/dynamic';
-import CategoryTile from '@/components/CategoryTile';
 import RepairServicesPanel from '@/components/RepairServicesPanel';
-import { getCategories } from '@/lib/db';
+import { getCategories, getCategoryProductCounts } from '@/lib/db';
 import { warmupConnection } from '@/lib/mongodb';
-import { Store, Truck, Shield, MessageCircle, Package, TrendingDown, Users, AlertTriangle, BarChart3, Recycle, ShoppingCart } from 'lucide-react';
+import { Store, Truck, Shield, MessageCircle, Package, TrendingDown, Users, AlertTriangle, BarChart3, Recycle, ShoppingCart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Preloader from '@/components/Preloader';
@@ -31,7 +30,7 @@ function LocallyPopularPanel() {
         <div className="mb-4 md:mb-6">
           <h2 className="text-base md:text-xl font-bold text-black" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Most Popular in Kigali</h2>
         </div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 shadow-sm">
+        <div className="bg-[#f9f6ed]/70 backdrop-blur-sm rounded-lg p-4 shadow-sm">
           <div className="md:grid md:grid-cols-3 md:gap-4">
             <div className="md:hidden flex flex-col">
               <div className="grid grid-cols-2 gap-3 mb-4">
@@ -89,7 +88,7 @@ function EducationPanel() {
             { title: 'Which Smartphone?', desc: 'Priority: Camera quality, Battery life (4000mAh+), Storage (128GB+)', link: '/category/smartphones', linkText: 'Browse Phones →' },
             { title: 'Smart TV Guide', desc: '4K resolution, HDR support, 32"+ for living room, 40"+ for cinema feel', link: '/category/smart-tvs', linkText: 'View TVs →' },
           ].map((card) => (
-            <div key={card.title} className="bg-white/70 backdrop-blur-sm p-5 md:p-6 rounded-lg shadow-sm">
+            <div key={card.title} className="bg-[#f9f6ed]/70 backdrop-blur-sm p-5 md:p-6 rounded-lg shadow-sm">
               <h3 className="font-bold text-lg text-black mb-2">{card.title}</h3>
               <p className="text-sm text-black/60 mb-3">{card.desc}</p>
               <Link href={card.link} className="text-black font-semibold hover:underline block text-right">{card.linkText}</Link>
@@ -109,7 +108,7 @@ function CommunityPanel() {
           <Users className="w-6 h-6 text-black" />
           <h2 className="text-lg md:text-xl font-bold text-black" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Community Picked</h2>
         </div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 shadow-sm">
+        <div className="bg-[#f9f6ed]/70 backdrop-blur-sm rounded-lg p-4 shadow-sm">
           <h3 className="text-lg font-bold text-black mb-1">Which Laptop Should You Buy?</h3>
           <p className="text-sm text-black/60 mb-4">1,427 customers compared these 3 laptops — here's what they chose</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -153,7 +152,7 @@ function RealBuyerStory() {
         <div className="mb-4">
           <h2 className="text-lg md:text-2xl font-bold text-black" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>Real Buyer Story</h2>
         </div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 shadow-sm max-w-2xl mx-auto">
+        <div className="bg-[#f9f6ed]/70 backdrop-blur-sm rounded-lg p-4 shadow-sm max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center font-bold text-black text-sm">S.K</div>
             <div>
@@ -217,55 +216,78 @@ export default async function HomePage() {
   try {
     categories = await getCategories();
   } catch {
-    // DB is unreachable (e.g. during a static build); render with empty data.
     categories = [];
   }
+
+  let liveCounts: Record<string, number> = {};
+  let hasLiveCounts = false;
+  try {
+    liveCounts = await getCategoryProductCounts();
+    hasLiveCounts = true;
+  } catch {}
+
+  const getRealCount = (cat: any): number => {
+    if (!hasLiveCounts) return (cat as { productCount?: number }).productCount ?? 0;
+    const s = cat.slug || '';
+    const n = (cat.name?.en || '').toLowerCase();
+    return liveCounts[s] ?? liveCounts[cat.name?.en] ?? liveCounts[n] ?? 0;
+  };
+
+  const GROUP_CONFIG: Array<{ title: string; match: (c: any) => boolean }> = [
+    { title: 'PHONES & COMPUTING', match: c => /phone|laptop|computer|tablet|monitor|keyboard|mouse/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'TVS & AUDIO', match: c => /tv|audio|speaker|headphone/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'WEARABLES', match: c => /wearable|watch/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'CAMERAS & DRONES', match: c => /camera|drone/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'GAMING & VR', match: c => /game|vr|gaming/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'HOME & APPLIANCES', match: c => /appliance|smart-home|home/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'POWER & SOLAR', match: c => /solar|power|charge|bank/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'OFFICE & SECURITY', match: c => /printer|network|security|office|business/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+    { title: 'MOBILITY', match: c => /mobility|scooter|bike/.test(((c.slug||'')+' '+(c.name?.en||'')).toLowerCase()) },
+  ];
+  const groups = GROUP_CONFIG
+    .map(g => ({ title: g.title, cats: categories.filter(g.match) }))
+    .filter(g => g.cats.length > 0);
+  const otherCats = categories.filter(c => !GROUP_CONFIG.some(g => g.match(c)));
+  if (otherCats.length) groups.push({ title: 'OTHER', cats: otherCats });
 
   return (
     <div className="min-h-screen bg-beige flex flex-col">
 
       <HeroVideo />
 
-      <section className="py-1 md:py-2 bg-beige">
+      <section className="py-6 bg-beige border-y border-black/10">
         <div className="container mx-auto">
-          <h2 className="text-xs md:text-xl font-bold my-6 md:my-12 text-center uppercase text-black" style={{ fontFamily: 'Outfit, sans-serif' }}>
-            In our shop we deliver all these categories
-          </h2>
-
-          {/* Mobile-only teaser: first 10 categories with progressive fade on 7–10 (reduced blur on 9+10), ends with VIEW MORE */}
-          <div className="md:hidden">
-            <div className="grid grid-cols-2 gap-1">
-              {categories.slice(0, 10).map((cat: any, index: number) => {
-                const hasMore = categories.length > 10;
-                let cls = '';
-                if (hasMore) {
-                  if (index === 6) cls = 'blur-[0.5px] opacity-90';
-                  else if (index === 7) cls = 'blur-[1px] opacity-82';
-                  else if (index === 8) cls = 'blur-[1.5px] opacity-68';
-                  else if (index === 9) cls = 'blur-[2px] opacity-52 pointer-events-none';
-                }
-                return (
-                  <div key={cat._id} className={cls}>
-                    <CategoryTile category={cat} />
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-3 text-center">
-              <Link
-                href="/category"
-                className="inline-block bg-black text-gold text-xs font-bold px-5 py-1.5 rounded hover:bg-black/80 active:scale-[0.985] transition-all"
-              >
-                VIEW MORE
-              </Link>
-            </div>
+          <div className="text-center mb-3 md:mb-4">
+            <div className="uppercase tracking-[2px] text-[8px] sm:text-[9px] text-black/50">FULL INVENTORY</div>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-black mt-0.5 tracking-tight">In our shop we deliver all these categories</h2>
           </div>
-
-          {/* Desktop / tablet: full grid (original behavior) */}
-          <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-6 gap-1 md:gap-2">
-            {categories.map((cat: any) => (
-              <CategoryTile key={cat._id} category={cat} />
+          <div className="columns-2 gap-3 sm:columns-2 md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-3">
+            {groups.map((group) => (
+              <div key={group.title} className="bg-[#f9f6ed]/80 border border-black/10 rounded-xl p-2.5 md:p-3.5 break-inside-avoid mb-3 md:mb-0">
+                <div className="uppercase tracking-[1px] text-[9px] text-black/60 mb-2 pb-1 border-b border-black/10" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>{group.title}</div>
+                <div className="flex flex-col gap-1">
+                  {group.cats.map((cat) => {
+                    const count = getRealCount(cat);
+                    return (
+                      <Link
+                        key={cat._id}
+                        href={`/category/${cat.slug}`}
+                        className="group flex w-full items-center justify-between gap-2 rounded-md border border-black/10 bg-white/40 px-2.5 py-1 text-sm text-black/85 transition-all hover:scale-[1.02] hover:border-gold/40 hover:bg-gold/5 hover:text-gold active:scale-[0.985]"
+                      >
+                        <span className="truncate">{cat.name.en}</span>
+                        <span className="flex items-center gap-1 text-xs text-black/50 group-hover:text-gold/80">
+                          <span>{count > 0 ? `(${count})` : '–'}</span>
+                          <ArrowRight className="h-3 w-3 opacity-50 group-hover:opacity-100" />
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
             ))}
+          </div>
+          <div className="mt-3 text-center">
+            <Link href="/category" className="text-xs text-gold hover:underline">Browse full catalog →</Link>
           </div>
         </div>
       </section>
@@ -274,7 +296,7 @@ export default async function HomePage() {
       <PriceJustDroppedPanel />
 
       {/* Mobile-only intro block — appears BEFORE Just Landed (taller with more info) */}
-      <div className="md:hidden mx-4 mt-2 mb-4 bg-white/80 backdrop-blur-sm rounded-xl p-4 text-[13px] leading-snug text-black/80">
+      <div className="md:hidden mx-4 mt-2 mb-4 bg-[#f9f6ed]/80 backdrop-blur-sm rounded-xl p-4 text-[13px] leading-snug text-black/80">
         <div className="font-bold text-base text-black mb-1 tracking-tight">__ JP ELECTRONICS</div>
         <p className="text-xs mb-3">Owned &amp; operated by <strong>Ndayisenga Jean Paul</strong> • +250 790 336 683</p>
 

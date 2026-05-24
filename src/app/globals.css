@@ -17,6 +17,14 @@
   --color-black:        #1a202c;                       /* 30 % — near-black / dark navy */
   --color-gold:         #d4af37;                       /* 10 % — brand accent */
 
+  /* Clean professional subtle texture — fine grain, clear & premium, never busy */
+  --bg-texture: 
+    radial-gradient(circle at 25% 30%, rgba(0,0,0,0.035) 0.5px, transparent 0.8px),
+    radial-gradient(circle at 75% 70%, rgba(255,255,255,0.32) 0.6px, transparent 1px),
+    radial-gradient(circle at 40% 85%, rgba(0,0,0,0.025) 0.4px, transparent 0.7px),
+    radial-gradient(circle at 80% 15%, rgba(255,255,255,0.26) 0.7px, transparent 1px);
+  --bg-texture-size: 4px 4px, 6px 6px, 5px 5px, 7px 7px;
+
   /* Typography */
   --font-sans:              var(--font-geist-sans);
   --font-mono:              var(--font-geist-mono);
@@ -30,7 +38,9 @@
 }
 
 body {
-  background: var(--background);
+  background-color: var(--color-beige);
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
   color: var(--foreground);
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -45,10 +55,57 @@ html {
 
 /* ─── Visual utility overrides ─── */
 
-/* Beige surfaces */
-.bg-beige      { background-color: rgba(232, 224, 200, 0.60); }
-.bg-beige-solid { background-color: #e8e0c8; }
-.bg-beige-deep  { background-color: #d4cbb6; }
+/* Beige surfaces — now with clean professional texture */
+.bg-beige {
+  background-color: rgba(232, 224, 200, 0.60);
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
+}
+.bg-beige-solid {
+  background-color: #e8e0c8;
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
+}
+.bg-beige-deep {
+  background-color: #d4cbb6;
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
+}
+
+/* Light textured surface for cards, panels, admin content — clean off-white with grain */
+.bg-textured-white,
+.bg-white.textured {
+  background-color: #f9f6ed;
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
+}
+
+/* Subtle gray surfaces get texture too */
+.bg-gray-50 {
+  background-color: #f4f1e6;
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
+}
+
+.bg-gray-100 {
+  background-color: #ede9d9;
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
+}
+
+.bg-gray-200 {
+  background-color: #e8e3d2;
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
+}
+
+/* Apply clean professional texture to ALL .bg-white surfaces (cards, panels, modals, inputs, etc.)
+   Subtle grain keeps everything clear, simple, premium — no flat solids anywhere */
+.bg-white {
+  background-color: #f9f6ed !important;
+  background-image: var(--bg-texture) !important;
+  background-size: var(--bg-texture-size) !important;
+}
 
 /* Gold set — ONLY accent elements are gold text */
 .text-gold     { color: #d4af37; }
@@ -154,7 +211,9 @@ html {
   block-size: 100%;
   inline-size: 100%;
   max-inline-size: 24rem;
-  background: #fff;
+  background-color: #f9f6ed;
+  background-image: var(--bg-texture);
+  background-size: var(--bg-texture-size);
   box-shadow: -4px 0 24px rgb(0 0 0 / .15);
   z-index: 50;
   transition: transform .3s ease;

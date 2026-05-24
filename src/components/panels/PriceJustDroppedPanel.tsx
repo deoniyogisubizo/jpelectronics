@@ -48,7 +48,7 @@ export default function PriceJustDroppedPanel() {
   if (!products.length) return null;
 
   const heroProduct = products[0];
-  const galleryProducts = products.slice(1, 9);
+  const galleryProducts = products.slice(1, 7);
 
   return (
     <section className="py-3 bg-beige">
@@ -73,15 +73,16 @@ export default function PriceJustDroppedPanel() {
 
         {/* Desktop: gallery first (deals feel) then big hero on right */}
         <div className="hidden md:grid grid-cols-[72%_28%] gap-3">
-          <div className="grid grid-cols-4 grid-rows-2 gap-1">
-            {galleryProducts.map((p: any) => (
-              <PanelCard key={p._id} product={p} sharp />
-            ))}
-          </div>
+           <div className="grid grid-cols-3 grid-rows-2 gap-1">
+             {galleryProducts.map((p: any) => (
+               <PanelCard key={p._id} product={p} sharp />
+             ))}
+           </div>
+
 
           {/* Hero deal spotlight */}
           <Link href={`/product/${heroProduct._id}`}>
-            <div className="bg-white/70 backdrop-blur rounded-xl overflow-hidden shadow border border-gold/30">
+            <div className="bg-[#f9f6ed]/70 backdrop-blur rounded-xl overflow-hidden shadow border border-gold/30">
               <div className="relative aspect-[4/3] bg-beige-solid overflow-hidden">
                 {heroProduct.images?.[0] ? (
                   <Image src={heroProduct.images[0]} alt={heroProduct.name?.en} width={800} height={600} className="object-cover" style={{width:'100%',height:'100%'}} priority />

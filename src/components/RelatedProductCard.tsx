@@ -24,7 +24,7 @@ export default function RelatedProductCard({ product }: RelatedProductCardProps)
 
   return (
     <Link href={`/product/${product._id}`}>
-      <div className="group bg-white/70 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm border border-black/10">
+      <div className="group bg-[#f9f6ed]/70 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm border border-black/10">
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-beige-solid">
           {product.images?.[0] ? (
@@ -37,10 +37,10 @@ export default function RelatedProductCard({ product }: RelatedProductCardProps)
             <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
           )}
 
-          {/* Eye on hover */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-10">
-            <div className="bg-white/95 rounded-full p-3 shadow">
-              <Eye className="w-5 h-5 text-black" />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
+            <div className="flex flex-col items-center text-center px-1">
+              <Eye className="w-5 h-5 text-white mb-0.5" />
+              <span className="text-white text-[7px] font-bold tracking-[0.5px] leading-[1.1] text-center">VIEW TO GET SHELF<br />BRAND NEW ELECTRONICS DETAILED</span>
             </div>
           </div>
         </div>

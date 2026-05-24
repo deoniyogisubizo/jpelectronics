@@ -40,7 +40,7 @@ export default function RepairServicesPanel() {
 
         <div className="grid md:grid-cols-2 gap-4">
           {[s1, s2].map((service, idx) => (
-            <div key={idx} className="flex flex-col md:flex-row bg-white/70 backdrop-blur rounded-2xl overflow-hidden border border-black/10">
+            <div key={idx} className="flex flex-col md:flex-row bg-[#f9f6ed]/70 backdrop-blur rounded-2xl overflow-hidden border border-black/10">
               <div className="md:w-5/12">
                 <img src={service.image} alt={service.name} className="w-full h-56 md:h-full object-cover" />
               </div>

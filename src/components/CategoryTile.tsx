@@ -63,14 +63,14 @@ export default function CategoryTile({ category }: CategoryTileProps) {
     'Explore products in this category.';
 
   return (
-    <div className="group relative bg-white/70 backdrop-blur-sm rounded-lg shadow hover:shadow-lg transition-all duration-300">
+    <div className="group relative bg-[#f9f6ed]/70 backdrop-blur-sm rounded-lg shadow hover:shadow-lg transition-all duration-300">
       <Link href={`/category/${category.slug}`} className="block p-2 md:p-4 text-center">
         <div className="text-black font-bold text-xs md:text-base" style={{ fontFamily: 'var(--font-share-tech-mono)' }}>
           {category.name.en}
         </div>
       </Link>
 
-      <div className="absolute top-full left-0 right-0 z-50 bg-white/95 backdrop-blur-sm rounded-b-lg shadow-lg border-t-2 border-black/10 p-2 md:p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2">
+      <div className="absolute top-full left-0 right-0 z-50 bg-[#f9f6ed]/95 backdrop-blur-sm rounded-b-lg shadow-lg border-t-2 border-black/10 p-2 md:p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2">
         <div className="text-xs md:text-sm text-black/60 mb-2 md:mb-3 leading-relaxed">
           {description}
         </div>

@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Product } from '@/types';
-import { Filter, SortAsc, Grid3X3, List, Search, Plus, Minus } from 'lucide-react';
+import { Filter, SortAsc, Grid3X3, List, Search, Plus, Minus, Eye } from 'lucide-react';
 import Link from 'next/link';
 
 interface CategoryBrowserProps {
@@ -358,22 +358,29 @@ export default function CategoryBrowser({ initialCategorySlug, title }: Category
                   <Link key={product._id} href={`/product/${product._id}`}>
                     <div className="bg-white rounded-lg overflow-hidden group cursor-pointer">
                       <div className="relative h-32 overflow-hidden bg-beige">
-                        {product.images && product.images.length > 0 ? (
-                          <img
-                            src={product.images[0]}
-                            alt={product.name.en}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400">
-                            <Search className="w-8 h-8" />
-                          </div>
-                        )}
-                        {!product.inStock && (
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">Out of Stock</span>
-                          </div>
-                        )}
+                         {product.images && product.images.length > 0 ? (
+                           <img
+                             src={product.images[0]}
+                             alt={product.name.en}
+                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                           />
+                         ) : (
+                           <div className="w-full h-full flex items-center justify-center text-gray-400">
+                             <Search className="w-8 h-8" />
+                           </div>
+                         )}
+                         {!product.inStock && (
+                           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                             <span className="text-white font-bold text-sm">Out of Stock</span>
+                           </div>
+                         )}
+                         <div className="absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
+                           <div className="flex flex-col items-center text-center px-1">
+                             <Eye className="w-5 h-5 text-white mb-0.5" />
+                             <span className="text-white text-[7px] font-bold tracking-[0.5px] leading-[1.1] text-center">VIEW TO GET SHELF<br />BRAND NEW ELECTRONICS DETAILED</span>
+                           </div>
+                         </div>
+
                       </div>
 
                       <div className="p-2">

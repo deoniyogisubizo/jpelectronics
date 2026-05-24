@@ -16,7 +16,7 @@ function SkeletonCard({
 }) {
   const inner = (
     <div
-      className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm relative group"
+      className="bg-[#f9f6ed]/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm relative group"
       style={{ animationDelay: `${delay}ms` }}
     >
       {/* Image */}
@@ -47,7 +47,7 @@ function SkeletonCard({
 function SkeletonHeroCard({ banner = null }: { banner?: React.ReactNode }) {
   return (
     <div
-      className="bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm"
+      className="bg-[#f9f6ed]/60 backdrop-blur-sm rounded-lg overflow-hidden shadow-sm"
       style={{ borderRadius: 'inherit' }}
     >
       <div className="relative aspect-[3/4] overflow-hidden bg-beige-solid">
@@ -154,12 +154,13 @@ export function HeroPlusGallerySkeleton({
           {/* Hero */}
           <SkeletonHeroCard />
 
-          {/* Gallery — 4 columns × 2 rows = 8 cards, each PanelCard-style */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-3">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <SkeletonCard key={i} aspect="aspect-[3/2]" delay={i * 60} />
-            ))}
-          </div>
+           {/* Gallery — 3 columns × 2 rows = 6 cards, each PanelCard-style */}
+           <div className="grid grid-cols-3 grid-rows-2 gap-3">
+             {Array.from({ length: 6 }).map((_, i) => (
+               <SkeletonCard key={i} aspect="aspect-[3/2]" delay={i * 60} />
+             ))}
+           </div>
+
         </div>
       </div>
     </section>
@@ -192,12 +193,13 @@ export function JustLandedSkeleton({ ref }: { ref?: React.Ref<HTMLElement> }) {
           {/* Hero */}
           <SkeletonHeroCard />
 
-          {/* Gallery — 4 columns × 2 rows = 8 cards */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-2">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <SkeletonCard key={i} aspect="aspect-[3/2]" delay={i * 60} />
-            ))}
-          </div>
+           {/* Gallery — 3 columns × 2 rows = 6 cards */}
+           <div className="grid grid-cols-3 grid-rows-2 gap-2">
+             {Array.from({ length: 6 }).map((_, i) => (
+               <SkeletonCard key={i} aspect="aspect-[3/2]" delay={i * 60} />
+             ))}
+           </div>
+
         </div>
       </div>
     </section>

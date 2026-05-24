@@ -116,6 +116,30 @@ export async function getCategories() {
   }));
 }
 
+export async function getCategoryProductCounts(): Promise<Record<string, number>> {
+  const db = await connectToDatabase();
+  const pipeline = [
+    {
+      $project: {
+        cat: { $ifNull: ['$categorySlug', '$category'] }
+      }
+    },
+    { $match: { cat: { $ne: null } } },
+    {
+      $group: {
+        _id: '$cat',
+        count: { $sum: 1 }
+      }
+    }
+  ];
+  const results = await db.collection('products').aggregate(pipeline).toArray();
+  const map: Record<string, number> = {};
+  for (const r of results) {
+    if (r._id) map[String(r._id)] = r.count;
+  }
+  return map;
+}
+
 export async function getProductSubset(
   filter: Record<string, unknown>,
   limit: number = 10,

@@ -48,7 +48,7 @@ export default function JustLandedPanel() {
   if (!products.length) return null;
 
   const heroProduct = products[0];
-  const galleryProducts = products.slice(1, 9);
+  const galleryProducts = products.slice(1, 7);
 
   return (
     <section className="py-3 bg-beige">
@@ -74,7 +74,7 @@ export default function JustLandedPanel() {
         {/* Desktop: tall fresh hero + grid */}
         <div className="hidden md:grid grid-cols-[25%_75%] gap-3">
           <Link href={`/product/${heroProduct._id}`}>
-            <div className="bg-white/70 backdrop-blur rounded-xl overflow-hidden shadow">
+            <div className="bg-[#f9f6ed]/70 backdrop-blur rounded-xl overflow-hidden shadow">
               <div className="relative aspect-[3/4] bg-beige-solid overflow-hidden">
                 {heroProduct.images?.[0] ? (
                   <Image src={heroProduct.images[0]} alt={heroProduct.name?.en} width={600} height={800} className="object-cover" style={{width:'100%',height:'100%'}} priority />
@@ -96,11 +96,12 @@ export default function JustLandedPanel() {
             </div>
           </Link>
 
-          <div className="grid grid-cols-4 grid-rows-2 gap-1">
-            {galleryProducts.map((p: any) => (
-              <PanelCard key={p._id} product={p} sharp />
-            ))}
-          </div>
+           <div className="grid grid-cols-3 grid-rows-2 gap-1">
+             {galleryProducts.map((p: any) => (
+               <PanelCard key={p._id} product={p} sharp />
+             ))}
+           </div>
+
         </div>
 
         <div className="flex justify-end mt-3">
