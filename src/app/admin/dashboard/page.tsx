@@ -44,11 +44,25 @@ export default function AdminDashboard() {
 
   // Form states
   const [newProduct, setNewProduct] = useState({
-    nameEn: '', nameRw: '', price: '', stockQuantity: '', category: '', categorySlug: '', brand: '', images: [] as string[]
+    nameEn: '', nameRw: '',
+    descriptionEn: '', descriptionRw: '',
+    shortDescriptionEn: '', shortDescriptionRw: '',
+    price: '', compareAtPrice: '', discount: '',
+    stockQuantity: '',
+    category: '', categorySlug: '', brand: '',
+    images: [] as string[],
+    tags: [] as string[],
+    specs: {} as Record<string, string>,
+    featured: false,
+    hotDeal: false,
+    inStock: true
   });
   const [imageOption, setImageOption] = useState<'url' | 'camera' | 'upload'>('url');
   const [imageUrl, setImageUrl] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [tagInput, setTagInput] = useState('');
+  const [specKey, setSpecKey] = useState('');
+  const [specValue, setSpecValue] = useState('');
   const [newCategory, setNewCategory] = useState({
     nameEn: '', nameRw: '', slug: '', image: ''
   });
@@ -118,26 +132,45 @@ export default function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: { en: newProduct.nameEn, rw: newProduct.nameRw },
-          description: { en: 'New product description', rw: 'Umwirondoro mushya' },
-          shortDescription: { en: 'Short description', rw: 'Umwirondoro muto' },
+          description: { en: newProduct.descriptionEn || 'New product description', rw: newProduct.descriptionRw || 'Umwirondoro mushya' },
+          shortDescription: { en: newProduct.shortDescriptionEn || 'Short description', rw: newProduct.shortDescriptionRw || 'Umwirondoro muto' },
           price: parseFloat(newProduct.price),
+          compareAtPrice: newProduct.compareAtPrice ? parseFloat(newProduct.compareAtPrice) : undefined,
+          discount: newProduct.discount ? parseFloat(newProduct.discount) : undefined,
           images: newProduct.images,
           category: newProduct.category,
           categorySlug: newProduct.categorySlug || newProduct.category.toLowerCase().replace(/\s+/g, '-'),
           brand: newProduct.brand,
-          inStock: true,
+          inStock: newProduct.inStock,
           stockQuantity: parseInt(newProduct.stockQuantity),
-          tags: [],
-          featured: false,
-          hotDeal: false,
+          tags: newProduct.tags,
+          specs: newProduct.specs,
+          featured: newProduct.featured,
+          hotDeal: newProduct.hotDeal,
         })
       });
 
       if (response.ok) {
         logAction('ADD_PRODUCT', { name: newProduct.nameEn, category: newProduct.category, images: newProduct.images.length });
-        setNewProduct({ nameEn: '', nameRw: '', price: '', stockQuantity: '', category: '', categorySlug: '', brand: '', images: [] });
+        setNewProduct({
+          nameEn: '', nameRw: '',
+          descriptionEn: '', descriptionRw: '',
+          shortDescriptionEn: '', shortDescriptionRw: '',
+          price: '', compareAtPrice: '', discount: '',
+          stockQuantity: '',
+          category: '', categorySlug: '', brand: '',
+          images: [],
+          tags: [],
+          specs: {},
+          featured: false,
+          hotDeal: false,
+          inStock: true
+        });
         setImageUrl('');
         setSelectedFile(null);
+        setTagInput('');
+        setSpecKey('');
+        setSpecValue('');
         fetchData();
         alert('Product added successfully!');
       }
@@ -655,6 +688,87 @@ export default function AdminDashboard() {
                   className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
                   required
                 />
+                <input
+                  type="number"
+                  placeholder="Compare At Price (optional)"
+                  value={newProduct.compareAtPrice}
+                  onChange={(e) => setNewProduct({ ...newProduct, compareAtPrice: e.target.value })}
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
+                />
+                <input
+                  type="number"
+                  placeholder="Discount % (optional)"
+                  value={newProduct.discount}
+                  onChange={(e) => setNewProduct({ ...newProduct, discount: e.target.value })}
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
+                />
+                <textarea
+                  placeholder="Description (English)"
+                  value={newProduct.descriptionEn}
+                  onChange={(e) => setNewProduct({ ...newProduct, descriptionEn: e.target.value })}
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base md:col-span-2"
+                  rows={2}
+                />
+                <textarea
+                  placeholder="Description (Kinyarwanda)"
+                  value={newProduct.descriptionRw}
+                  onChange={(e) => setNewProduct({ ...newProduct, descriptionRw: e.target.value })}
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base md:col-span-2"
+                  rows={2}
+                />
+                <textarea
+                  placeholder="Short Description (English)"
+                  value={newProduct.shortDescriptionEn}
+                  onChange={(e) => setNewProduct({ ...newProduct, shortDescriptionEn: e.target.value })}
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
+                  rows={1}
+                />
+                <textarea
+                  placeholder="Short Description (Kinyarwanda)"
+                  value={newProduct.shortDescriptionRw}
+                  onChange={(e) => setNewProduct({ ...newProduct, shortDescriptionRw: e.target.value })}
+                  className="border-0 border-b border-gray-400 p-3 md:p-4 bg-transparent text-sm md:text-base"
+                  rows={1}
+                />
+                <div className="flex flex-wrap items-center gap-4 p-2 text-sm md:text-base md:col-span-2">
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={newProduct.inStock} onChange={(e) => setNewProduct({ ...newProduct, inStock: e.target.checked })} /> In Stock</label>
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={newProduct.featured} onChange={(e) => setNewProduct({ ...newProduct, featured: e.target.checked })} /> Featured</label>
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={newProduct.hotDeal} onChange={(e) => setNewProduct({ ...newProduct, hotDeal: e.target.checked })} /> Hot Deal</label>
+                </div>
+                <div className="md:col-span-2">
+                  <div className="flex gap-2 mb-1">
+                    <input
+                      type="text"
+                      placeholder="Add tag (Enter to add)"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (tagInput.trim()) { setNewProduct({ ...newProduct, tags: [...newProduct.tags, tagInput.trim()] }); setTagInput(''); } } }}
+                      className="flex-1 border-0 border-b border-gray-400 p-2 bg-transparent text-sm"
+                    />
+                    <button type="button" onClick={() => { if (tagInput.trim()) { setNewProduct({ ...newProduct, tags: [...newProduct.tags, tagInput.trim()] }); setTagInput(''); } }} className="bg-gray-200 px-3 text-sm rounded-sm">Add</button>
+                  </div>
+                  {newProduct.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 text-xs">
+                      {newProduct.tags.map((t, i) => (
+                        <span key={i} className="bg-gray-100 px-2 py-0.5 rounded flex items-center gap-1">{t}<button type="button" onClick={() => setNewProduct({ ...newProduct, tags: newProduct.tags.filter((_, j) => j !== i) })} className="text-red-500">×</button></span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="md:col-span-2 space-y-1">
+                  <div className="flex gap-2">
+                    <input placeholder="Spec key (e.g. RAM)" value={specKey} onChange={(e) => setSpecKey(e.target.value)} className="flex-1 border-0 border-b border-gray-400 p-2 bg-transparent text-sm" />
+                    <input placeholder="Value (e.g. 8GB)" value={specValue} onChange={(e) => setSpecValue(e.target.value)} className="flex-1 border-0 border-b border-gray-400 p-2 bg-transparent text-sm" />
+                    <button type="button" onClick={() => { if (specKey.trim() && specValue.trim()) { setNewProduct(p => ({ ...p, specs: { ...p.specs, [specKey.trim()]: specValue.trim() } })); setSpecKey(''); setSpecValue(''); } }} className="bg-gray-200 px-3 text-sm rounded-sm">Add</button>
+                  </div>
+                  {Object.keys(newProduct.specs).length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs">
+                      {Object.entries(newProduct.specs).map(([k, v], i) => (
+                        <div key={i} className="flex justify-between bg-gray-50 p-1 rounded"><span>{k}: {v}</span><button type="button" onClick={() => { const { [k]: _, ...rest } = newProduct.specs; setNewProduct({ ...newProduct, specs: rest }); }} className="text-red-500">×</button></div>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
                 {/* Image Upload Section - sharp */}
                 <div className="md:col-span-2 p-4 md:p-5 bg-gray-50">
@@ -720,6 +834,17 @@ export default function AdminDashboard() {
                         <Plus className="w-4 h-4" />
                         Add URL
                       </button>
+                      {imageUrl.trim() && (
+                        <div>
+                          <div className="text-xs text-gray-600 mb-1">Live preview (click Add URL to include):</div>
+                          <img
+                            src={imageUrl}
+                            alt="URL preview"
+                            className="max-h-24 rounded border border-gray-300 object-contain bg-white"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
 
