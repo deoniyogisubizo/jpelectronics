@@ -367,7 +367,7 @@ export default function Header() {
       </div>
 
       {/* LAYER 3: CATEGORY MEGA NAV — Marquee */}
-      <nav className={`border-t border-black/10 bg-white relative ${isScrolled ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-20'}`} style={{ scrollbarWidth: 'none' }}>
+      <nav className={`border-t border-black/10 bg-beige-solid relative opacity-100 ${isScrolled ? 'md:opacity-0 md:max-h-0 md:overflow-hidden' : 'max-h-20'}`} style={{ scrollbarWidth: 'none' }}>
         <style>{`
           @keyframes marquee {
             from { transform: translateX(0); }
