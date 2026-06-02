@@ -9,23 +9,27 @@ import WhatsAppIcon from '@/components/WhatsAppIcon';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const shareTechMono = Share_Tech_Mono({
   variable: "--font-share-tech-mono",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
 });
 
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -57,7 +61,26 @@ export default function RootLayout({
         <link rel="icon" href="/favicon-16x16.svg?v=1" sizes="16x16" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/favicon.svg?v=1" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                  for (var i = 0; i < registrations.length; i++) {
+                    registrations[i].unregister();
+                  }
+                });
+                caches.keys().then(function(names) {
+                  for (var i = 0; i < names.length; i++) {
+                    if (names[i].startsWith('jptech-') || names[i].startsWith('next-pwa-')) {
+                      caches.delete(names[i]);
+                    }
+                  }
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${shareTechMono.variable} ${outfit.variable} antialiased`}>
         <Providers>

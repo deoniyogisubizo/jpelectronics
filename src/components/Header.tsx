@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
 import { useUser } from '@/context/UserContext';
@@ -12,10 +13,13 @@ import {
   Cpu, CircuitBoard, Cog, Zap, Radio, Hammer,
   Smartphone, Volume2, Laptop, Monitor, Gamepad2,
   Clock, Sun, Router, Plane, Printer, Eye, Home as HomeIcon,
-  Bot, Heart, Factory, BookOpen, Search
+  Bot, Heart, Factory, BookOpen, Search, ExternalLink
 } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -24,7 +28,7 @@ export default function Header() {
   const router = useRouter();
   const { navigateTo, startNavigation } = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [placeholderText, setPlaceholderText] = useState('Search components, manufacturers, or SKUs...');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -102,55 +106,49 @@ export default function Header() {
     return () => clearTimeout(timeoutId);
   }, [currentIndex, categories]);
 
-  useEffect(() => {
-    const defaultCategories = [
-      { name: 'Semiconductors', slug: 'semiconductors', description: 'ICs, Transistors, Diodes & Integrated Circuits', items: ['Microcontrollers', 'Analog ICs', 'Digital ICs', 'Power Management', 'Memory'] },
-      { name: 'Passive Components', slug: 'passives', description: 'Capacitors, Resistors, Inductors & Coils', items: ['Ceramic Capacitors', 'Aluminium Electrolytic', 'Thick Film Resistors', 'Power Inductors'] },
-      { name: 'Electromechanical', slug: 'electromechanical', description: 'Relays, Switches, Connectors & Hardware', items: ['Signal Relays', 'Pushbutton Switches', 'Board-to-Board', 'Terminal Blocks'] },
-      { name: 'Power Supplies', slug: 'power', description: 'AC/DC Converters, Batteries & Chargers', items: ['Switching Power Supplies', 'Li-Po Batteries', 'USB-C Chargers', 'DC-DC Converters'] },
-      { name: 'IoT & Wireless', slug: 'iot', description: 'WiFi, Bluetooth, LoRa & Zigbee Modules', items: ['ESP32 Modules', 'NRF52 Series', 'GSM/LTE Modems', 'ANTENNAS'] },
-      { name: 'Tools & Test', slug: 'tools', description: 'Oscilloscopes, Multimeters & Soldering', items: ['Digital Multimeters', 'Logic Analyzers', 'Soldering Stations', 'Calibration Tools'] },
-      { name: 'Mobile Phones', slug: 'mobilephone', description: 'Smartphones, Accessories & Parts', items: ['Android Phones', 'iPhones', 'Phone Cases', 'Chargers', 'Screens'] },
-      { name: 'Speakers', slug: 'speakers', description: 'Audio Equipment & Sound Systems', items: ['Bluetooth Speakers', 'Home Theater', 'Microphones', 'Amplifiers', 'Headphones'] },
-      { name: 'Laptops', slug: 'laptops', description: 'Notebooks, Ultrabooks & Accessories', items: ['Gaming Laptops', 'Business Laptops', 'Chromebooks', 'Laptop Bags', 'Cooling Pads'] },
-      { name: 'TVs', slug: 'tvs', description: 'LED, OLED & Smart Televisions', items: ['4K TVs', 'Smart TVs', 'LED TVs', 'Curved TVs', 'TV Mounts'] },
-      { name: 'Cameras', slug: 'cameras', description: 'Digital Cameras & Photography', items: ['DSLR Cameras', 'Mirrorless', 'Action Cameras', 'Security Cameras', 'Lenses'] },
-      { name: 'Gaming', slug: 'gaming', description: 'Consoles, Accessories & Games', items: ['PlayStation', 'Xbox', 'Nintendo', 'Gaming PCs', 'Controllers'] },
-      { name: 'Wearables', slug: 'wearables', description: 'Smartwatches, Fitness Trackers', items: ['Apple Watch', 'Samsung Galaxy Watch', 'Fitbit', 'Smart Bands', 'Earbuds'] },
-      { name: 'Solar Products', slug: 'solar', description: 'Solar Panels, Inverters & Batteries', items: ['Solar Panels', 'Inverters', 'Solar Batteries', 'Charge Controllers', 'Solar Lights'] },
-      { name: 'Networking', slug: 'networking', description: 'Routers, Switches & Cables', items: ['WiFi Routers', 'Ethernet Switches', 'Network Cables', 'Access Points', 'Modems'] },
-      { name: 'Drones', slug: 'drones', description: 'UAVs, Quadcopters & Accessories', items: ['Consumer Drones', 'Professional Drones', 'Drone Cameras', 'Batteries', 'Propellers'] },
-      { name: '3D Printers', slug: '3dprinters', description: '3D Printing Equipment & Supplies', items: ['FDM Printers', 'Resin Printers', 'Filament', 'Resin', '3D Scanner'] },
-      { name: 'VR/AR', slug: 'vrar', description: 'Virtual & Augmented Reality', items: ['VR Headsets', 'AR Glasses', 'VR Games', 'Motion Controllers', 'VR Accessories'] },
-      { name: 'Home Automation', slug: 'homeauto', description: 'Smart Home Devices & Systems', items: ['Smart Lights', 'Smart Locks', 'Thermostats', 'Security Cameras', 'Voice Assistants'] },
-      { name: 'Robotics', slug: 'robotics', description: 'Robots, Kits & Components', items: ['Robot Kits', 'Servos', 'Sensors', 'Arduino', 'Raspberry Pi'] },
-      { name: 'Medical Electronics', slug: 'medical', description: 'Medical Devices & Equipment', items: ['Blood Pressure Monitors', 'Thermometers', 'Pulse Oximeters', 'ECG Machines', 'Ultrasound'] },
-      { name: 'Industrial', slug: 'industrial', description: 'Industrial Electronics & Automation', items: ['PLCs', 'HMIs', 'Sensors', 'Motors', 'Industrial PCs'] },
-      { name: 'Educational', slug: 'educational', description: 'Learning Kits & Educational Tools', items: ['Arduino Kits', 'Raspberry Pi Kits', 'STEM Kits', 'Educational Robots', 'Coding Boards'] }
-    ];
+  const { data: rawCategories } = useSWR('/api/categories', fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000,
+    onError: () => {},
+  });
 
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch('/api/categories');
-        if (!res.ok) throw new Error('Failed to fetch');
-        const data = await res.json();
-        const fetchedCategories = data.map((cat: any) => {
-          const defaultCat = defaultCategories.find((dc: any) => dc.slug === cat.slug);
-          return {
-            name: cat.name[language] || cat.name.en,
-            slug: cat.slug,
-            description: defaultCat?.description || '',
-            items: defaultCat?.items || []
-          };
-        });
-        setCategoryData(fetchedCategories);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        setCategoryData(defaultCategories);
-      }
-    };
-    fetchCategories();
-  }, [language]);
+  const defaultCategories = [
+    { name: 'Semiconductors', slug: 'semiconductors', description: 'ICs, Transistors, Diodes & Integrated Circuits', items: ['Microcontrollers', 'Analog ICs', 'Digital ICs', 'Power Management', 'Memory'] },
+    { name: 'Passive Components', slug: 'passives', description: 'Capacitors, Resistors, Inductors & Coils', items: ['Ceramic Capacitors', 'Aluminium Electrolytic', 'Thick Film Resistors', 'Power Inductors'] },
+    { name: 'Electromechanical', slug: 'electromechanical', description: 'Relays, Switches, Connectors & Hardware', items: ['Signal Relays', 'Pushbutton Switches', 'Board-to-Board', 'Terminal Blocks'] },
+    { name: 'Power Supplies', slug: 'power', description: 'AC/DC Converters, Batteries & Chargers', items: ['Switching Power Supplies', 'Li-Po Batteries', 'USB-C Chargers', 'DC-DC Converters'] },
+    { name: 'IoT & Wireless', slug: 'iot', description: 'WiFi, Bluetooth, LoRa & Zigbee Modules', items: ['ESP32 Modules', 'NRF52 Series', 'GSM/LTE Modems', 'ANTENNAS'] },
+    { name: 'Mobile Phones', slug: 'mobilephone', description: 'Smartphones, Accessories & Parts', items: ['Android Phones', 'iPhones', 'Phone Cases', 'Chargers', 'Screens'] },
+    { name: 'Speakers', slug: 'speakers', description: 'Audio Equipment & Sound Systems', items: ['Bluetooth Speakers', 'Home Theater', 'Microphones', 'Amplifiers', 'Headphones'] },
+    { name: 'Laptops', slug: 'laptops', description: 'Notebooks, Ultrabooks & Accessories', items: ['Gaming Laptops', 'Business Laptops', 'Chromebooks', 'Laptop Bags', 'Cooling Pads'] },
+    { name: 'TVs', slug: 'tvs', description: 'LED, OLED & Smart Televisions', items: ['4K TVs', 'Smart TVs', 'LED TVs', 'Curved TVs', 'TV Mounts'] },
+    { name: 'Cameras', slug: 'cameras', description: 'Digital Cameras & Photography', items: ['DSLR Cameras', 'Mirrorless', 'Action Cameras', 'Security Cameras', 'Lenses'] },
+    { name: 'Gaming', slug: 'gaming', description: 'Consoles, Accessories & Games', items: ['PlayStation', 'Xbox', 'Nintendo', 'Gaming PCs', 'Controllers'] },
+    { name: 'Wearables', slug: 'wearables', description: 'Smartwatches, Fitness Trackers', items: ['Apple Watch', 'Samsung Galaxy Watch', 'Fitbit', 'Smart Bands', 'Earbuds'] },
+    { name: 'Solar Products', slug: 'solar', description: 'Solar Panels, Inverters & Batteries', items: ['Solar Panels', 'Inverters', 'Solar Batteries', 'Charge Controllers', 'Solar Lights'] },
+    { name: 'Networking', slug: 'networking', description: 'Routers, Switches & Cables', items: ['WiFi Routers', 'Ethernet Switches', 'Network Cables', 'Access Points', 'Modems'] },
+    { name: 'Drones', slug: 'drones', description: 'UAVs, Quadcopters & Accessories', items: ['Consumer Drones', 'Professional Drones', 'Drone Cameras', 'Batteries', 'Propellers'] },
+    { name: '3D Printers', slug: '3dprinters', description: '3D Printing Equipment & Supplies', items: ['FDM Printers', 'Resin Printers', 'Filament', 'Resin', '3D Scanner'] },
+    { name: 'Home Automation', slug: 'homeauto', description: 'Smart Home Devices & Systems', items: ['Smart Lights', 'Smart Locks', 'Thermostats', 'Security Cameras', 'Voice Assistants'] },
+    { name: 'Robotics', slug: 'robotics', description: 'Robots, Kits & Components', items: ['Robot Kits', 'Servos', 'Sensors', 'Arduino', 'Raspberry Pi'] },
+    { name: 'Industrial', slug: 'industrial', description: 'Industrial Electronics & Automation', items: ['PLCs', 'HMIs', 'Sensors', 'Motors', 'Industrial PCs'] },
+    { name: 'Educational', slug: 'educational', description: 'Learning Kits & Educational Tools', items: ['Arduino Kits', 'Raspberry Pi Kits', 'STEM Kits', 'Educational Robots', 'Coding Boards'] },
+  ];
+
+  useEffect(() => {
+    if (rawCategories && Array.isArray(rawCategories)) {
+      const mapped = rawCategories.map((cat: any) => {
+        const def = defaultCategories.find(d => d.slug === cat.slug);
+        return {
+          name: cat.name?.[language] || cat.name?.en || cat.slug,
+          slug: cat.slug,
+          description: def?.description || '',
+          items: def?.items || [],
+        };
+      });
+      setCategoryData(mapped);
+    }
+  }, [rawCategories, language]);
 
   useEffect(() => {
     if (categoryData.length > 0) {
@@ -161,21 +159,15 @@ export default function Header() {
     }
   }, [categoryData.length]);
 
+  const { data: searchResults } = useSWR(
+    searchQuery.length >= 2 ? `/api/products/search?q=${encodeURIComponent(searchQuery)}` : null,
+    fetcher,
+    { revalidateOnFocus: false, dedupingInterval: 5000 }
+  );
+
   useEffect(() => {
-    if (searchQuery.length < 2) { setSuggestions([]); return; }
-    const timeoutId = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery)}`);
-        if (res.ok) {
-          const data = await res.json();
-          setSuggestions(data);
-        }
-      } catch (error) {
-        console.error('Search suggestions error:', error);
-      }
-    }, 300);
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery]);
+    setSuggestions(Array.isArray(searchResults) ? searchResults : []);
+  }, [searchResults]);
 
   useEffect(() => {
     const SCROLL_THRESHOLD = 80; // ~2cm to prevent jitter on rapid scrolling
@@ -212,9 +204,12 @@ export default function Header() {
   return (
     <header className="bg-white sticky top-0 z-50 border-b border-black/10 shadow-sm font-sans">
       {/* LAYER 1: TOP UTILITY BAR */}
-      <div className="bg-black text-gray-400 py-1.5 hidden lg:block">
-        <div className="container mx-auto px-4 flex justify-between items-center text-[12px]">
+      <div className="bg-black text-gray-400 py-3 hidden lg:block">
+        <div className="container mx-auto px-4 flex justify-between items-center text-[13px]">
           <div className="flex items-center gap-3">
+            <Link href="/" className="hover:text-gold transition-colors flex items-center gap-1 font-semibold text-white">
+              <Home className="w-3 h-3" /> Home
+            </Link>
             <div className="flex items-center gap-1 hover:text-gold cursor-pointer transition-colors">
               <span className="font-semibold text-white">USD</span>
               <ChevronDown className="w-3 h-3" />
@@ -237,7 +232,7 @@ export default function Header() {
             <Link href="/contact" className="hover:text-gold transition-colors flex items-center gap-1">
               <HelpCircle className="w-3 h-3" /> +250 790 336 683
             </Link>
-            <Link href="/rfq" className="bg-gold text-black px-2 py-0.5 rounded hover:bg-gold-light transition-colors font-medium text-[11px]">
+            <Link href="/rfq" className="bg-gold text-black px-3 py-1 rounded hover:bg-gold-light transition-colors font-medium text-[12px]">
               Bulk Order (RFQ)
             </Link>
             <Link href="/admin" className="hover:text-gold transition-colors flex items-center gap-1">
@@ -245,29 +240,37 @@ export default function Header() {
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] opacity-50">Follow Us:</span>
-            <a href="#" className="hover:text-gold transition-colors"><i className="fa-brands fa-facebook-f text-sm font-bold"></i></a>
-            <a href="#" className="hover:text-gold transition-colors"><i className="fa-brands fa-instagram text-sm font-bold"></i></a>
-            <a href="#" className="hover:text-gold transition-colors"><i className="fa-brands fa-linkedin-in text-sm font-bold"></i></a>
-            <a href="#" className="hover:text-gold transition-colors"><i className="fa-brands fa-youtube text-sm font-bold"></i></a>
+            <span className="text-[11px] text-gray-400">Follow Us:</span>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors" aria-label="LinkedIn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors" aria-label="YouTube">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
           </div>
         </div>
       </div>
 
       {/* LAYER 2: PRIMARY NAV */}
-      <div className="container mx-auto px-4 py-1">
+      <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between gap-6">
           <div className="flex items-center gap-3 md:gap-6 flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-              <img src="/loading/load.png" alt="Logo" className="w-14 h-9 md:w-20 scale-170 md:h-12 object-contain transition-transform group-hover:scale-105 md:group-hover:scale-205" />
+              <Image src="/loading/load.png" alt="Logo" width={80} height={48} className="w-14 h-9 md:w-20 scale-170 md:h-12 object-contain transition-transform group-hover:scale-105 md:group-hover:scale-205" priority />
               <div className="flex flex-col justify-center leading-none font-mono">
                 <span className="font-black text-lg md:text-xl tracking-[1.5px] md:tracking-[2.5px] text-black">JP TECH</span>
-                <span className="text-[7px] md:text-[9px] text-black/70 tracking-[0.5px] md:tracking-[1px]">Electronic shop & repair services</span>
+                <span className="font-bold text-[7px] md:text-[9px] text-black/70 tracking-[0.5px] md:tracking-[1px]">Electronic shop & repair services</span>
               </div>
             </Link>
           </div>
 
-          <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center h-14">
+          <form onSubmit={handleSearch} className="flex-1 max-w-5xl hidden md:flex items-center h-16">
             <div className="relative flex-1">
               <input
                 type="text"
@@ -276,13 +279,13 @@ export default function Header() {
                 placeholder={placeholderText}
                 autoFocus
                 onBlur={() => setTimeout(() => setSuggestions([]), 200)}
-                className="w-full h-12 px-4 pr-16 border border-black/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/20 text-sm text-black placeholder:text-black/40 bg-white"
+                className="w-full h-14 px-4 pr-20 border border-black/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/20 text-sm text-black placeholder:text-black/40 bg-white"
               />
               <button
                 type="submit"
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-14 w-14 bg-black text-gold mr-[-10] rounded-full hover:bg-black/80 transition-colors flex items-center justify-center"
+                className="absolute right-[-18] top-1/2 transform -translate-y-1/2 h-16  w-16 bg-black text-gold rounded-full hover:bg-black/80 transition-colors flex items-center justify-center"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-6 h-6" />
               </button>
               {suggestions.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-black/20 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
@@ -313,7 +316,7 @@ export default function Header() {
             </div>
 
             <Link href="/profile"
-              className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-black hover:bg-beige rounded-lg transition-colors"
+              className="hidden md:flex items-center gap-2 px-3 py-2 text-base font-medium text-black hover:bg-beige rounded-lg transition-colors"
             >
               {user ? (
                 <div className="relative">
@@ -420,7 +423,7 @@ export default function Header() {
         <div className="md:hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm">
           <div className="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-black/10">
-              <img src="/loading/load.png" alt="Logo" className="w-32 h-10" />
+              <Image src="/loading/load.png" alt="Logo" width={128} height={40} className="w-32 h-10" />
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-beige rounded-lg">
                 <X className="w-5 h-5" />
               </button>

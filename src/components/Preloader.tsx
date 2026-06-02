@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
@@ -40,10 +41,13 @@ export default function Preloader() {
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-beige">
       {/* Loading Image */}
       <div className="mb-8">
-        <img
+        <Image
           src="/loading/load.png"
           alt="Loading JP Tech"
-          className="w-64 h-64 mx-auto"
+          width={256}
+          height={256}
+          className="mx-auto"
+          priority
         />
       </div>
 

@@ -16,7 +16,11 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(product);
+    return NextResponse.json(product, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (error) {
     console.error('Product API error:', error);
     return NextResponse.json(

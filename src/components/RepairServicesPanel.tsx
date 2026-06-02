@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { MessageCircle } from 'lucide-react';
 
 const repairServices = [
@@ -42,7 +43,7 @@ export default function RepairServicesPanel() {
           {[s1, s2].map((service, idx) => (
             <div key={idx} className="flex flex-col md:flex-row bg-[#f9f6ed]/70 backdrop-blur rounded-2xl overflow-hidden border border-black/10">
               <div className="md:w-5/12">
-                <img src={service.image} alt={service.name} className="w-full h-56 md:h-full object-cover" />
+                <Image src={service.image} alt={service.name} width={400} height={300} className="w-full h-56 md:h-full object-cover" />
               </div>
               <div className="flex-1 p-5 flex flex-col">
                 <div className="uppercase text-[10px] text-gold font-bold tracking-widest mb-1">PROFESSIONAL FIX</div>

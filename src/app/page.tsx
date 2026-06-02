@@ -1,25 +1,24 @@
- 
- import Footer from '@/components/Footer';
+import { Suspense } from 'react';
+import Footer from '@/components/Footer';
 import dynamic from 'next/dynamic';
 import RepairServicesPanel from '@/components/RepairServicesPanel';
+import AlmostGonePanelWrapper from '@/components/panels/AlmostGonePanelWrapper';
+import PriceJustDroppedPanelWrapper from '@/components/panels/PriceJustDroppedPanelWrapper';
+import JustLandedPanelWrapper from '@/components/panels/JustLandedPanelWrapper';
+import ProductGridPanelWrapper from '@/components/panels/ProductGridPanelWrapper';
 import { getCategories, getCategoryProductCounts } from '@/lib/db';
 import { warmupConnection } from '@/lib/mongodb';
 import { Store, Truck, Shield, MessageCircle, Package, TrendingDown, Users, AlertTriangle, BarChart3, Recycle, ShoppingCart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Preloader from '@/components/Preloader';
+import { HeroPlusGallerySkeleton, JustLandedSkeleton, FeaturedSkeleton } from '@/components/panels/SkeletonScreens';
 
-// Warm up the Atlas connection pool on the server as soon as this page is hit.
-// Only runs when MONGODB_URI is defined; silently skipped otherwise (e.g. during local builds).
 if (process.env.MONGODB_URI) {
   warmupConnection().catch(() => {});
 }
 
 const HeroVideo = dynamic(() => import('@/components/HeroVideo'));
-const AlmostGonePanel = dynamic(() => import('@/components/panels/AlmostGonePanel'));
-const PriceJustDroppedPanel = dynamic(() => import('@/components/panels/PriceJustDroppedPanel'));
-const JustLandedPanel = dynamic(() => import('@/components/panels/JustLandedPanel'));
-const ProductGridPanel = dynamic(() => import('@/components/panels/ProductGridPanel'));
 
 export const revalidate = 60;
 
@@ -292,8 +291,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <AlmostGonePanel />
-      <PriceJustDroppedPanel />
+      <Suspense fallback={<HeroPlusGallerySkeleton label="LAST CHANCE — ONLY A FEW LEFT" />}>
+        <AlmostGonePanelWrapper />
+      </Suspense>
+      <Suspense fallback={<HeroPlusGallerySkeleton label="PRICE JUST DROPPED — FLASH SAVINGS" secondaryLabel="Lock it in before prices rise again" />}>
+        <PriceJustDroppedPanelWrapper />
+      </Suspense>
 
       {/* Mobile-only intro block — appears BEFORE Just Landed (taller with more info) */}
       <div className="md:hidden mx-4 mt-2 mb-4 bg-[#f9f6ed]/80 backdrop-blur-sm rounded-xl p-4 text-[13px] leading-snug text-black/80">
@@ -348,12 +351,16 @@ export default async function HomePage() {
         </Link>
       </div>
 
-      <JustLandedPanel />
+      <Suspense fallback={<JustLandedSkeleton />}>
+        <JustLandedPanelWrapper />
+      </Suspense>
       <LocallyPopularPanel />
       <RepairServicesPanel />
       <EducationPanel />
       <CommunityPanel />
-      <ProductGridPanel />
+      <Suspense fallback={<FeaturedSkeleton />}>
+        <ProductGridPanelWrapper />
+      </Suspense>
       <RealBuyerStory />
       <TrustStrip />
       <Footer />

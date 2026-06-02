@@ -3,6 +3,7 @@
 import { Product } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Eye } from 'lucide-react';
 
 interface RelatedProductCardProps {
@@ -28,10 +29,13 @@ export default function RelatedProductCard({ product }: RelatedProductCardProps)
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-beige-solid">
           {product.images?.[0] ? (
-            <img
+            <Image
               src={product.images[0]}
               alt={name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 640px) 50vw, 25vw"
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>

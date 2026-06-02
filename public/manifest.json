@@ -1,17 +1,14 @@
 {
   "name": "JP Tech - Electronics Store Rwanda",
   "short_name": "JP Tech",
-  "description": "Your trusted electronics marketplace in Rwanda",
+  "description": "Your trusted electronics marketplace in Rwanda. Shop smartphones, laptops, TVs, and more.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f5f5dc",
+  "background_color": "#e8e0c8",
   "theme_color": "#d4af37",
+  "orientation": "portrait-primary",
+  "categories": ["electronics", "shopping", "technology"],
   "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    },
     {
       "src": "/favicon-16x16.svg",
       "sizes": "16x16",
@@ -21,6 +18,14 @@
       "src": "/favicon-32x32.svg",
       "sizes": "32x32",
       "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
 }

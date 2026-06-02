@@ -10,13 +10,18 @@ import { useHomeData } from '@/context/HomeDataContext';
 import PanelCard from './PanelCard';
 import HoverCartSelector from './HoverCartSelector';
 
-export default function PriceJustDroppedPanel() {
+interface Props {
+  initialProducts?: any[];
+  initialLoaded?: boolean;
+}
+
+export default function PriceJustDroppedPanel({ initialProducts, initialLoaded: _initialLoaded }: Props = {}) {
   const { ref, inView } = useInView({ triggerOnce: true });
   const { cache, ensureFetched } = useHomeData();
   const endpoint = '/api/products/price-dropped';
   const entry = cache[endpoint] || { data: [], loaded: false };
-  const [products, setProducts] = useState<any[]>(entry.data);
-  const [loaded, setLoaded] = useState<boolean>(entry.loaded);
+  const [products, setProducts] = useState<any[]>(initialProducts || entry.data);
+  const [loaded, setLoaded] = useState<boolean>(_initialLoaded || initialProducts ? true : entry.loaded);
 
   useEffect(() => {
     if (inView && !loaded) {

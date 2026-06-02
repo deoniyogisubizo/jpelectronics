@@ -2,7 +2,11 @@
 
 import { Play } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 export default function HeroVideo() {
   const [hovered, setHovered] = useState(1); // 0=delivery, 1=repair (default big), 2=product
@@ -11,17 +15,17 @@ export default function HeroVideo() {
   const [previousHovered, setPreviousHovered] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
 
+  const { data: featuredData } = useSWR('/api/products/featured', fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000,
+  });
+
   useEffect(() => {
-    fetch('/api/products/featured')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          const random = data[Math.floor(Math.random() * data.length)];
-          setPreviewProduct(random);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (Array.isArray(featuredData) && featuredData.length > 0) {
+      const random = featuredData[Math.floor(Math.random() * featuredData.length)];
+      setPreviewProduct(random);
+    }
+  }, [featuredData]);
 
   // Auto cycle the "big" card every 5 seconds (paused when cursor is over the preview)
   useEffect(() => {
@@ -64,15 +68,15 @@ export default function HeroVideo() {
     // Slide animation when big changes
     if (isBig && type !== previousHovered) {
       // This card is becoming the new big → slide in from right
-      extra = 'translate-x-[12px]';
+      extra = 'translate-x-[6px]';
     } else if (!isBig && type === previousHovered) {
       // This card was big and is now becoming small → slide out to left
-      extra = 'translate-x-[-12px]';
+      extra = 'translate-x-[-6px]';
     }
 
     const sizeClass = isBig 
-      ? `flex-[2.1] h-68 scale-[1.03] ${extra}` 
-      : `flex-[0.72] h-48 scale-[0.97] ${extra}`;
+      ? `flex-[2.4] h-80 ${extra}` 
+      : `flex-[0.8] h-56 ${extra}`;
 
     const baseClass = `relative overflow-hidden rounded-sm flex min-w-0 transition-[flex,height,width,transform] duration-700 ease-out ${sizeClass}`;
 
@@ -95,10 +99,13 @@ export default function HeroVideo() {
           onMouseEnter={() => setHovered(0)}
         >
           {topLoadingBar}
-          <img 
+          <Image 
             src="/delivery.png" 
             alt="Delivery person" 
-            className="absolute inset-0 w-full h-full object-cover" 
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 420px"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
           <div className="absolute bottom-0 left-0 p-1 text-white text-[10px] leading-[1.05]">
@@ -117,7 +124,7 @@ export default function HeroVideo() {
           onMouseEnter={() => setHovered(1)}
         >
           {topLoadingBar}
-          <img src="/images/4.jpeg" alt="Repair" className="absolute inset-0 w-full h-full object-cover" />
+          <Image src="/images/4.jpeg" alt="Repair" fill className="object-cover" sizes="(max-width: 768px) 100vw, 420px" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
           <div className="absolute bottom-0 left-0 p-1 text-white text-[10px] leading-[1.05]">
             <div className="font-bold tracking-wide">Expert Repair</div>
@@ -136,7 +143,7 @@ export default function HeroVideo() {
       >
         {topLoadingBar}
         {previewProduct?.images?.[0] ? (
-          <img src={previewProduct.images[0]} alt={previewProduct.name?.en} className="absolute inset-0 w-full h-full object-cover" />
+          <Image src={previewProduct.images[0]} alt={previewProduct.name?.en || ''} fill className="object-cover" sizes="420px" />
         ) : (
           <div className="absolute inset-0 bg-white/10" />
         )}
@@ -151,13 +158,17 @@ export default function HeroVideo() {
   };
 
   return (
-    <section className="relative h-[450px] md:h-[550px] overflow-hidden bg-[#1a202c]">
+    <section className="relative h-[500px] md:h-[650px] overflow-hidden bg-[#1a202c]">
       {/* Background image + gradient overlay */}
       <div className="absolute inset-0 overflow-hidden bg-[#1a202c]">
-        <img
+        <Image
           src="/video/bg.png"
           alt="Hero Background"
-          className="absolute right-0 top-0 h-full w-auto max-w-[85%] object-cover z-0"
+          fill
+          className="object-cover z-0"
+          style={{ objectPosition: 'right top', maxWidth: '85%', marginLeft: 'auto' }}
+          sizes="(max-width: 768px) 100vw, 85vw"
+          priority
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a202c] via-[#1a202c]/85 to-transparent z-10" />
       </div>
@@ -195,14 +206,14 @@ export default function HeroVideo() {
         </div>
 
         {/* Right: only the 3-grid preview (search removed) */}
-        <div className="hidden md:flex md:w-[42%] flex-col justify-center pt-6 pr-5 lg:pr-6 relative z-30">
+        <div className="hidden md:flex md:w-[42%] flex-col justify-center pt-6 pr-12 lg:pr-20 relative z-30">
           {/* 3 column preview: middle big by default, sides small. Hover any → it becomes big, others small */}
             <div 
-              className="h-72 relative"
+              className="h-96 relative"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
-              <div className="flex h-full gap-1.5 items-center">
+              <div className="flex h-full gap-4 items-center">
                 {renderPreviewCard((hovered + 2) % 3, false)}
                 {renderPreviewCard(hovered, true)}
                 {renderPreviewCard((hovered + 1) % 3, false)}

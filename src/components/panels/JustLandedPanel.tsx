@@ -10,13 +10,18 @@ import { useHomeData } from '@/context/HomeDataContext';
 import PanelCard from './PanelCard';
 import HoverCartSelector from './HoverCartSelector';
 
-export default function JustLandedPanel() {
+interface Props {
+  initialProducts?: any[];
+  initialLoaded?: boolean;
+}
+
+export default function JustLandedPanel({ initialProducts, initialLoaded: _initialLoaded }: Props = {}) {
   const { ref, inView } = useInView({ triggerOnce: true });
   const { cache, ensureFetched } = useHomeData();
   const endpoint = '/api/products/just-landed';
   const entry = cache[endpoint] || { data: [], loaded: false };
-  const [products, setProducts] = useState<any[]>(entry.data);
-  const [loaded, setLoaded] = useState<boolean>(entry.loaded);
+  const [products, setProducts] = useState<any[]>(initialProducts || entry.data);
+  const [loaded, setLoaded] = useState<boolean>(_initialLoaded || initialProducts ? true : entry.loaded);
 
   useEffect(() => {
     if (inView && !loaded) {

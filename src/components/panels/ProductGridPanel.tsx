@@ -8,13 +8,18 @@ import { FeaturedSkeleton } from './SkeletonScreens';
 import { useHomeData } from '@/context/HomeDataContext';
 import PanelCard from './PanelCard';
 
-export default function ProductGridPanel() {
+interface Props {
+  initialProducts?: any[];
+  initialLoaded?: boolean;
+}
+
+export default function ProductGridPanel({ initialProducts, initialLoaded: _initialLoaded }: Props = {}) {
   const { ref, inView } = useInView({ triggerOnce: true });
   const { cache, ensureFetched } = useHomeData();
   const endpoint = '/api/products/featured';
   const entry = cache[endpoint] || { data: [], loaded: false };
-  const [products, setProducts] = useState<any[]>(entry.data);
-  const [loaded, setLoaded] = useState<boolean>(entry.loaded);
+  const [products, setProducts] = useState<any[]>(initialProducts || entry.data);
+  const [loaded, setLoaded] = useState<boolean>(_initialLoaded || initialProducts ? true : entry.loaded);
 
   useEffect(() => {
     if (inView && !loaded) {
@@ -44,14 +49,10 @@ export default function ProductGridPanel() {
           className="flex -ml-4 w-auto"
           columnClassName="pl-4 bg-clip-padding"
         >
-          {products.slice(0, 20).map((product: any, index: number) => (
-            <Link key={product._id} href={`/product/${product._id}`} className="group block">
-              <PanelCard
-                product={product}
-                aspect={index % 3 === 0 ? 'aspect-[4/3]' : index % 3 === 1 ? 'aspect-square' : 'aspect-[3/4]'}
-              />
-            </Link>
-          ))}
+          {products.slice(0, 20).map((product: any, index: number) => {
+            const asp = index % 3 === 0 ? 'aspect-[4/3]' : index % 3 === 1 ? 'aspect-square' : 'aspect-[3/4]';
+            return <PanelCard key={product._id} product={product} aspect={asp} />;
+          })}
         </Masonry>
 
         <div className="text-center mt-4">

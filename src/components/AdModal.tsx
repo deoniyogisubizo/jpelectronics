@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function AdModal() {
   const [showModal, setShowModal] = useState(true);
@@ -16,7 +17,7 @@ export default function AdModal() {
         >
           ✕
         </button>
-        <img src="/add/add.jpeg" alt="Advertisement" className="max-w-full max-h-full rounded-lg" />
+        <Image src="/add/add.jpeg" alt="Advertisement" width={600} height={400} className="max-w-full max-h-full rounded-lg" priority />
       </div>
     </div>
   );

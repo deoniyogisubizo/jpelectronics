@@ -16,7 +16,11 @@ async function withRetry<T>(fn: () => Promise<T>, attempts = 2): Promise<T> {
 export async function GET() {
   try {
     const categories = await withRetry(() => getCategories());
-    return NextResponse.json(categories);
+    return NextResponse.json(categories, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      },
+    });
   } catch (error) {
     console.error('Categories API error:', error);
     return NextResponse.json(

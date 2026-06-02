@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { CartItem } from '@/types';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, ShoppingCart } from 'lucide-react';
 
 interface HoverCartSelectorProps {
   product: any;
@@ -75,7 +75,7 @@ export default function HoverCartSelector({ product, className, ctaText = 'Add I
           className="h-8 w-8 flex items-center justify-center bg-black text-gold rounded-full text-sm active:scale-95 transition-transform shadow"
           aria-label="Add to cart"
         >
-          <i className="fa-solid fa-cart-plus"></i>
+          <ShoppingCart className="w-4 h-4" />
         </button>
       </div>
     </div>
